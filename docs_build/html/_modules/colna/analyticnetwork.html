@@ -1,0 +1,1012 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>colna.analyticnetwork &mdash; Complex Linear Network Analyzer 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Complex Linear Network Analyzer
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../manual.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../colna.html">COLNA Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Complex Linear Network Analyzer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>colna.analyticnetwork</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for colna.analyticnetwork</h1><div class="highlight"><pre>
+<span></span><span class="c1"># +-----------------------------------------------------------------------------+</span>
+<span class="c1"># |  Copyright 2019 IBM Research - Zurich                                       |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |  Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);            |</span>
+<span class="c1"># |  you may not use this file except in compliance with the License.           |</span>
+<span class="c1"># |  You may obtain a copy of the License at                                    |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |      http://www.apache.org/licenses/LICENSE-2.0                             |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |  Unless required by applicable law or agreed to in writing, software        |</span>
+<span class="c1"># |  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,          |</span>
+<span class="c1"># |  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   |</span>
+<span class="c1"># |  See the License for the specific language governing permissions and        |</span>
+<span class="c1"># |  limitations under the License.                                             |</span>
+<span class="c1"># +-----------------------------------------------------------------------------+</span>
+<span class="c1"># |  Authors: Lorenz K. Mueller, Pascal Stark                                   |</span>
+<span class="c1"># +-----------------------------------------------------------------------------+</span>
+
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.dummy</span> <span class="kn">import</span> <span class="n">Pool</span> <span class="k">as</span> <span class="n">ThreadPool</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+
+<div class="viewcode-block" id="Edge"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Edge">[docs]</a><span class="k">class</span> <span class="nc">Edge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Edges connect two nodes in a directed manner. Edges add a phase shift (:math:`\phi`), delay (:math:`d`) and</span>
+<span class="sd">    attenuation (:math:`a`) to the signal. The input to output relation of an edge is given by:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        x_{out}(t) = a \cdot x_{in}(t-d) \cdot e^{j\phi}</span>
+
+<span class="sd">    Edge properties can be constant or symbolic numbers (variables).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">phase</span><span class="o">=.</span><span class="mi">4</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=.</span><span class="mi">8</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param start: name of start vertex connected by this edge</span>
+<span class="sd">        :param end: name of end vertex connected by this edge</span>
+<span class="sd">        :param phase: phase shift added by this element (stacks additively)</span>
+<span class="sd">        :param attenuation: attenuation caused by element (stacks multiplicatively)</span>
+<span class="sd">        :param delay: time delay added by this element (stacks additively)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">phase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attenuation</span> <span class="o">=</span> <span class="n">attenuation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">delay</span></div>
+
+
+<div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Networks consist of linear nodes and directed edges. Networks are represented by a directed graph. COLNA computes all paths</span>
+<span class="sd">    leading to the output nodes (including recurrent paths) down to a certain accuracy threshold.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">      If a network contains recurrent paths (loops), the user must ensure that there is no gain in the network (i.e. attenuation &lt; 1), otherwise the amplitude at the output will never fall below the threshold.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="Network.add_node"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.add_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add a new node to the network</span>
+
+<span class="sd">        :param name: the name of the node</span>
+<span class="sd">        :type name: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">),</span> <span class="s2">&quot;node of name &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; already exists&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Network.add_edge"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.add_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a new edge to the network</span>
+
+<span class="sd">        :param edge: the edge object to add</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">edge</span><span class="o">.</span><span class="n">start</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;attempted to add edge from undefined node&quot;</span>
+        <span class="k">assert</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;attempted to add edge to undefined node&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Network.add_input"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.add_input">[docs]</a>    <span class="k">def</span> <span class="nf">add_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Define input points of network. The evaluation assumes signals with the given amplitude, phase and delay are</span>
+<span class="sd">        propagating through the network when computing the analytical waveforms at each node.</span>
+
+<span class="sd">        :param name: name of the node that is to receive the input</span>
+<span class="sd">        :param amplitude: amplitude of the input</span>
+<span class="sd">        :param phase: phase of the input (relative to other inputs)</span>
+<span class="sd">        :param delay: delay of the input (relative to other inputs)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;attempted to give input to inexistent node &quot;</span> <span class="o">+</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Network.get_result"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of waves mixing at this node</span>
+
+<span class="sd">        :param name: name of the node to get result from</span>
+<span class="sd">        :return: a list of waves mixing at this node (amplitude, phase, delay)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;node does not exist&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="Network.get_result_np"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_result_np">[docs]</a>    <span class="k">def</span> <span class="nf">get_result_np</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a result at a given node as numpy array</span>
+
+<span class="sd">        :param name: name of the node to get result from</span>
+<span class="sd">        :return: x; x[0]: amp, x[1]: phase, x[2]: delay</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;node does not exist&quot;</span>
+        <span class="n">amp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">entry</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">delay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">entry</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">delay</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Network.get_paths"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_paths">[docs]</a>    <span class="k">def</span> <span class="nf">get_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Find all paths leading to node.</span>
+
+<span class="sd">        :return: all paths leading to a node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;node does not exist&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">entry</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="Network.print_stats"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.print_stats">[docs]</a>    <span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints some statistics of the evaluated network</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_paths</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;total number of paths:&#39;</span><span class="p">,</span> <span class="n">n_paths</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Network.stopping_criterion"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.stopping_criterion">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stopping_criterion</span><span class="p">(</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">amplitude</span> <span class="o">&lt;</span> <span class="n">cutoff</span></div>
+
+<div class="viewcode-block" id="Network.evaluate"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_endpoints</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">hide_tqdm_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluate the network.</span>
+
+<span class="sd">        :param amplitude_cutoff:  amplitude below which a wave is not further propagated through the network</span>
+<span class="sd">        :param max_endpoints: evaluation is interrupted early, if more than max_endpoints exist in evaluation</span>
+<span class="sd">        :param use_global_default: set to true if global defaults should be used with SymNum&#39;s (higher speed),</span>
+<span class="sd">         set to false if the default value of each SymNum should be used instead (higher accuracy). Default: True</span>
+<span class="sd">        :type use_global_default: Boolean</span>
+<span class="sd">        :param feed_dict: Feed dictionary for SymNum variables. Default: None</span>
+<span class="sd">        :return:</span>
+<span class="sd">            updates self.nodes_to_output</span>
+<span class="sd">            a dictionary whose keys are node names. For each node name a list of quadruplets is given</span>
+<span class="sd">            [(amplitude, phase, delay, path), (amplitude, phase, delay, path), ...].</span>
+
+<span class="sd">            .. note::</span>
+<span class="sd">                phases are not reset to a finite range, but simply added</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># at the start of the evaluation the endpoints are at the inputs</span>
+        <span class="n">current_endpoints</span> <span class="o">=</span> <span class="p">[</span><span class="nb">input</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">]</span>
+        <span class="n">endpoint</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;point&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">input</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">],</span>
+                    <span class="s1">&#39;delay&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">input</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">],</span>
+                    <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">input</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">],</span>
+                    <span class="s1">&#39;amp&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">input</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">],</span>
+                    <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">current_endpoints</span><span class="p">]}</span>
+
+        <span class="c1"># keep propagating waves, while there is a front endpoint that is above the amplitude cutoff</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">disable</span><span class="o">=</span><span class="n">hide_tqdm_progress</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Network evaluation in progress&#39;</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_endpoints</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_endpoints</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_endpoints</span><span class="p">,</span> <span class="s2">&quot;evaluation interrupted, too many endpoints&quot;</span>
+
+            <span class="c1"># in these we will collect the parameters of the next endpoints</span>
+            <span class="n">new_endpoints</span><span class="p">,</span> <span class="n">new_delays</span><span class="p">,</span> <span class="n">new_phases</span><span class="p">,</span> <span class="n">new_amplitudes</span><span class="p">,</span> <span class="n">new_paths</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+            <span class="c1"># iterate over all current endpoints</span>
+            <span class="k">for</span> <span class="n">node_index</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">current_endpoints</span><span class="p">):</span>
+                <span class="c1"># add the current endpoint to the final output</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;amp&#39;</span><span class="p">][</span><span class="n">node_index</span><span class="p">],</span>
+                                                   <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">][</span><span class="n">node_index</span><span class="p">],</span>
+                                                   <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;delay&#39;</span><span class="p">][</span><span class="n">node_index</span><span class="p">],</span>
+                                                   <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="n">node_index</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">node</span><span class="p">))</span>
+
+                <span class="c1"># check if any edge&#39;s start is the current endpoint</span>
+                <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+                    <span class="n">current_attn</span> <span class="o">=</span> <span class="p">(</span><span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;amp&#39;</span><span class="p">][</span><span class="n">node_index</span><span class="p">]</span> <span class="o">*</span> <span class="n">edge</span><span class="o">.</span><span class="n">attenuation</span><span class="p">)</span>
+                    <span class="n">current_attn_fl</span> <span class="o">=</span> <span class="n">current_attn</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">,</span>
+                                                        <span class="n">use_global_default</span><span class="o">=</span><span class="n">use_global_default</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">current_attn</span><span class="p">,</span>
+                                                                                                          <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">current_attn</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">node</span> <span class="o">==</span> <span class="n">edge</span><span class="o">.</span><span class="n">start</span>
+                            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopping_criterion</span><span class="p">(</span><span class="n">current_attn_fl</span><span class="p">,</span> <span class="n">amplitude_cutoff</span><span class="p">)):</span>
+                        <span class="c1"># if yes, add the new endpoint to the new endpoints (unless the amp. is too low)</span>
+                        <span class="n">new_endpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+                        <span class="n">new_delays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;delay&#39;</span><span class="p">][</span><span class="n">node_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">delay</span><span class="p">)</span>
+                        <span class="n">new_phases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">][</span><span class="n">node_index</span><span class="p">]</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>
+                        <span class="n">new_amplitudes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_attn</span><span class="p">)</span>
+                        <span class="n">new_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">][</span><span class="n">node_index</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">node</span><span class="p">)</span>
+
+                <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># set the current endpoint parameters to the new ones and go to the top</span>
+            <span class="n">current_endpoints</span> <span class="o">=</span> <span class="n">new_endpoints</span>
+            <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;delay&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_delays</span>
+            <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;amp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_amplitudes</span>
+            <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_phases</span>
+            <span class="n">endpoint</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_paths</span></div>
+
+<div class="viewcode-block" id="Network.visualize"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.visualize">[docs]</a>    <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_edge_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;network.gv&#39;</span><span class="p">,</span> <span class="n">skip_colon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
+        <span class="k">except</span> <span class="n">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Graphviz Package was not found, visualization is skipped.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">Digraph</span><span class="p">(</span><span class="s1">&#39;structs&#39;</span><span class="p">,</span> <span class="n">graph_attr</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ranksep&#39;</span><span class="p">:</span> <span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="s1">&#39;overlap&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;splines&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;rankdir&#39;</span><span class="p">:</span> <span class="s1">&#39;TB&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;constraint&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;nodesep&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">},</span> <span class="n">node_attr</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="s1">&#39;record&#39;</span><span class="p">},</span>
+                    <span class="n">edge_attr</span><span class="o">=</span><span class="p">{},</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;dot&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">skip_colon</span> <span class="ow">and</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">node</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">show_edge_labels</span><span class="p">:</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                       <span class="n">label</span><span class="o">=</span><span class="s1">&#39;a</span><span class="si">{}</span><span class="s1">, p</span><span class="si">{}</span><span class="s1">, d</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">attenuation</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">delay</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+
+        <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SymNum"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.SymNum">[docs]</a><span class="k">class</span> <span class="nc">SymNum</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    symbolic numbers for edge properties in analytic networks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">global_default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">numerical</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Symbolic numbers for the analytic network.</span>
+
+<span class="sd">        Instantiates a symbolic number (variable) of name &#39;name&#39; with default value &#39;default&#39;. &#39;product&#39; is used</span>
+<span class="sd">        to distinguish attenuations (stacking multiplicatively) and phases / delays (stacking additively).</span>
+
+<span class="sd">        :param name: the name of the variable. The name should be unique for each SymNum present in the network.</span>
+<span class="sd">        :param default: the default value substituted, when we evaluate this variable</span>
+<span class="sd">        :param product: whether this variable is composed as a product (True) or a sum (False)</span>
+<span class="sd">        :param global_default: this is assumed to be the value of the variable when we evaluate the network if use_global_defaults is set.</span>
+<span class="sd">        :param numerical: initial value of numerical part (numerical factor for product variables, numerical addition for additive variables). Can be set to none for automatic initialization (1.0 for product variables, 0.0 for additive variables)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># the numerical part of the number&#39;s value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numerical</span> <span class="o">=</span> <span class="n">numerical</span> <span class="k">if</span> <span class="n">numerical</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">product</span>
+
+        <span class="c1"># the symbolic part of the number&#39;s value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+
+        <span class="c1"># dict. of the values that are inserted for each variable if no particular value is specified at evaluation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">default</span><span class="p">}</span>
+
+        <span class="c1"># indicates whether the number stacks multiplicatively or additively</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">=</span> <span class="n">product</span>
+
+        <span class="c1"># when the network is evaluated we use this value to determine when to cut the path due to attenuation limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_default</span> <span class="o">=</span> <span class="n">global_default</span>
+
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="n">global_default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_default</span><span class="p">,</span> <span class="n">numerical</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">numerical</span><span class="p">)</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="p">)</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">copy</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="s2">&quot;do not add product variables&quot;</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">numerical</span>
+            <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">symbol</span> <span class="ow">in</span> <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">+=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">copy</span>
+
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="s2">&quot;do not multiply non-product variables&quot;</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">*=</span> <span class="n">other</span><span class="o">.</span><span class="n">numerical</span>
+            <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">symbol</span> <span class="ow">in</span> <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">*=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">copy</span>
+
+    <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="s2">&quot;do not multiply non-product variables&quot;</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">/=</span> <span class="n">other</span><span class="o">.</span><span class="n">numerical</span>
+            <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">symbol</span> <span class="ow">in</span> <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">-=</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">/=</span> <span class="n">other</span>
+        <span class="k">return</span> <span class="n">copy</span>
+
+<div class="viewcode-block" id="SymNum.eval"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.SymNum.eval">[docs]</a>    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        evaluate the numerical value of the number</span>
+
+<span class="sd">        :param feed_dict: a dictionary specifying values of variables by name(if not given default values are used)</span>
+<span class="sd">        :param verbose: print the number in symbolic form before returning</span>
+<span class="sd">        :param use_global_default: set to true if global defaults should be used with SymNum&#39;s (higher speed) when no \</span>
+<span class="sd">        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \</span>
+<span class="sd">        The value is ignored if feed_dict is not none. Default: True</span>
+<span class="sd">        :type use_global_default: Boolean</span>
+<span class="sd">        :return: numerical value of the number (float)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">symbolic_evaluated</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">feed_dict</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">use_global_default</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">total_count</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">symbolic_evaluated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_default</span> <span class="o">**</span> <span class="n">total_count</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_default</span> <span class="o">*</span> <span class="n">total_count</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="k">if</span> <span class="p">(</span><span class="n">feed_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="n">symbol</span> <span class="ow">in</span> <span class="n">feed_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">else</span> <span class="n">feed_dict</span><span class="p">[</span>
+                    <span class="n">symbol</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="p">:</span>
+                    <span class="n">symbolic_evaluated</span> <span class="o">*=</span> <span class="n">val</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">symbolic_evaluated</span> <span class="o">+=</span> <span class="n">val</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerical</span><span class="p">,</span> <span class="n">symbolic_evaluated</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">symbolic_evaluated</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerical</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="k">else</span> <span class="n">symbolic_evaluated</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerical</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">op1</span> <span class="o">=</span> <span class="s2">&quot; * &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="k">else</span> <span class="s2">&quot; + &quot;</span>
+        <span class="n">op2</span> <span class="o">=</span> <span class="s2">&quot;**&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="k">else</span> <span class="s2">&quot;*&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="n">op1</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="n">key</span> <span class="o">+</span> <span class="n">op2</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numerical</span><span class="p">)</span> <span class="o">+</span> <span class="n">out</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        convenience overload to print lists of these numbers easily.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;SymNum{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;}&gt;&#39;</span></div>
+
+
+<div class="viewcode-block" id="Device"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device">[docs]</a><span class="k">class</span> <span class="nc">Device</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines a device object for physical networks.</span>
+
+<span class="sd">    All nodes in a device get their &#39;name&#39; changed to &#39;devicetype:devicename:name&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">devicetype</span><span class="o">=</span><span class="s1">&#39;device&#39;</span><span class="p">,</span> <span class="n">scattering_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param scattering_matrix: device scattering matrix, if both :attr:`scattering_matrix` and :attr:`delay` are provided, the device will be initalized with the corresponding scattering matrix and delay</span>
+<span class="sd">        :param delay: device delay, if both :attr:`scattering_matrix` and :attr:`delay` are provided, the device will be initalized with the corresponding scattering matrix and delay</span>
+<span class="sd">        :param name: name of the device (str)</span>
+<span class="sd">        :param devicetype: typename of the device (str)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">=</span> <span class="n">devicetype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">scattering_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">delay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_from_scattering_matrix</span><span class="p">(</span><span class="n">scattering_matrix</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Device.add_output"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device.add_output">[docs]</a>    <span class="k">def</span> <span class="nf">add_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        adds a node (by name) to the outputs of the physical network</span>
+
+<span class="sd">        :param nodename: name (str) of the node to add to the outputs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">nodename</span>
+        <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;attempted to add output to inexistent node&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Device.add_input"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device.add_input">[docs]</a>    <span class="k">def</span> <span class="nf">add_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        adds an external input to a node</span>
+
+<span class="sd">        :param nodename: name (str) of the node</span>
+<span class="sd">        :param amplitude: amplitude of the input</span>
+<span class="sd">        :param phase: phase shift of the input</span>
+<span class="sd">        :param delay: time delay of the input</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">nodename</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Device.add_node"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device.add_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add a new node to the network</span>
+
+<span class="sd">        :param nodename: the name of the node (a string, not containing &#39;:&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;:&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nodename</span><span class="p">,</span> <span class="s2">&quot;avoid use of : in nodenames&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">nodename</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Device.add_edge"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device.add_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add a new edge to the network</span>
+
+<span class="sd">        :param edge: the edge object to add</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">edge</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">start</span>
+        <span class="n">edge</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Device.init_from_scattering_matrix"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device.init_from_scattering_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">init_from_scattering_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smatrix</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        defines a device by its scattering matrix (complex matrix) and a delay</span>
+
+<span class="sd">        for a device with n inputs and m outputs pass a nxm complex matrix specifying attenuation and phase-shift</span>
+<span class="sd">        creates n+m nodes linked by n*m edges with the given parameters, all with time delay &#39;delay&#39;</span>
+<span class="sd">        input node number k will be named &#39;i+str(k)&#39;</span>
+<span class="sd">        output node number k will be named &#39;o+str(k)&#39;</span>
+
+<span class="sd">        :param smatrix: complex matrix defining the input to output mapping</span>
+<span class="sd">        :param delay: scalar time delay</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">smatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">smatrix</span><span class="p">)</span>
+        <span class="n">n_in</span> <span class="o">=</span> <span class="n">smatrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n_out</span> <span class="o">=</span> <span class="n">smatrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_in</span><span class="p">):</span>
+            <span class="n">in_name</span> <span class="o">=</span> <span class="s2">&quot;i&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_out</span><span class="p">):</span>
+                <span class="n">out_name</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">out_name</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">out_name</span><span class="p">)</span>
+                <span class="n">edge</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">out_name</span><span class="p">,</span>
+                            <span class="n">phase</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">smatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]),</span>
+                            <span class="n">attenuation</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">smatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]),</span>
+                            <span class="n">delay</span><span class="o">=</span><span class="n">delay</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DeviceLink"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.DeviceLink">[docs]</a><span class="k">class</span> <span class="nc">DeviceLink</span><span class="p">(</span><span class="n">Edge</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines a device link object for physical networks.</span>
+
+<span class="sd">    Device links are special edges that link devices. They are given the name of source and target device as well as</span>
+<span class="sd">    source and target node within the device. Otherwise they function like the parent class Edge.</span>
+
+<span class="sd">    :param startdevice: name of the start device (string)</span>
+<span class="sd">    :param enddevice: name of the end device (string)</span>
+<span class="sd">    :param startnode: name of the node within the start device (string)</span>
+<span class="sd">    :param endnode: name of the node within the end device (string)</span>
+<span class="sd">    :param startdevicetype: name of the device type of startdevice (optinal, defaults to &#39;device&#39;)</span>
+<span class="sd">    :param enddevicetype: name of the device type of enddevice (optinal, defaults to &#39;device&#39;)</span>
+<span class="sd">    :param phase: phase shift of the device link</span>
+<span class="sd">    :param attenuation: attenuation of the device link</span>
+<span class="sd">    :param delay: time delay of the device link</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">startdevice</span><span class="p">,</span> <span class="n">enddevice</span><span class="p">,</span> <span class="n">startnode</span><span class="p">,</span> <span class="n">endnode</span><span class="p">,</span> <span class="n">startdevicetype</span><span class="o">=</span><span class="s1">&#39;device&#39;</span><span class="p">,</span> <span class="n">enddevicetype</span><span class="o">=</span><span class="s1">&#39;device&#39;</span><span class="p">,</span>
+                 <span class="n">phase</span><span class="o">=.</span><span class="mi">4</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=.</span><span class="mi">8</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="p">[</span><span class="n">startdevice</span><span class="p">,</span> <span class="n">enddevice</span><span class="p">,</span> <span class="n">startnode</span><span class="p">,</span> <span class="n">endnode</span><span class="p">,</span> <span class="n">startdevicetype</span><span class="p">,</span> <span class="n">enddevicetype</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;device links require string inputs on some arguments&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">startnode</span><span class="p">,</span> <span class="n">endnode</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">attenuation</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">startdevicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">startdevice</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">startnode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">enddevicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">enddevice</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">endnode</span></div>
+
+
+<div class="viewcode-block" id="PhysicalNetwork"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.PhysicalNetwork">[docs]</a><span class="k">class</span> <span class="nc">PhysicalNetwork</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines a physical network for simulation.</span>
+
+<span class="sd">    Extension of the Network class that allows for a more natural implementation of physical networks using</span>
+<span class="sd">    a description as a collection of devices, device links, input and output sites.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="PhysicalNetwork.add_device"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.PhysicalNetwork.add_device">[docs]</a>    <span class="k">def</span> <span class="nf">add_device</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add an device to the network</span>
+
+<span class="sd">        :param device: device to add</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">device</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">device</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">device</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="nb">input</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="nb">input</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">input</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">input</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">device</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PhysicalNetwork.add_devicelink"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.PhysicalNetwork.add_devicelink">[docs]</a>    <span class="k">def</span> <span class="nf">add_devicelink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">devicelink</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        add a device link to the network</span>
+
+<span class="sd">        :param devicelink: the device link to add</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">start</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;attempted to add device link from inexistent node &quot;</span> <span class="o">+</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">start</span>
+        <span class="k">assert</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">end</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;attempted to add device link to inexistent node &quot;</span> <span class="o">+</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">devicelink</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PhysicalNetwork.get_outputs"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.PhysicalNetwork.get_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get the computed wave forms at all output sites</span>
+
+<span class="sd">        :return: a list of the output waves at all output nodes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PhysicalNetwork.visualize"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.PhysicalNetwork.visualize">[docs]</a>    <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_edge_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;network.gv&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">full_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draws the network graph.</span>
+
+<span class="sd">        :param show_edge_labels: If true labels showing attenuation, phase and delay for each edge are drawn in the graph.</span>
+<span class="sd">        :param path: output path and filename</span>
+<span class="sd">        :param full_graph: if true, inner edges of devices are shown as well</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">full_graph</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">show_edge_labels</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
+            <span class="k">except</span> <span class="n">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Graphviz Package was not found, visualization is skipped.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="mi">0</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">Digraph</span><span class="p">(</span><span class="s1">&#39;structs&#39;</span><span class="p">,</span> <span class="n">graph_attr</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ranksep&#39;</span><span class="p">:</span> <span class="s1">&#39;0.5&#39;</span><span class="p">,</span> <span class="s1">&#39;overlap&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;splines&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;rankdir&#39;</span><span class="p">:</span> <span class="s1">&#39;TB&#39;</span><span class="p">,</span>
+                                               <span class="s1">&#39;constraint&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;nodesep&#39;</span><span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">},</span> <span class="n">node_attr</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="s1">&#39;record&#39;</span><span class="p">},</span>
+                        <span class="n">edge_attr</span><span class="o">=</span><span class="p">{},</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;dot&#39;</span><span class="p">)</span>
+            <span class="n">previous_node</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+            <span class="n">nodenames</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                <span class="n">nodesplit</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="n">nodenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">nodesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">nodenames</span><span class="p">):</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+
+                <span class="n">startsplit</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="n">edgestart</span> <span class="o">=</span> <span class="n">startsplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">startsplit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="n">stopslit</span> <span class="o">=</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="n">edgeend</span> <span class="o">=</span> <span class="n">stopslit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">stopslit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">edgestart</span> <span class="o">!=</span> <span class="n">edgeend</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">show_edge_labels</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="n">s</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">edgestart</span><span class="p">,</span> <span class="n">edgeend</span><span class="p">,</span>
+                               <span class="n">label</span><span class="o">=</span><span class="s1">&#39;a</span><span class="si">{}</span><span class="s1">, p</span><span class="si">{}</span><span class="s1">, d</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">attenuation</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">edge</span><span class="o">.</span><span class="n">delay</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">s</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">edgestart</span><span class="p">,</span> <span class="n">edgeend</span><span class="p">)</span>
+
+            <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Testbench"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench">[docs]</a><span class="k">class</span> <span class="nc">Testbench</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Class that allows to find the output sequence for a given input signal sequence. &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">network</span><span class="p">:</span> <span class="n">Network</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">disable_progress_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param timestep: timestep on which the network is evaluated. Ideally it should be a factor of all delays in the network.</span>
+<span class="sd">        :param network: network where signals should be applied</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_t</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span> <span class="o">=</span> <span class="n">timestep</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">network</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disable_tqdm</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span> <span class="o">=</span> <span class="n">feed_dict</span>
+
+<div class="viewcode-block" id="Testbench.clear_inputoutput"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench.clear_inputoutput">[docs]</a>    <span class="k">def</span> <span class="nf">clear_inputoutput</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clears the input and output lists which store the input nodes and corresponding signals and the output node names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_x</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_t</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="Testbench.set_feed_dict"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench.set_feed_dict">[docs]</a>    <span class="k">def</span> <span class="nf">set_feed_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feed_dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span> <span class="o">=</span> <span class="n">feed_dict</span></div>
+
+<div class="viewcode-block" id="Testbench.add_output_node"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench.add_output_node">[docs]</a>    <span class="k">def</span> <span class="nf">add_output_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Testbench.add_input_sequence"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench.add_input_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">add_input_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add input signal sequence to network node</span>
+
+<span class="sd">        :param node_name: Name of node that receives the input</span>
+<span class="sd">        :param x: input signal (complex), dimension: 1xN</span>
+<span class="sd">        :param t: time of signal, if none we assume that the signal vector provides the signal at each time step. The value x[n] is applied to the input Node during the right-open time interval [t[n], t[n+1]), dimension: 1x(N+1). Time values must be in increasing order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Size of time vector does not match size of signal vector.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s2">&quot;attempted to give input to inexistent node &quot;</span> <span class="o">+</span> <span class="n">node_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;At most one input sequence can be added per node. You added two at &quot;</span> <span class="o">+</span> <span class="n">node_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_extract_min_max_signal_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts the start and stop time of all signals. Stores the minimum (self.t0) and maximum (self.t1)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_t</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">time</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_t</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_prepare_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts all signals to cover the time interval [self.t0, self.t1].</span>
+<span class="sd">        Signals are set to zero whenever they were not defined.</span>
+<span class="sd">        Use `extract_min_max_signal_time` to extract t0 and t1 automatically from the provided input signals.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_x</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">disable_tqdm</span><span class="p">)):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">t_s</span><span class="p">,</span> <span class="n">x_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_signal_to_timestep</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">t_s</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_s</span>
+
+    <span class="k">def</span> <span class="nf">_convert_signal_to_timestep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resamples the input signals with sampling rate according to timestep. Sets signal to 0 if the signal is not defined at that time.</span>
+
+<span class="sd">        :param x: Signal vector</span>
+<span class="sd">        :param t: Time vector</span>
+<span class="sd">        :param timestep: timestep to which signal is resampled</span>
+<span class="sd">        :return: t_sampled, x_sampled: resampled data and time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t_sampled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">round</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">t1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">timestep</span><span class="p">))</span>
+        <span class="n">x_sampled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate_constant</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t_sampled</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">yp</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t_sampled</span><span class="p">,</span> <span class="n">x_sampled</span>
+
+    <span class="k">def</span> <span class="nf">_interpolate_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interpolation method that interpolates signals to the nearest left neighbour of the sampling point.</span>
+
+<span class="sd">        This sampling is used, as input signal y[n] is defined to be applied at during a right open time interval</span>
+<span class="sd">        [t[n], t[n+1]).</span>
+
+<span class="sd">        :param x: x coordinates where signal should be sampled</span>
+<span class="sd">        :param xp: x coordinate of signal to be sampled, assuming array is sorted in increasing order (typically time vector)</span>
+<span class="sd">        :param yp: y coordinate of signal to be sampled</span>
+<span class="sd">        :return: sampled signal, signal is set to zero in regions outside of</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Interpolate only in the range where xp (typically time vector) is defined, for sampling values outside of this range create zero values.</span>
+        <span class="n">x_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">x_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">x_l</span><span class="p">:</span><span class="n">x_r</span><span class="p">],</span> <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mi">0</span><span class="p">],</span> <span class="n">yp</span><span class="p">))</span>
+        <span class="c1"># create zeros for times where the signal</span>
+        <span class="n">z_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">x_l</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+        <span class="n">z_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x_r</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">z_l</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">indices</span><span class="p">],</span> <span class="n">z_r</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Testbench.evaluate_network"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench.evaluate_network">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_network</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">max_endpoints</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates the network.</span>
+
+<span class="sd">        :param amplitude_cutoff:</span>
+<span class="sd">        :param max_endpoints:</span>
+<span class="sd">        :param use_global_default: set to true if global defaults should be used with SymNum&#39;s (higher speed) when no\</span>
+<span class="sd">        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy).\</span>
+<span class="sd">        The value is ignored if feed_dict is not none. Default: True</span>
+<span class="sd">        :type use_global_default: Boolean</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="p">,</span> <span class="n">max_endpoints</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="n">use_global_default</span><span class="p">,</span>
+                            <span class="n">feed_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Testbench.calculate_output"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench.calculate_output">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the output signals for the given input signals.</span>
+
+<span class="sd">        :param use_global_default: set to true if global defaults should be used with SymNum&#39;s (higher speed) when no \</span>
+<span class="sd">        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \</span>
+<span class="sd">        The value is ignored if feed_dict is not none. Default: False</span>
+<span class="sd">        :param n_threads: Number of threads that are used for evaluation (set to 0 to disable multithreading)</span>
+<span class="sd">        :type use_global_default: Boolean</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_out</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">n_threads</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">node_out</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="p">):</span>
+                <span class="k">assert</span> <span class="n">node_out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;node </span><span class="si">{}</span><span class="s2"> does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_out</span><span class="p">)</span>
+                <span class="n">t</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_output_sequence</span><span class="p">(</span><span class="n">node_name</span><span class="o">=</span><span class="n">node_out</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="n">use_global_default</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">t_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">node_out</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="p">):</span>
+                <span class="k">assert</span> <span class="n">node_out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;node </span><span class="si">{}</span><span class="s2"> does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_out</span><span class="p">)</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">node_out</span><span class="p">,</span> <span class="n">use_global_default</span><span class="p">))</span>
+
+            <span class="n">pool</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="n">n_threads</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculate_output_sequence</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">t_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_out</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t_out</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Testbench.add_const_output"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench.add_const_output">[docs]</a>    <span class="k">def</span> <span class="nf">add_const_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bias</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a constant signal to the output vector.</span>
+
+<span class="sd">        :param bias: value of constant output signal</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x_out</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">bias</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">))))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">t_out</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span></div>
+
+<div class="viewcode-block" id="Testbench.calculate_output_sequence"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench.calculate_output_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_output_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates the output sequence at a given node.</span>
+
+<span class="sd">        The output sequence is calculated according to the input sequence(s) added prior to executing this method to the</span>
+<span class="sd">        testbench. Before executing make sure :meth:`self.evaluate_network()` was executed.</span>
+
+<span class="sd">        :param node_name: Name of node for which the output is returned.</span>
+<span class="sd">        :param use_global_default: set to true if global defaults should be used with SymNum&#39;s (higher speed) when no \</span>
+<span class="sd">        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \</span>
+<span class="sd">        The value is ignored if feed_dict is not none. Default: False</span>
+<span class="sd">        :type use_global_default: Boolean</span>
+<span class="sd">        :return: tuple containing time and signal vector at the given output node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;node does not exist&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extract_min_max_signal_time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_signals</span><span class="p">()</span>
+
+        <span class="n">nodes_to_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>  <span class="c1"># amplitude, phase, delay, path</span>
+
+        <span class="n">t_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># all signals have a common time vector after resampling</span>
+        <span class="n">x_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">t_out</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">nodes_to_output</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">disable_tqdm</span><span class="p">):</span>
+            <span class="n">end_index</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">input_signal_name</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
+            <span class="n">input_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">input_signal_name</span><span class="p">)</span>
+            <span class="n">delay</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">path</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">,</span>
+                                                                              <span class="n">use_global_default</span><span class="o">=</span><span class="n">use_global_default</span><span class="p">)</span>
+            <span class="n">shift_steps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">delay</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">timestep</span><span class="p">))</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_x</span><span class="p">[</span><span class="n">input_index</span><span class="p">]</span>
+            <span class="n">attn</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">,</span>
+                                                                             <span class="n">use_global_default</span><span class="o">=</span><span class="n">use_global_default</span><span class="p">)</span>
+            <span class="n">phase</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feed_dict</span><span class="p">,</span>
+                                                                              <span class="n">use_global_default</span><span class="o">=</span><span class="n">use_global_default</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">shift_steps</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">shift_steps</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">shift_steps</span><span class="p">,)),</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="n">shift_steps</span><span class="p">]))</span>
+                <span class="n">x_out</span> <span class="o">+=</span> <span class="n">attn</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span>
+            <span class="k">elif</span> <span class="n">shift_steps</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">x_out</span> <span class="o">+=</span> <span class="n">attn</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">t_out</span><span class="p">,</span> <span class="n">x_out</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">multiprocessing</span><span class="o">.</span><span class="n">freeze_support</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Lorenz K. Müller, Pascal Stark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

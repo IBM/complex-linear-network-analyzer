@@ -1,0 +1,731 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>COLNA Reference &mdash; Complex Linear Network Analyzer 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="License" href="license.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Complex Linear Network Analyzer
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="manual.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">COLNA Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-colna.analyticnetwork">Analyticnetwork module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-colna.lossconversion">Lossconversion module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-colna">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Complex Linear Network Analyzer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>COLNA Reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/colna.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="colna-reference">
+<h1>COLNA Reference<a class="headerlink" href="#colna-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-colna.analyticnetwork">
+<span id="analyticnetwork-module"></span><h2>Analyticnetwork module<a class="headerlink" href="#module-colna.analyticnetwork" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="colna.analyticnetwork.Device">
+<em class="property">class </em><code class="sig-prename descclassname">colna.analyticnetwork.</code><code class="sig-name descname">Device</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">devicetype='device'</em>, <em class="sig-param">scattering_matrix=None</em>, <em class="sig-param">delay=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#colna.analyticnetwork.Network" title="colna.analyticnetwork.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">colna.analyticnetwork.Network</span></code></a></p>
+<p>Defines a device object for physical networks.</p>
+<p>All nodes in a device get their ‘name’ changed to ‘devicetype:devicename:name’</p>
+<dl class="method">
+<dt id="colna.analyticnetwork.Device.add_edge">
+<code class="sig-name descname">add_edge</code><span class="sig-paren">(</span><em class="sig-param">edge</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Device.add_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Device.add_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a new edge to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>edge</strong> – the edge object to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Device.add_input">
+<code class="sig-name descname">add_input</code><span class="sig-paren">(</span><em class="sig-param">nodename</em>, <em class="sig-param">amplitude=1.0</em>, <em class="sig-param">phase=0.0</em>, <em class="sig-param">delay=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Device.add_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Device.add_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds an external input to a node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nodename</strong> – name (str) of the node</p></li>
+<li><p><strong>amplitude</strong> – amplitude of the input</p></li>
+<li><p><strong>phase</strong> – phase shift of the input</p></li>
+<li><p><strong>delay</strong> – time delay of the input</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Device.add_node">
+<code class="sig-name descname">add_node</code><span class="sig-paren">(</span><em class="sig-param">nodename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Device.add_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Device.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a new node to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nodename</strong> – the name of the node (a string, not containing ‘:’)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Device.add_output">
+<code class="sig-name descname">add_output</code><span class="sig-paren">(</span><em class="sig-param">nodename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Device.add_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Device.add_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds a node (by name) to the outputs of the physical network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nodename</strong> – name (str) of the node to add to the outputs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Device.init_from_scattering_matrix">
+<code class="sig-name descname">init_from_scattering_matrix</code><span class="sig-paren">(</span><em class="sig-param">smatrix</em>, <em class="sig-param">delay=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Device.init_from_scattering_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Device.init_from_scattering_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>defines a device by its scattering matrix (complex matrix) and a delay</p>
+<p>for a device with n inputs and m outputs pass a nxm complex matrix specifying attenuation and phase-shift
+creates n+m nodes linked by n*m edges with the given parameters, all with time delay ‘delay’
+input node number k will be named ‘i+str(k)’
+output node number k will be named ‘o+str(k)’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smatrix</strong> – complex matrix defining the input to output mapping</p></li>
+<li><p><strong>delay</strong> – scalar time delay</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colna.analyticnetwork.DeviceLink">
+<em class="property">class </em><code class="sig-prename descclassname">colna.analyticnetwork.</code><code class="sig-name descname">DeviceLink</code><span class="sig-paren">(</span><em class="sig-param">startdevice</em>, <em class="sig-param">enddevice</em>, <em class="sig-param">startnode</em>, <em class="sig-param">endnode</em>, <em class="sig-param">startdevicetype='device'</em>, <em class="sig-param">enddevicetype='device'</em>, <em class="sig-param">phase=0.4</em>, <em class="sig-param">attenuation=0.8</em>, <em class="sig-param">delay=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#DeviceLink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.DeviceLink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#colna.analyticnetwork.Edge" title="colna.analyticnetwork.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">colna.analyticnetwork.Edge</span></code></a></p>
+<p>Defines a device link object for physical networks.</p>
+<p>Device links are special edges that link devices. They are given the name of source and target device as well as
+source and target node within the device. Otherwise they function like the parent class Edge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>startdevice</strong> – name of the start device (string)</p></li>
+<li><p><strong>enddevice</strong> – name of the end device (string)</p></li>
+<li><p><strong>startnode</strong> – name of the node within the start device (string)</p></li>
+<li><p><strong>endnode</strong> – name of the node within the end device (string)</p></li>
+<li><p><strong>startdevicetype</strong> – name of the device type of startdevice (optinal, defaults to ‘device’)</p></li>
+<li><p><strong>enddevicetype</strong> – name of the device type of enddevice (optinal, defaults to ‘device’)</p></li>
+<li><p><strong>phase</strong> – phase shift of the device link</p></li>
+<li><p><strong>attenuation</strong> – attenuation of the device link</p></li>
+<li><p><strong>delay</strong> – time delay of the device link</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="colna.analyticnetwork.Edge">
+<em class="property">class </em><code class="sig-prename descclassname">colna.analyticnetwork.</code><code class="sig-name descname">Edge</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">phase=0.4</em>, <em class="sig-param">attenuation=0.8</em>, <em class="sig-param">delay=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Edges connect two nodes in a directed manner. Edges add a phase shift (<span class="math notranslate nohighlight">\(\phi\)</span>), delay (<span class="math notranslate nohighlight">\(d\)</span>) and
+attenuation (<span class="math notranslate nohighlight">\(a\)</span>) to the signal. The input to output relation of an edge is given by:</p>
+<div class="math notranslate nohighlight">
+\[x_{out}(t) = a \cdot x_{in}(t-d) \cdot e^{j\phi}\]</div>
+<p>Edge properties can be constant or symbolic numbers (variables).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="colna.analyticnetwork.Network">
+<em class="property">class </em><code class="sig-prename descclassname">colna.analyticnetwork.</code><code class="sig-name descname">Network</code><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Networks consist of linear nodes and directed edges. Networks are represented by a directed graph. COLNA computes all paths
+leading to the output nodes (including recurrent paths) down to a certain accuracy threshold.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If a network contains recurrent paths (loops), the user must ensure that there is no gain in the network (i.e. attenuation &lt; 1), otherwise the amplitude at the output will never fall below the threshold.</p>
+</div>
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.add_edge">
+<code class="sig-name descname">add_edge</code><span class="sig-paren">(</span><em class="sig-param">edge</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.add_edge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.add_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new edge to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>edge</strong> – the edge object to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.add_input">
+<code class="sig-name descname">add_input</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">amplitude=1.0</em>, <em class="sig-param">phase=0.0</em>, <em class="sig-param">delay=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.add_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.add_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define input points of network. The evaluation assumes signals with the given amplitude, phase and delay are
+propagating through the network when computing the analytical waveforms at each node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – name of the node that is to receive the input</p></li>
+<li><p><strong>amplitude</strong> – amplitude of the input</p></li>
+<li><p><strong>phase</strong> – phase of the input (relative to other inputs)</p></li>
+<li><p><strong>delay</strong> – delay of the input (relative to other inputs)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.add_node">
+<code class="sig-name descname">add_node</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.add_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a new node to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>string</em>) – the name of the node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">amplitude_cutoff=0.01</em>, <em class="sig-param">max_endpoints=100000</em>, <em class="sig-param">use_global_default=True</em>, <em class="sig-param">feed_dict=None</em>, <em class="sig-param">hide_tqdm_progress=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.evaluate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>amplitude_cutoff</strong> – amplitude below which a wave is not further propagated through the network</p></li>
+<li><p><strong>max_endpoints</strong> – evaluation is interrupted early, if more than max_endpoints exist in evaluation</p></li>
+<li><p><strong>use_global_default</strong> (<em>Boolean</em>) – set to true if global defaults should be used with SymNum’s (higher speed),
+set to false if the default value of each SymNum should be used instead (higher accuracy). Default: True</p></li>
+<li><p><strong>feed_dict</strong> – Feed dictionary for SymNum variables. Default: None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>updates self.nodes_to_output
+a dictionary whose keys are node names. For each node name a list of quadruplets is given
+[(amplitude, phase, delay, path), (amplitude, phase, delay, path), …].</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>phases are not reset to a finite range, but simply added</p>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.get_paths">
+<code class="sig-name descname">get_paths</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.get_paths"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.get_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all paths leading to node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>all paths leading to a node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.get_result">
+<code class="sig-name descname">get_result</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.get_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.get_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of waves mixing at this node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – name of the node to get result from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of waves mixing at this node (amplitude, phase, delay)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.get_result_np">
+<code class="sig-name descname">get_result_np</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.get_result_np"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.get_result_np" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a result at a given node as numpy array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> – name of the node to get result from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>x; x[0]: amp, x[1]: phase, x[2]: delay</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.print_stats">
+<code class="sig-name descname">print_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.print_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.print_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints some statistics of the evaluated network</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.stopping_criterion">
+<em class="property">static </em><code class="sig-name descname">stopping_criterion</code><span class="sig-paren">(</span><em class="sig-param">amplitude</em>, <em class="sig-param">cutoff</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.stopping_criterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.stopping_criterion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.visualize">
+<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><em class="sig-param">show_edge_labels=True</em>, <em class="sig-param">path='network.gv'</em>, <em class="sig-param">skip_colon=False</em>, <em class="sig-param">format='pdf'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.visualize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colna.analyticnetwork.PhysicalNetwork">
+<em class="property">class </em><code class="sig-prename descclassname">colna.analyticnetwork.</code><code class="sig-name descname">PhysicalNetwork</code><a class="reference internal" href="_modules/colna/analyticnetwork.html#PhysicalNetwork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.PhysicalNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#colna.analyticnetwork.Network" title="colna.analyticnetwork.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">colna.analyticnetwork.Network</span></code></a></p>
+<p>Defines a physical network for simulation.</p>
+<p>Extension of the Network class that allows for a more natural implementation of physical networks using
+a description as a collection of devices, device links, input and output sites.</p>
+<dl class="method">
+<dt id="colna.analyticnetwork.PhysicalNetwork.add_device">
+<code class="sig-name descname">add_device</code><span class="sig-paren">(</span><em class="sig-param">device</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#PhysicalNetwork.add_device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.PhysicalNetwork.add_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>add an device to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>device</strong> – device to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.PhysicalNetwork.add_devicelink">
+<code class="sig-name descname">add_devicelink</code><span class="sig-paren">(</span><em class="sig-param">devicelink</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#PhysicalNetwork.add_devicelink"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.PhysicalNetwork.add_devicelink" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a device link to the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>devicelink</strong> – the device link to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.PhysicalNetwork.get_outputs">
+<code class="sig-name descname">get_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#PhysicalNetwork.get_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.PhysicalNetwork.get_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the computed wave forms at all output sites</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list of the output waves at all output nodes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.PhysicalNetwork.visualize">
+<code class="sig-name descname">visualize</code><span class="sig-paren">(</span><em class="sig-param">show_edge_labels=True</em>, <em class="sig-param">path='network.gv'</em>, <em class="sig-param">format='pdf'</em>, <em class="sig-param">full_graph=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#PhysicalNetwork.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.PhysicalNetwork.visualize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the network graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>show_edge_labels</strong> – If true labels showing attenuation, phase and delay for each edge are drawn in the graph.</p></li>
+<li><p><strong>path</strong> – output path and filename</p></li>
+<li><p><strong>full_graph</strong> – if true, inner edges of devices are shown as well</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colna.analyticnetwork.SymNum">
+<em class="property">class </em><code class="sig-prename descclassname">colna.analyticnetwork.</code><code class="sig-name descname">SymNum</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">default=0.9</em>, <em class="sig-param">product=True</em>, <em class="sig-param">global_default=0.8</em>, <em class="sig-param">numerical=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#SymNum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.SymNum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>symbolic numbers for edge properties in analytic networks</p>
+<dl class="method">
+<dt id="colna.analyticnetwork.SymNum.eval">
+<code class="sig-name descname">eval</code><span class="sig-paren">(</span><em class="sig-param">feed_dict=None</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">use_global_default=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#SymNum.eval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.SymNum.eval" title="Permalink to this definition">¶</a></dt>
+<dd><p>evaluate the numerical value of the number</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feed_dict</strong> – a dictionary specifying values of variables by name(if not given default values are used)</p></li>
+<li><p><strong>verbose</strong> – print the number in symbolic form before returning</p></li>
+<li><p><strong>use_global_default</strong> (<em>Boolean</em>) – set to true if global defaults should be used with SymNum’s (higher speed) when no         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy).         The value is ignored if feed_dict is not none. Default: True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numerical value of the number (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="colna.analyticnetwork.Testbench">
+<em class="property">class </em><code class="sig-prename descclassname">colna.analyticnetwork.</code><code class="sig-name descname">Testbench</code><span class="sig-paren">(</span><em class="sig-param">network: colna.analyticnetwork.Network</em>, <em class="sig-param">timestep=1</em>, <em class="sig-param">disable_progress_bars=True</em>, <em class="sig-param">feed_dict=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Class that allows to find the output sequence for a given input signal sequence.</p>
+<dl class="method">
+<dt id="colna.analyticnetwork.Testbench.add_const_output">
+<code class="sig-name descname">add_const_output</code><span class="sig-paren">(</span><em class="sig-param">bias</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench.add_const_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench.add_const_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a constant signal to the output vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bias</strong> – value of constant output signal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Testbench.add_input_sequence">
+<code class="sig-name descname">add_input_sequence</code><span class="sig-paren">(</span><em class="sig-param">node_name</em>, <em class="sig-param">x</em>, <em class="sig-param">t</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench.add_input_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench.add_input_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add input signal sequence to network node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_name</strong> – Name of node that receives the input</p></li>
+<li><p><strong>x</strong> – input signal (complex), dimension: 1xN</p></li>
+<li><p><strong>t</strong> – time of signal, if none we assume that the signal vector provides the signal at each time step. The value x[n] is applied to the input Node during the right-open time interval [t[n], t[n+1]), dimension: 1x(N+1). Time values must be in increasing order.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Testbench.add_output_node">
+<code class="sig-name descname">add_output_node</code><span class="sig-paren">(</span><em class="sig-param">node_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench.add_output_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench.add_output_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Testbench.calculate_output">
+<code class="sig-name descname">calculate_output</code><span class="sig-paren">(</span><em class="sig-param">use_global_default=False</em>, <em class="sig-param">n_threads=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench.calculate_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench.calculate_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the output signals for the given input signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>use_global_default</strong> (<em>Boolean</em>) – set to true if global defaults should be used with SymNum’s (higher speed) when no         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy).         The value is ignored if feed_dict is not none. Default: False</p></li>
+<li><p><strong>n_threads</strong> – Number of threads that are used for evaluation (set to 0 to disable multithreading)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Testbench.calculate_output_sequence">
+<code class="sig-name descname">calculate_output_sequence</code><span class="sig-paren">(</span><em class="sig-param">node_name</em>, <em class="sig-param">use_global_default=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench.calculate_output_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench.calculate_output_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the output sequence at a given node.</p>
+<p>The output sequence is calculated according to the input sequence(s) added prior to executing this method to the
+testbench. Before executing make sure <code class="xref py py-meth docutils literal notranslate"><span class="pre">self.evaluate_network()</span></code> was executed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_name</strong> – Name of node for which the output is returned.</p></li>
+<li><p><strong>use_global_default</strong> (<em>Boolean</em>) – set to true if global defaults should be used with SymNum’s (higher speed) when no         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy).         The value is ignored if feed_dict is not none. Default: False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple containing time and signal vector at the given output node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Testbench.clear_inputoutput">
+<code class="sig-name descname">clear_inputoutput</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench.clear_inputoutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench.clear_inputoutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the input and output lists which store the input nodes and corresponding signals and the output node names.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Testbench.evaluate_network">
+<code class="sig-name descname">evaluate_network</code><span class="sig-paren">(</span><em class="sig-param">amplitude_cutoff=0.001</em>, <em class="sig-param">max_endpoints=1000000.0</em>, <em class="sig-param">use_global_default=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench.evaluate_network"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench.evaluate_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>amplitude_cutoff</strong> – </p></li>
+<li><p><strong>max_endpoints</strong> – </p></li>
+<li><p><strong>use_global_default</strong> (<em>Boolean</em>) – set to true if global defaults should be used with SymNum’s (higher speed) when no        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy).        The value is ignored if feed_dict is not none. Default: True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Testbench.set_feed_dict">
+<code class="sig-name descname">set_feed_dict</code><span class="sig-paren">(</span><em class="sig-param">feed_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Testbench.set_feed_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Testbench.set_feed_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-colna.lossconversion">
+<span id="lossconversion-module"></span><h2>Lossconversion module<a class="headerlink" href="#module-colna.lossconversion" title="Permalink to this headline">¶</a></h2>
+<p>Convenience module that contains functionality do convert optical propagation loss between different units.</p>
+<dl class="function">
+<dt id="colna.lossconversion.attenuation_to_dBcm">
+<code class="sig-prename descclassname">colna.lossconversion.</code><code class="sig-name descname">attenuation_to_dBcm</code><span class="sig-paren">(</span><em class="sig-param">attenuation</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/lossconversion.html#attenuation_to_dBcm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.lossconversion.attenuation_to_dBcm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts attenuation to dB/cm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attenuation</strong> – </p></li>
+<li><p><strong>length</strong> – propagation distance in meters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="colna.lossconversion.attenuation_to_loss_per_meter">
+<code class="sig-prename descclassname">colna.lossconversion.</code><code class="sig-name descname">attenuation_to_loss_per_meter</code><span class="sig-paren">(</span><em class="sig-param">attenuation</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/lossconversion.html#attenuation_to_loss_per_meter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.lossconversion.attenuation_to_loss_per_meter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts attenuation to loss per meter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attenuation</strong> (<em>Numeric</em>) – Attenuation</p></li>
+<li><p><strong>length</strong> – propagation distance in meters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>loss per meter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="colna.lossconversion.dBcm_to_attenuation">
+<code class="sig-prename descclassname">colna.lossconversion.</code><code class="sig-name descname">dBcm_to_attenuation</code><span class="sig-paren">(</span><em class="sig-param">dBcm</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/lossconversion.html#dBcm_to_attenuation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.lossconversion.dBcm_to_attenuation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts dB/cm to attenuation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dBcm</strong> – Loss in dB/cm</p></li>
+<li><p><strong>length</strong> – propagation distance in meters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="colna.lossconversion.dBcm_to_loss_per_m">
+<code class="sig-prename descclassname">colna.lossconversion.</code><code class="sig-name descname">dBcm_to_loss_per_m</code><span class="sig-paren">(</span><em class="sig-param">dBcm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/lossconversion.html#dBcm_to_loss_per_m"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.lossconversion.dBcm_to_loss_per_m" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts dB/cm loss value to loss per meter (alpha)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dBcm</strong> (<em>Numeric</em>) – Loss in dB/cm</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Loss per meter (alpha)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="colna.lossconversion.loss_per_m_to_dBcm">
+<code class="sig-prename descclassname">colna.lossconversion.</code><code class="sig-name descname">loss_per_m_to_dBcm</code><span class="sig-paren">(</span><em class="sig-param">loss_per_m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/lossconversion.html#loss_per_m_to_dBcm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.lossconversion.loss_per_m_to_dBcm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts loss per meter (alpha) in dB/cm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>loss_per_m</strong> (<em>Numeric</em>) – Loss per meter (alpha)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Loss in dB/cm</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="colna.lossconversion.loss_per_meter_to_attenuation">
+<code class="sig-prename descclassname">colna.lossconversion.</code><code class="sig-name descname">loss_per_meter_to_attenuation</code><span class="sig-paren">(</span><em class="sig-param">loss_per_m</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/lossconversion.html#loss_per_meter_to_attenuation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.lossconversion.loss_per_meter_to_attenuation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts loss per meter to attenuation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loss_per_m</strong> – Loss per meter (alpha)</p></li>
+<li><p><strong>length</strong> – propagation distance in meters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-colna">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-colna" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Lorenz K. Müller, Pascal Stark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
