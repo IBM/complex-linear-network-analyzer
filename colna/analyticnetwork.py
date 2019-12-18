@@ -27,10 +27,17 @@ import multiprocessing
 
 
 class Edge(object):
-    """
-    defines an directed edge in a simple delay reservoir.
 
-    Each edge connects two nodes in a directed manner, adds a phase shift and a delay, and attenuates the signal
+    """
+    Edges connect two nodes in a directed manner. Edges add a phase shift (:math:`\phi`), delay (:math:`d`) and
+    attenuation (:math:`a`) to the signal. The input to output relation of an edge is given by:
+
+    .. math::
+        x_{out}(t) = a \cdot x_{in}(t-d) \cdot e^{j\phi}
+
+    Edge properties can be constant or symbolic numbers (variables).
+
+
     """
 
     def __init__(self, start, end, phase=.4, attenuation=.8, delay=1.0):
@@ -248,9 +255,8 @@ class SymNum:
         :param name: the name of the variable
         :param default: the default value substituted, when we evaluate this variable
         :param product: whether this variable is composed as a product (True) or a sum (False)
-        :param global_default: this is assumed to be the value of the variable when we evaluate the network
-        :param numerical: initial value of numerical part
-        (this should be the same for all attenuations in the network).
+        :param global_default: this is assumed to be the value of the variable when we evaluate the network if use_global_defaults is set.
+        :param numerical: initial value of numerical part (numerical factor for product variables, numerical addition for additive variables). Can be set to none for automatic initialization (1.0 for product variables, 0.0 for additive variables)
         """
         # the numerical part of the number's value
         self.numerical = numerical if numerical is not None else 1.0 * product
@@ -367,9 +373,9 @@ class SymNum:
 
     def __repr__(self):
         """
-        convenience overload to print lists of these numbers easily. May lead to undesirable behaviour.
+        convenience overload to print lists of these numbers easily.
         """
-        return str(self)
+        return '<SymNum{' + str(self)+'}>'
 
 
 class Device(Network):
