@@ -27,7 +27,6 @@ import multiprocessing
 
 
 class Edge(object):
-
     """
     Edges connect two nodes in a directed manner. Edges add a phase shift (:math:`\phi`), delay (:math:`d`) and
     attenuation (:math:`a`) to the signal. The input to output relation of an edge is given by:
@@ -36,8 +35,6 @@ class Edge(object):
         x_{out}(t) = a \cdot x_{in}(t-d) \cdot e^{j\phi}
 
     Edge properties can be constant or symbolic numbers (variables).
-
-
     """
 
     def __init__(self, start, end, phase=.4, attenuation=.8, delay=1.0):
@@ -57,7 +54,13 @@ class Edge(object):
 
 class Network(object):
     """
-    defines a simple delay reservoir. A network is a collection of nodes and edges.
+    Networks consist of linear nodes and directed edges. Networks are represented by a directed graph. COLNA computes all paths
+    leading to the output nodes (including recurrent paths) down to a certain accuracy threshold.
+
+    .. note::
+
+      If a network contains recurrent paths (loops), the user must ensure that there is no gain in the network (i.e. attenuation < 1), otherwise the amplitude at the output will never fall below the threshold.
+
     """
 
     def __init__(self):
@@ -252,7 +255,7 @@ class SymNum:
         Instantiates a symbolic number (variable) of name 'name' with default value 'default'. 'product' is used
         to distinguish attenuations (stacking multiplicatively) and phases / delays (stacking additively).
 
-        :param name: the name of the variable
+        :param name: the name of the variable. The name should be unique for each SymNum present in the network.
         :param default: the default value substituted, when we evaluate this variable
         :param product: whether this variable is composed as a product (True) or a sum (False)
         :param global_default: this is assumed to be the value of the variable when we evaluate the network if use_global_defaults is set.
@@ -544,7 +547,7 @@ class PhysicalNetwork(Network):
         """
         return [self.get_result(name) for name in self.outputs]
 
-    def visualize(self, show_edge_labels=True, path='network.gv', full_graph=False):
+    def visualize(self, show_edge_labels=True, path='network.gv', format='pdf', full_graph=False):
         """
         Draws the network graph.
 
@@ -553,7 +556,7 @@ class PhysicalNetwork(Network):
         :param full_graph: if true, inner edges of devices are shown as well
         """
         if full_graph:
-            super().visualize(show_edge_labels, path, True)
+            super().visualize(show_edge_labels, path, True, format=format)
         else:
             try:
                 from graphviz import Digraph
@@ -588,7 +591,7 @@ class PhysicalNetwork(Network):
                     else:
                         s.edge(edgestart, edgeend)
 
-            s.render(path, view=False)
+            s.render(path, format=format, view=False)
 
 
 class Testbench():
