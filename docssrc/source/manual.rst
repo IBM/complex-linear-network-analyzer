@@ -1,0 +1,593 @@
+User Manual
+=========================
+
+Installation
+------------
+
+This package runs on Python 3.5+. Use pip to install it. Download/Clone the repository on your computer and run the
+install command in the base directory of the package (ComplexLinearNetworkAnalyzer).
+
+.. code-block:: console
+
+    pip install .
+
+All dependencies required for the core features will be installed automatically.
+
+Optional Features
+#################
+
+Networks can be visualized using Graphviz. If you intend to use this feature you need to install Graphviz manually
+and add it to your system path (get Graphviz here `<https://www.graphviz.org/>`_). Afterwards use
+
+.. code-block:: console
+
+    pip install .[Visualization]
+
+to install the COLNA package and all its dependencies, including the Graphviz Python wrapper.
+
+Quickstart
+----------
+Create a network object.
+
+.. code-block:: python
+
+    from colna.analyticnetwork import Network, Edge, Testbench, SymNum
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    # Define Network
+    net = Network()
+
+Add three nodes and edges, some edge properties are defined through symbolic numbers.
+
+.. code-block:: python
+
+    # Add three nodes
+    net.add_node(name='a')
+    net.add_node(name='b')
+    net.add_node(name='c')
+
+    # Add three edges (with mixed symbolic and numeric values)
+    net.add_edge(Edge(start='c',end='a', phase=0.5, attenuation=0.6, delay=0.1))
+    net.add_edge(Edge(start='a', end='b', phase=SymNum('ph_ab', default=5, product=False), attenuation=0.95, delay=0.2))
+    net.add_edge(Edge(start='b', end='c', phase=SymNum('ph_bc', default=3, product=False),
+                      attenuation=SymNum('amp_bc', default=0.8, product=True), delay=0.1))
+
+If you have installed graphviz, you can visualize the network:
+
+.. code-block:: python
+
+    # Visualize the network (if graphviz is installed)
+    net.visualize(path='./quickstart')
+
+Will create a network visualization that looks as follows:
+
+.. figure:: /figures/quickstart2.svg
+    :align: center
+
+Create a testbench, send an input signal to the network and register an output node.
+
+.. code-block:: python
+
+    # Create a testbench
+    tb = Testbench(network=net, timestep=0.1)
+
+    # Add an input signal
+    tb.add_input_sequence(node_name='a',x=np.array([1,2,0]),t=np.array([0,2,7,10]))
+
+    # register an output node
+    tb.add_output_node('c')
+
+Feed the symbolic values, evaluate the network up to a certain accuracy and calculate and plot the output signals.
+
+.. code-block:: python
+
+    # set the feed dictionary for the symbolic numbers
+    tb.set_feed_dict({'amp_bc':0.7, 'ph_bc': 3.1, 'ph_ab': 4.9})
+
+    # evaluate the network (through the testbench)
+    tb.evaluate_network(amplitude_cutoff=1e-6)
+
+    # Calculate the output signal at the output nodes
+    tb.calculate_output(n_threads=8)
+    t, x = tb.t_out.transpose(), tb.x_out.transpose()
+
+    ### Plot the Input and Output Signals
+    plt.plot(tb.input_t[0][:-1], np.abs(tb.input_x[0][:-1]), 'o') # Input signal
+    plt.plot(t, np.abs(x), 'x') # Output signal
+    plt.xlabel('Time')
+    plt.ylabel('|x|')
+    plt.legend(['Input', 'Output C'], loc='lower left')
+    plt.show()
+
+
+Simple Network
+----------------
+
+The fundamental class of the COLNA module is the :class:`.Network` class. The network class describes
+the network through which we propagate a signal. Networks are defined by nodes and edges (class :class:`.Edge`).
+
+You can create a network by instantiating a new :class:`.Network` object:
+
+.. code-block:: python
+
+    from colna.analyticnetwork import Network
+    net = Network()
+    print(net)
+    >>> <colna.analyticnetwork.Network object at 0x...>
+
+You can add nodes and edges to the network using its :meth:`~.Network.add_node` and :meth:`~.Network.add_edge` methods.
+To create edges you need to import the :class:`.Edge` class as well.
+
+.. code-block:: python
+
+    from colna.analyticnetwork import Network, Edge
+    net = Network()
+
+    net.add_node(name='a')
+    net.add_node(name='b')
+    net.add_node(name='c')
+    net.add_node(name='d')
+
+    net.add_edge(Edge(start='a',end='b',phase=1,attenuation=0.8,delay=1))
+    net.add_edge(Edge(start='b',end='c',phase=2,attenuation=0.6,delay=2))
+    net.add_edge(Edge(start='b',end='d',phase=3,attenuation=0.4,delay=3))
+
+The :meth:`~.Network.add_node` method takes a node name as argument, :meth:`~.Network.add_edge` takes an :class:`.Edge` object as
+argument. The Edge initializer takes the name of the start and end node (by node name) and edge properties (phase, attenuation and delay).
+
+The network initialized before looks as follows.
+
+.. _simplenetworklabel:
+.. figure:: /figures/simple_network.svg
+    :align: center
+
+    The labels at the edges give the attenuation (a), phase (p) and delay (d) of the respective edge.
+
+In the next step you should add a constant input and then you can evaluate the network.
+
+.. code-block:: python
+
+    net.add_input(name='a',amplitude=1.0, phase=0)
+    net.evaluate()
+
+The :meth:`~.Network.add_input` method takes the name of the node where the constant signal is injected and it's amplitude and phase.
+The :meth:`~.Network.evaluate` evaluates the network, which means it computes all paths leading from the input node(s) to each node.
+You can print the evaluated paths using the :meth:`~.Network.get_path`, which takes a node name as argument.
+
+.. code-block:: python
+
+    print('paths leading to c:', net.get_paths('c'))
+    print('paths leading to d:', net.get_paths('d'))
+
+    >>> paths leading to c: ['-a-b-c']
+    >>> paths leading to d: ['-a-b-d']
+
+You can calculate the waves arriving at the output node, for this we use the
+
+.. code-block:: python
+
+    print('waves arriving at c:', net.get_result('c'))
+    print('waves arriving at d:', net.get_result('d'))
+
+    >>> waves arriving at c: [(0.48, 3, 3.0)]
+    >>> waves arriving at d: [(0.32000000000000006, 4, 4.0)]
+
+If you have installed the visualization feature (see :ref:`Installation`), you can visualize the graph by running:
+
+.. code-block:: python
+
+    net.visualize(path='simple_network')
+
+The visualization method creates a dot file (at the given output path) and renders it into a pdf file, using Graphviz.
+The resulting visualization is shown in :ref:`the figure above<simplenetworklabel>`.
+
+Testbenches
+-----------
+
+So far we have only injected constant signals into the network. To inject time dependant signals, we can use a :class:`.Testbench` object.
+The Testbench is used to inject signals to nodes of the network and read the output. This is illustrated in the figure
+below.
+
+.. image:: /figures/network_testbench_diagram.svg
+    :align: center
+
+You can create a testbench as follows:
+
+.. code-block:: python
+
+    tb = Testbench(network=net, timestep=0.1) # Timestep should be factor of all delays
+
+The testbench initialization method takes two arguments: The network to which the signals should be injected and a timestep. The timestep is the time interval, at which
+the output signal is computed. Choose the timestep such that all delays present in the network are an integer multiple of the timestep.
+
+You can create an input signal and add it to the testbench, using the :meth:`~.Testbench.add_input_sequence` method.
+
+.. code-block:: python
+
+    x_in_a = np.sin(np.linspace(0,15,500))+1.5 # create the input signal (Dimensino N)
+    t_in = np.linspace(0, 10, num=501) # create the input time vector (Dimension N+1)
+    tb.add_input_sequence(node_name='a',x=x_in_a,t=t_in)
+
+The :meth:`~.Testbench.add_input_sequence` method takes three arguments: the name of the node where the signal should be injected, the signal value (x) and a time vector (t).
+The value x[n] is injected to the input node during the right-open time interval [t[n], t[n+1]). Therefore the time vector has dimension N+1 for a signal of length N.
+The input signal will be resampled to match the timestep of the testbench.
+
+When computing the signal transmission through the network, the testbench will only store the signals at nodes on the output recording list.
+You can use the :meth:`~.Testbench.add_output_node` method to add a node to the output recording list.
+
+.. code-block:: python
+
+    # add output nodes to testbench (nodes at which output signal should be recorded)
+    tb.add_output_node('c')
+    tb.add_output_node('d')
+
+The network can be evaluated through the testbench using the :meth:`~.Testbench.evaluate_network` method. After the evaluation, you can compute the output signals at the output nodes using the
+:meth:`~.Testbench.calculate_output` method.
+
+.. code-block:: python
+
+    # evaluate the network (through the testbench)
+    tb.evaluate_network()
+
+    # Calculate the output signal at the output nodes
+    tb.calculate_output(n_threads=8) # uses multithreading with at most 8 threads
+    t, x = tb.t_out.transpose(), tb.x_out.transpose()
+
+To speed up the calculation of the output signals COLNA uses multithreading, you can specify the maximum number of threads as needed.
+After calling :meth:`~.Testbench.calculate_output` the testbench object will contain the resulting node output in the x_out, t_out attribute.
+In addition the resampled input signal is available through input_t, input_x attribute.
+
+You can plot the signals using Matplotlib as follows. The resulting plot is shown below.
+
+.. code-block:: python
+
+    plt.plot(tb.input_t[0][:-1], np.abs(tb.input_x[0][:-1]), 'o') # Input signal
+    plt.plot(t, np.abs(x), 'x') # Output signal
+
+    plt.xlabel('Time')
+    plt.ylabel('|x|')
+    plt.legend(['Input', 'Output C', 'Output D'], loc='best')
+    plt.grid()
+    plt.show()
+
+
+.. figure:: /figures/basic_feedforward_tb_output.svg
+    :align: center
+
+As expected, the signal at node C is delayed by 3 time units, the signal add node D by 4 time units.
+
+The full code for this example is provided in the examples directory (`/examples/basic_feedforward_with_testbench.py`)
+
+Recurrent Network
+-----------------
+
+COLNA supports the analysis of recurrent connections (loops) in the network. COLNA computes all paths
+leading from input nodes to output nodes (including the recurrent paths) down to a certain accuracy threshold.
+
+.. note::
+
+  If a network contains recurrent paths (loops), the user must ensure that there is no gain in the network (i.e. attenuation < 1), otherwise the amplitude at the output will never fall below the threshold.
+
+The code below creates a small recurrent network with 4 nodes (cyclic connection).
+
+.. code-block:: python
+
+    from colna.analyticnetwork import Network, Edge
+
+    ###Define Network
+    nodes = ['a', 'b', 'c', 'd']
+    edges = [Edge('a', 'b', phase=0.5, attenuation=0.95, delay=1.0),
+             Edge('b', 'c', phase=1, attenuation=0.9, delay=2.0),
+             Edge('c', 'd', phase=0.2, attenuation=0.98, delay=0.5),
+             Edge('d', 'a', phase=-0.5, attenuation=0.8, delay=1.5)]
+
+    net = Network()
+    for node in nodes:
+        net.add_node(node)
+    for edge in edges:
+        net.add_edge(edge)
+    net.add_input('a', amplitude=1.0)
+    net.visualize()
+
+The network is visualized below.
+
+.. figure:: /figures/recurrent_net.svg
+    :align: center
+
+When evaluating the network you can specify the amplitude_cutoff limit. When the amplitude of the current analyzed path falls below this limit, the
+evaluation of the current path will be stopped. The evaluation ends, when all paths fall below the threshold. In our example a lower cutoff level leads to more cycles through the recurrent path.
+
+.. note::
+
+    The amplitude_cutoff defines the amplitude, at which the analysis of the path will be stopped. The accuracy at the output can be lower than this value, as multiple paths might lead to the same output!
+
+.. code-block:: python
+
+    net.evaluate(amplitude_cutoff=1e-1)
+
+Let's take a look at the paths leading to node a:
+
+.. code-block:: python
+
+    print('paths leading to a:', net.get_paths('a'))
+    print('waves arriving at a:', net.get_result('a'))
+
+    >>> paths leading to a: ['-a', '-a-b-c-d-a', '-a-b-c-d-a-b-c-d-a', '-a-b-c-d-a-b-c-d-a-b-c-d-a', '-a-b-c-d-a-b-c-d-a-b-c-d-a-b-c-d-a', '-a-b-c-d-a-b-c-d-a-b-c-d-a-b-c-d-a-b-c-d-a']
+    >>> waves arriving at a: [(1.0, 0.0, 0.0), (0.67032, 1.2, 5.0), (0.4493289024, 2.4000000000000004, 10.0), (0.301194149856768, 3.6000000000000005, 15.0), (0.20189646253198876, 4.800000000000001, 20.0), (0.1353352367644427, 6.000000000000001, 25.0)]
+
+
+As you can see, the input signal is injected at node a; then it cycles through the recurrent path multiple times. Through each cycle the amplitude is reduced by a factor of
+:math:`0.95 \cdot 0.9 \cdot 0.98 \cdot 0.8 \approx 0.67`. After 6 cycles the amplitude falls below 0.1 (:math:`0.67^6 \approx 0.09`) and the evaluation is stopped.
+
+
+.. warning::
+    If we would have gain in the loop, the signal would never fall below the threshold and the evaluation would run forever.
+    Avoid gain in the loop as it leads to an infinitely long evaluation process.
+
+
+The full code for this example is provided in the examples directory (`/examples/basic_recurrent.py`).
+An example of a recurrent network with a testbench is also given there (`/examples/basic_recurrent_with_testbench`).
+
+Symbolic Numbers
+----------------
+
+COLNA supports the use of symbolic numbers (variables) for all edge properties. The network evaluation with symbolic numbers
+is slower, but the values can be feed after the evaluation when the output is computed. Feeding variables is much faster than evaluating the
+full network multiple times with different edge parameters. Additionally, the use of symbolic numbers allows to extract an analytic
+description of the network output.
+
+COLNA symbolic numbers are provided through the :class:`.SymNum` class. The following code snippet creats two symbolic numbers and mulitplies them together:
+
+.. literalinclude:: ../../examples/symnumexample.py
+    :language: python
+    :linenos:
+    :lines: 1-10
+
+Returns:
+
+.. code-block:: console
+
+    >>> 1.0 * a1**1
+    >>> 1.0 * a2**1
+    >>> 1.0 * a1**1 * a2**1
+
+SymNum's can either be additive or multiplicative, their behaviour is controlled through the product argument (product = True: mulitiplicative variable, product = False: additative variable).
+In the example above we created two multiplicative, symbolic numbers and multiplied them together. As you might have noticed, SymNum takes not
+only the variable name but also a default numeric value as arguments.
+To evaluate the symbolic numbers use the SymNums :meth:`~.SymNum.eval` method. Take a look at the four different variants
+that we can use to compute the numeric value:
+
+**Evaluate without feed dictionary and use defaults**
+
+.. code-block:: python
+
+    print(amp3.eval(feed_dict=None, use_shared_default=False))
+    >>> 0.4
+
+If we do not provide a feed dictionary and we set the use_shared_default argument to false, the default values of the SymNums will be used for the evaluation.
+So in this case, eval computes :math:`0.5\cdot0.8=0.4`.
+
+**Evaluate without feed dictionary and use shared defaults**
+
+.. code-block:: python
+
+    # Evaluate without feed dictionary, but use shared defaults
+    print('amp3 shared default: ', amp3.shared_default)
+    print(amp3.eval(feed_dict=None, use_shared_default=True))
+    >>> amp3 shared default:  0.8
+    >>> 0.64
+
+If we do not provide a feed dictionary and we set the use_shared_default argument to true, SymNum will assume that all
+symbolic values are set to the shared_default value of the SymNum which is evaluated. The shared_default value is initialized
+automatically to be the same as the default value. If we add or multiply two SymNum's a new SymNum is generated. It's
+shared_default value  will be the maximum of the shared_default values of the two SymNum's which are added or multiplied
+together.
+
+So in this case the shared default of `amp3` is set to 0.8 and eval returns :math:`0.8\cdot0.8=0.64`.
+Evaluating a symbolic expression with use_shared_default is faster than using individual default values, this can be helpful when
+very large or recurrent networks need to be evaluated.
+
+**Evaluate with feed dictionary**
+
+.. code-block:: python
+
+    feed = {'a1': 2, 'a2': 3}
+    print(amp3.eval(feed_dict=feed))
+    >>> 6.0
+
+If we provide a feed dictionary, eval will replace the symbolic numbers by the feed values (independent of use_shared_default setting). In this case, eval returns :math:`2\cdot3=6.0`.
+
+**Evaluate with partial feed dictionary**
+
+.. code-block:: python
+
+    feed = {'a2': 3}
+    print(amp3.eval(feed_dict=feed))
+    >>> 1.5
+
+If we provide a partial feed dictionary, eval will replace the symbolic numbers present in the feed dictionary by the feed values and all others by their default value (independent of use_shared_default setting).
+In this case, eval returns :math:`3\cdot3=9.0`.
+
+Symbolic Networks
+-----------------
+Simple Symbolic Network
+########################
+
+We can use symbolic numbers (:class:`.SymNum`) for the edge properties of our network. Below is an example using the same network topology as the network discussed in :ref:`Simple Network`.
+However, for some edge properties symbolic numbers are used.
+
+.. code-block:: python
+
+    from colna.analyticnetwork import Network, Edge, SymNum, Testbench
+    
+    amp1 = SymNum(name='a1', default=1.5, product=True)
+    amp2 = SymNum(name='a2', default=2.0, product=True)
+    phi1 = SymNum(name='phi1', default=2.0, product=False)
+    phi2 = SymNum(name='phi2', default=3.0, product=False)
+    
+    net = Network()
+    
+    net.add_node(name='a')
+    net.add_node(name='b')
+    net.add_node(name='c')
+    net.add_node(name='d')
+    
+    net.add_edge(Edge(start='a',end='b',phase=phi1,attenuation=amp1,delay=1))
+    net.add_edge(Edge(start='b',end='c',phase=phi2,attenuation=amp2,delay=2))
+    net.add_edge(Edge(start='b',end='d',phase=3,attenuation=0.4,delay=3))
+    
+    net.add_input(name='a',amplitude=1.0, phase=0)
+    
+    net.visualize(path='./visualizations/symbolicfeedforward')
+    
+    net.evaluate(use_shared_default=False, feed_dict=None)
+
+    # print the waves arriving at node c and d
+    print('waves arriving at c:', net.get_result('c'))
+    print('waves arriving at d:', net.get_result('d'))
+
+    >>> waves arriving at c: [(<SymNum{1.0 * a1**1 * a2**1}>, <SymNum{0.0 + phi1*1 + phi2*1}>, 3.0)]
+    >>> waves arriving at d: [(<SymNum{0.4 * a1**1}>, <SymNum{3.0 + phi1*1}>, 4.0)]
+
+:meth:`~.Network.evaluate` returns a symbolic representation of the waves arriving at node c and d. :meth:`~.Network.evaluate` takes two arguments: use_shared_default and a feed dictionary.
+These arguments are used for the evaluation of the network, the are applied in the same way as in the :meth:`.SymNum.eval` method. This settings are especially important when we work with recurrent
+loops in the network, as the cutoff criterion will be evaluated based on the evaluated numeric value of the symbolic numbers.
+
+Once again you can use the three different versions:
+
+    * :code:`feed_dict=None, use_shared_default=True`: Do not provide a feed dictionary and set the values of all symbolic numbers to the largest shared_default member of the symbolic numbers under evaluation (faster)
+    * :code:`feed_dict=None, use_shared_default=False`: Do not provide a feed dictionary and set the value of each symbolic number to its default value (more accurate)
+    * :code:`feed_dict=feed dictionary`: The values of each symbolic number is set to the value given in the feed dicitionary. If a partial feed dictionary is used, missing symbolic numbers are set to their default values.
+
+Independent of the parameters, :meth:`~.Network.evaluate` will always compute the symbolic representation of the network,
+the feed values are only used for the evaluation of the cutoff criterion.
+
+We can evaluate the symbolic expression using the :meth:`SymNum.eval` method as discussed in the :ref:`Symbolic Numbers` section.
+
+.. code-block:: python
+
+    # Evaluation with a feed dictionary
+    feed = {'a1': 1, 'a2': 2, 'phi1': 2, 'phi2': 4}
+    waves = [tuple([w.eval(feed_dict=feed, use_shared_default=True) if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('c')]
+    print('Waves arriving at c:', waves, '\n')
+
+    >>> Waves arriving at c: [(2.0, 6.0, 3.0)]
+
+Symbolic Network with Testbench
+###############################
+SymNum based networks can be used together with a :class:`.Testbench`.
+
+The use_shared_default parameter of the :meth:`.Testbench.evaluate_network` and :meth:`.Testbench.calculate_output` works as discussed
+previously for the :meth:`.Network.evaluate` method. The main difference is, that the `feed_dict` is an attribute of the :class:`.Testbench` object instead of an argument of the method.
+
+The full code example is given in `/examples/symnum_feedforward_with_tb.py`, here we just show the relevant changes.
+
+.. code-block:: python
+
+    ### Create a testbench with a feed dictionary
+    tb = Testbench(network=net, timestep=0.1, feed_dict={'a1':0.2,'a2':1.5,'phi1':2,'phi2':3})
+
+    # evaluate the network (through the testbench)
+    tb.evaluate_network(amplitude_cutoff=1e-3,use_shared_default=False)
+
+    # Calculate the output signal at the output nodes
+    tb.calculate_output(n_threads=8, use_shared_default=False)
+    t, x = tb.t_out.transpose(), tb.x_out.transpose()
+    plot()
+
+    # Set a different feed dict and recompute the
+    tb.set_feed_dict({'a1':1.2,'a2':1.5,'phi1':2,'phi2':3})
+    tb.calculate_output(n_threads=8, use_shared_default=False)
+    plot()
+
+.. figure:: /figures/symnum_feedforward_tb_output.svg
+    :align: center
+
+As you can see, it is possible to change the feed dictionary after evaluating the network. The new output can be computed
+without evaluating the network again!
+
+.. warning::
+
+    Keep in mind that for recurrent networks, the cutoff criterion for the network evaluation
+    was based either on local or shared default settings of the symbolic numbers or on a specific feed dictionary used during the evaluation.
+    This means that the accuracy of the network output might be lowered if a feed dictionary with smaller attenuation in the feedback loops is used!
+
+
+Physical Networks
+-----------------
+
+PhysicalNetwork is a child class of Network that allows for a more natural implementation of physical (hardware) networks.
+Physical networks are made out of :class:`.Device` s and :class:`.DeviceLink` s, which connect devices.
+
+Devices and Devicelinks
+##########################
+A :class:`.Device` has a number of input and output nodes (ports) and the input-to-output relation is given by a scattering matrix
+and a fixed delay. Device is a child class of network. It provides convenience methods to create the device from it's complex
+scattering matrix (matrix describing input-output relation). Nodes are renamed automatically, based on the device type,
+device name and port number.
+
+A :class:`.DeviceLink` is an edge that connects to devices.  Devicelinks are given the name of source and target device as well as
+source and target node within the device. Otherwise they function like the parent class :class:`.Edge`.
+
+A simple example of a physical network using devices and devicelinks is given below:
+
+.. code-block:: python
+
+    from colna.analyticnetwork import PhysicalNetwork, Device, DeviceLink
+    import numpy as np
+
+    # define a physical network
+    physnet = PhysicalNetwork()
+
+    # create a splitter and a combiner Device based on their scattering matrix
+    splitter = Device(name='0', devicetype='Splitter', scattering_matrix=np.array([[1 / np.sqrt(2), 1 / np.sqrt(2)]]),
+                      delay=1)
+    combiner = Device(name='0', devicetype='Combiner', scattering_matrix=np.array([[1 / np.sqrt(2)], [1 / np.sqrt(2)]]),
+                      delay=1)
+
+    # add input and output nodes to the devices
+    splitter.add_input('i0',amplitude=1)
+    combiner.add_output('o0')
+
+    # add the devices to the physical network
+    physnet.add_device(splitter)
+    physnet.add_device(combiner)
+
+    # connect the devices using two DeviceLinks
+    physnet.add_devicelink(
+        DeviceLink(startdevice='0', startdevicetype='Splitter', startnode='o0', enddevicetype='Combiner', enddevice='0',
+                   endnode='i0', phase=5 * np.pi, attenuation=0.5, delay=2))
+    physnet.add_devicelink(
+        DeviceLink(startdevice='0', startdevicetype='Splitter', startnode='o1', enddevicetype='Combiner', enddevice='0',
+                   endnode='i1', phase=6 * np.pi, attenuation=0.7, delay=3)
+        )
+
+    # visualize the full and simplified
+    physnet.visualize(full_graph=True, path='PhysicalNetworkFull')
+    physnet.visualize(full_graph=False, path='PhysicalNetworkSimplified')
+
+    # evaluate network
+    physnet.evaluate()
+    out = physnet.get_outputs()
+    print(out)
+
+    >>> [[(0.24999999999999994, 15.707963267948966, 4.0), (0.3499999999999999, 18.84955592153876, 5.0)]]
+
+Visualization of physical networks supports two level of abstraction, either the device networks are simplified to a box or they can be shown as a full network as well. See the visualization below.
+
+.. figure:: /figures/PhysicalNetworkSimplified.svg
+    :align: center
+
+    Simplified visualization of physical network.
+
+.. figure:: /figures/PhysicalNetworkFull.svg
+    :align: center
+
+    Full visualization of physical network.
+
+
+
+
+
+
