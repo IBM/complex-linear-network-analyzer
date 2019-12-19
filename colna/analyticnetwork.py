@@ -145,16 +145,16 @@ class Network(object):
     def stopping_criterion(amplitude, cutoff):
         return amplitude < cutoff
 
-    def evaluate(self, amplitude_cutoff=0.01, max_endpoints=100000, use_global_default=True, feed_dict=None,
+    def evaluate(self, amplitude_cutoff=0.01, max_endpoints=100000, use_shared_default=True, feed_dict=None,
                  hide_tqdm_progress=False):
         """
         Evaluate the network.
 
         :param amplitude_cutoff:  amplitude below which a wave is not further propagated through the network
         :param max_endpoints: evaluation is interrupted early, if more than max_endpoints exist in evaluation
-        :param use_global_default: set to true if global defaults should be used with SymNum's (higher speed),
+        :param use_shared_default: set to true if global defaults should be used with SymNum's (higher speed),
          set to false if the default value of each SymNum should be used instead (higher accuracy). Default: True
-        :type use_global_default: Boolean
+        :type use_shared_default: Boolean
         :param feed_dict: Feed dictionary for SymNum variables. Default: None
         :return:
             updates self.nodes_to_output
@@ -198,7 +198,7 @@ class Network(object):
                 for edge in self.edges:
                     current_attn = (endpoint['amp'][node_index] * edge.attenuation)
                     current_attn_fl = current_attn.eval(feed_dict=feed_dict,
-                                                        use_global_default=use_global_default) if hasattr(current_attn,
+                                                        use_shared_default=use_shared_default) if hasattr(current_attn,
                                                                                                           'eval') else current_attn
                     if (node == edge.start
                             and not self.stopping_criterion(current_attn_fl, amplitude_cutoff)):
@@ -248,7 +248,7 @@ class SymNum:
     symbolic numbers for edge properties in analytic networks
     """
 
-    def __init__(self, name, default=0.9, product=True, global_default=0.8, numerical=None):
+    def __init__(self, name, default=0.9, product=True, numerical=None):
         """
         Symbolic numbers for the analytic network.
 
@@ -258,7 +258,6 @@ class SymNum:
         :param name: the name of the variable. The name should be unique for each SymNum present in the network.
         :param default: the default value substituted, when we evaluate this variable
         :param product: whether this variable is composed as a product (True) or a sum (False)
-        :param global_default: this is assumed to be the value of the variable when we evaluate the network if use_global_defaults is set.
         :param numerical: initial value of numerical part (numerical factor for product variables, numerical addition for additive variables). Can be set to none for automatic initialization (1.0 for product variables, 0.0 for additive variables)
         """
         # the numerical part of the number's value
@@ -274,10 +273,12 @@ class SymNum:
         self.product = product
 
         # when the network is evaluated we use this value to determine when to cut the path due to attenuation limit
-        self.global_default = global_default
+        # for SymNums that result from addition/multiplication of other SymNums (a and b) this is
+        # max(a.shared_default, b.shared_default)
+        self.shared_default = default
 
     def __copy__(self):
-        copy = SymNum('', product=self.product, global_default=self.global_default, numerical=self.numerical)
+        copy = SymNum('', product=self.product, numerical=self.numerical)
         copy.symbolic = deepcopy(self.symbolic)
         copy.defaults = deepcopy(self.defaults)
         return copy
@@ -288,6 +289,7 @@ class SymNum:
         if isinstance(other, SymNum):
             assert self.product == other.product, "ensure that product type of symbolic numbers are the same"
             copy.numerical += other.numerical
+            copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
                 if not (symbol in copy.symbolic.keys()):
                     copy.symbolic[symbol] = 1
@@ -307,6 +309,7 @@ class SymNum:
         if isinstance(other, SymNum):
             assert self.product == other.product, "ensure that product type of symbolic numbers are the same"
             copy.numerical *= other.numerical
+            copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
                 if not (symbol in copy.symbolic.keys()):
                     copy.symbolic[symbol] = 1
@@ -326,6 +329,7 @@ class SymNum:
         if isinstance(other, SymNum):
             assert self.product == other.product, "ensure that product type of symbolic numbers are the same"
             copy.numerical /= other.numerical
+            copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
                 if not (symbol in copy.symbolic.keys()):
                     copy.symbolic[symbol] = -1
@@ -336,22 +340,28 @@ class SymNum:
             copy.numerical /= other
         return copy
 
-    def eval(self, feed_dict=None, verbose=False, use_global_default=True):
+    def eval(self, feed_dict=None, verbose=False, use_shared_default=True):
         """
         evaluate the numerical value of the number
 
         :param feed_dict: a dictionary specifying values of variables by name(if not given default values are used)
         :param verbose: print the number in symbolic form before returning
-        :param use_global_default: set to true if global defaults should be used with SymNum's (higher speed) when no \
+        :param use_shared_default: set to true if shared defaults should be used with SymNums (higher speed) when no \
         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
         The value is ignored if feed_dict is not none. Default: True
-        :type use_global_default: Boolean
+        :type use_shared_default: Boolean
         :return: numerical value of the number (float)
         """
         symbolic_evaluated = 1 if self.product else 0
-        if feed_dict is None and use_global_default == True:
+        if feed_dict is None and use_shared_default:
+            # this option leads to the fastest evaluation of the network
+            # we assume all symbols have the same default value
+            assert self.shared_default < 1, "use_shared_default only supports SymNums with default values < 1"
             total_count = sum(self.symbolic.values())
-            symbolic_evaluated = self.global_default ** total_count if self.product else self.global_default * total_count
+            if self.product:
+                symbolic_evaluated = self.shared_default ** total_count
+            else:
+                symbolic_evaluated = self.shared_default * total_count
         else:
             for symbol in self.symbolic.keys():
                 val = self.defaults[symbol] if (feed_dict is None) or not (symbol in feed_dict.keys()) else feed_dict[
@@ -710,29 +720,29 @@ class Testbench():
         z_r = np.zeros(shape=(len(x) - x_r,), dtype=np.complex128)
         return np.concatenate((z_l, y[indices], z_r))
 
-    def evaluate_network(self, amplitude_cutoff=1e-3, max_endpoints=1e6, use_global_default=True):
+    def evaluate_network(self, amplitude_cutoff=1e-3, max_endpoints=1e6, use_shared_default=True):
         """
         Evaluates the network.
 
         :param amplitude_cutoff:
         :param max_endpoints:
-        :param use_global_default: set to true if global defaults should be used with SymNum's (higher speed) when no\
+        :param use_shared_default: set to true if global defaults should be used with SymNum's (higher speed) when no\
         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy).\
         The value is ignored if feed_dict is not none. Default: True
-        :type use_global_default: Boolean
+        :type use_shared_default: Boolean
         """
-        self.model.evaluate(amplitude_cutoff, max_endpoints, use_global_default=use_global_default,
+        self.model.evaluate(amplitude_cutoff, max_endpoints, use_shared_default=use_shared_default,
                             feed_dict=self.feed_dict)
 
-    def calculate_output(self, use_global_default=False, n_threads=0):
+    def calculate_output(self, use_shared_default=False, n_threads=0):
         """
         Calculates the output signals for the given input signals.
 
-        :param use_global_default: set to true if global defaults should be used with SymNum's (higher speed) when no \
+        :param use_shared_default: set to true if global defaults should be used with SymNum's (higher speed) when no \
         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
         The value is ignored if feed_dict is not none. Default: False
         :param n_threads: Number of threads that are used for evaluation (set to 0 to disable multithreading)
-        :type use_global_default: Boolean
+        :type use_shared_default: Boolean
 
         """
 
@@ -742,7 +752,7 @@ class Testbench():
         if n_threads == 0:
             for ind, node_out in enumerate(self.output_nodes):
                 assert node_out in self.model.nodes, "node {} does not exist".format(node_out)
-                t, x = self.calculate_output_sequence(node_name=node_out, use_global_default=use_global_default)
+                t, x = self.calculate_output_sequence(node_name=node_out, use_shared_default=use_shared_default)
                 self.x_out.append(x)
                 self.t_out.append(t)
 
@@ -750,7 +760,7 @@ class Testbench():
             args = []
             for ind, node_out in enumerate(self.output_nodes):
                 assert node_out in self.model.nodes, "node {} does not exist".format(node_out)
-                args.append((node_out, use_global_default))
+                args.append((node_out, use_shared_default))
 
             pool = ThreadPool(n_threads)
             result = pool.starmap(self.calculate_output_sequence, args)
@@ -773,7 +783,7 @@ class Testbench():
         self.x_out = np.concatenate((self.x_out, np.atleast_2d(bias * np.ones(shape=self.input_t[0].shape))))
         self.t_out = np.concatenate((self.t_out, np.atleast_2d(self.input_t[0])))
 
-    def calculate_output_sequence(self, node_name, use_global_default=False):
+    def calculate_output_sequence(self, node_name, use_shared_default=False):
         """
         Calculates the output sequence at a given node.
 
@@ -781,10 +791,10 @@ class Testbench():
         testbench. Before executing make sure :meth:`self.evaluate_network()` was executed.
 
         :param node_name: Name of node for which the output is returned.
-        :param use_global_default: set to true if global defaults should be used with SymNum's (higher speed) when no \
+        :param use_shared_default: set to true if global defaults should be used with SymNum's (higher speed) when no \
         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
         The value is ignored if feed_dict is not none. Default: False
-        :type use_global_default: Boolean
+        :type use_shared_default: Boolean
         :return: tuple containing time and signal vector at the given output node
         """
         assert node_name in self.model.nodes, "node does not exist"
@@ -801,13 +811,13 @@ class Testbench():
             input_signal_name = path[3][1:end_index]
             input_index = self.input_nodes.index(input_signal_name)
             delay = path[2] if not hasattr(path[2], 'eval') else path[2].eval(feed_dict=self.feed_dict,
-                                                                              use_global_default=use_global_default)
+                                                                              use_shared_default=use_shared_default)
             shift_steps = int(round(delay / self.timestep))
             x = self.input_x[input_index]
             attn = path[0] if not hasattr(path[0], 'eval') else path[0].eval(feed_dict=self.feed_dict,
-                                                                             use_global_default=use_global_default)
+                                                                             use_shared_default=use_shared_default)
             phase = path[1] if not hasattr(path[1], 'eval') else path[1].eval(feed_dict=self.feed_dict,
-                                                                              use_global_default=use_global_default)
+                                                                              use_shared_default=use_shared_default)
             if shift_steps <= len(x) and shift_steps > 0:
                 x = np.hstack((np.zeros(shape=(shift_steps,)), x[0:-shift_steps]))
                 x_out += attn * np.exp(1j * phase) * x
