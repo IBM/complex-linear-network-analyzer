@@ -1,5 +1,5 @@
 User Manual
-=================================
+=========================
 
 Installation
 ------------
@@ -24,6 +24,81 @@ and add it to your system path (get Graphviz here `<https://www.graphviz.org/>`_
     pip install .[Visualization]
 
 to install the COLNA package and all its dependencies, including the Graphviz Python wrapper.
+
+Quickstart
+----------
+Create a network object.
+
+.. code-block:: python
+
+    from colna.analyticnetwork import Network, Edge, Testbench, SymNum
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    # Define Network
+    net = Network()
+
+Add three nodes and edges, some edge properties are defined through symbolic numbers.
+
+.. code-block:: python
+
+    # Add three nodes
+    net.add_node(name='a')
+    net.add_node(name='b')
+    net.add_node(name='c')
+
+    # Add three edges (with mixed symbolic and numeric values)
+    net.add_edge(Edge(start='c',end='a', phase=0.5, attenuation=0.6, delay=0.1))
+    net.add_edge(Edge(start='a', end='b', phase=SymNum('ph_ab', default=5, product=False), attenuation=0.95, delay=0.2))
+    net.add_edge(Edge(start='b', end='c', phase=SymNum('ph_bc', default=3, product=False),
+                      attenuation=SymNum('amp_bc', default=0.8, product=True), delay=0.1))
+
+If you have installed graphviz, you can visualize the network:
+
+.. code-block:: python
+
+    # Visualize the network (if graphviz is installed)
+    net.visualize(path='./quickstart')
+
+Will create a network visualization that looks as follows:
+
+.. figure:: /figures/quickstart2.svg
+    :align: center
+
+Create a testbench, send an input signal to the network and register an output node.
+
+.. code-block:: python
+
+    # Create a testbench
+    tb = Testbench(network=net, timestep=0.1)
+
+    # Add an input signal
+    tb.add_input_sequence(node_name='a',x=np.array([1,2,0]),t=np.array([0,2,7,10]))
+
+    # register an output node
+    tb.add_output_node('c')
+
+Feed the symbolic values, evaluate the network up to a certain accuracy and calculate and plot the output signals.
+
+.. code-block:: python
+
+    # set the feed dictionary for the symbolic numbers
+    tb.set_feed_dict({'amp_bc':0.7, 'ph_bc': 3.1, 'ph_ab': 4.9})
+
+    # evaluate the network (through the testbench)
+    tb.evaluate_network(amplitude_cutoff=1e-6)
+
+    # Calculate the output signal at the output nodes
+    tb.calculate_output(n_threads=8)
+    t, x = tb.t_out.transpose(), tb.x_out.transpose()
+
+    ### Plot the Input and Output Signals
+    plt.plot(tb.input_t[0][:-1], np.abs(tb.input_x[0][:-1]), 'o') # Input signal
+    plt.plot(t, np.abs(x), 'x') # Output signal
+    plt.xlabel('Time')
+    plt.ylabel('|x|')
+    plt.legend(['Input', 'Output C'], loc='lower left')
+    plt.show()
 
 
 Simple Network
@@ -107,8 +182,8 @@ If you have installed the visualization feature (see :ref:`Installation`), you c
 The visualization method creates a dot file (at the given output path) and renders it into a pdf file, using Graphviz.
 The resulting visualization is shown in :ref:`the figure above<simplenetworklabel>`.
 
-Testbench
----------
+Testbenches
+-----------
 
 So far we have only injected constant signals into the network. To inject time dependant signals, we can use a :class:`.Testbench` object.
 The Testbench is used to inject signals to nodes of the network and read the output. This is illustrated in the figure
@@ -188,7 +263,7 @@ Recurrent Network
 -----------------
 
 COLNA supports the analysis of recurrent connections (loops) in the network. COLNA computes all paths
-leading to the output nodes (including the recurrent paths) down to a certain accuracy threshold.
+leading from input nodes to output nodes (including the recurrent paths) down to a certain accuracy threshold.
 
 .. note::
 
@@ -220,8 +295,12 @@ The network is visualized below.
 .. figure:: /figures/recurrent_net.svg
     :align: center
 
-When evaluating the network you can specify the amplitude_cutoff limit. When the amplitude falls below this limit, the
-evaluation will be stopped. In our example a lower cutoff level leads to more cycles through the recurrent path.
+When evaluating the network you can specify the amplitude_cutoff limit. When the amplitude of the current analyzed path falls below this limit, the
+evaluation of the current path will be stopped. The evaluation ends, when all paths fall below the threshold. In our example a lower cutoff level leads to more cycles through the recurrent path.
+
+.. note::
+
+    The amplitude_cutoff defines the amplitude, at which the analysis of the path will be stopped. The accuracy at the output can be lower than this value, as multiple paths might lead to the same output!
 
 .. code-block:: python
 
@@ -260,17 +339,14 @@ description of the network output.
 
 COLNA symbolic numbers are provided through the :class:`.SymNum` class. The following code snippet creats two symbolic numbers and mulitplies them together:
 
-.. code-block:: python
+.. literalinclude:: ../../examples/symnumexample.py
+    :language: python
+    :linenos:
+    :lines: 1-10
 
-    from colna.analyticnetwork import SymNum
+Returns:
 
-    amp1 = SymNum(name='a1', default=3, product=True, global_default=5)
-    amp2 = SymNum(name='a2', default=4, product=True, global_default=6)
-    amp3 = amp1 * amp2
-
-    print(amp1)
-    print(amp2)
-    print(amp3)
+.. code-block:: console
 
     >>> 1.0 * a1**1
     >>> 1.0 * a2**1
@@ -278,37 +354,41 @@ COLNA symbolic numbers are provided through the :class:`.SymNum` class. The foll
 
 SymNum's can either be additive or multiplicative, their behaviour is controlled through the product argument (product = True: mulitiplicative variable, product = False: additative variable).
 In the example above we created two multiplicative, symbolic numbers and multiplied them together. As you might have noticed, SymNum takes not
-only the variable name but also a default and a global_default value as arguments. The difference will become clear, when we start to evaluate the symbolic term.
+only the variable name but also a default numeric value as arguments.
 To evaluate the symbolic numbers use the SymNums :meth:`~.SymNum.eval` method. Take a look at the four different variants
 that we can use to compute the numeric value:
 
-** Evaluate without feed dictionary and use individual defaults **
+**Evaluate without feed dictionary and use defaults**
 
 .. code-block:: python
 
-    print(amp3.eval(feed_dict=None, use_global_default=False))
-    >>> 12.0
+    print(amp3.eval(feed_dict=None, use_shared_default=False))
+    >>> 0.4
 
-If we do not provide a feed dictionary and we set the use_global_default argument to false, the default values of the SymNums will be used for the evaluation.
-So in this case, eval computes :math:`3.0\cdot4.0=12.0`.
+If we do not provide a feed dictionary and we set the use_shared_default argument to false, the default values of the SymNums will be used for the evaluation.
+So in this case, eval computes :math:`0.5\cdot0.8=0.4`.
 
-** Evaluate without feed dictionary and use global defaults **
+**Evaluate without feed dictionary and use shared defaults**
 
 .. code-block:: python
 
-    # Evaluate without feed dictionary, but use global defaults
-    print('amp3 global default: ', amp3.global_default)
-    print(amp3.eval(feed_dict=None, use_global_default=True))
-    >>> amp3 global default:  5
-    >>> 25.0
+    # Evaluate without feed dictionary, but use shared defaults
+    print('amp3 shared default: ', amp3.shared_default)
+    print(amp3.eval(feed_dict=None, use_shared_default=True))
+    >>> amp3 shared default:  0.8
+    >>> 0.64
 
-If we do not provide a feed dictionary and we set the use_global_default argument to true, SymNum will assume that all
-symbolic values are set to the global_default value of the SymNum which is evaluated. So in this case this would be the
-global_default value of the `amp3` object which was set to 5.0. In this case, eval returns :math:`5.0\cdot5.0=25.0`.
-Evaluating a symbolic expression with use_global_default is faster than using individual default values, this can be helpful when
-large or recurrent networks need to be evaluated.
+If we do not provide a feed dictionary and we set the use_shared_default argument to true, SymNum will assume that all
+symbolic values are set to the shared_default value of the SymNum which is evaluated. The shared_default value is initialized
+automatically to be the same as the default value. If we add or multiply two SymNum's a new SymNum is generated. It's
+shared_default value  will be the maximum of the shared_default values of the two SymNum's which are added or multiplied
+together.
 
-** Evaluate with feed dictionary **
+So in this case the shared default of `amp3` is set to 0.8 and eval returns :math:`0.8\cdot0.8=0.64`.
+Evaluating a symbolic expression with use_shared_default is faster than using individual default values, this can be helpful when
+very large or recurrent networks need to be evaluated.
+
+**Evaluate with feed dictionary**
 
 .. code-block:: python
 
@@ -316,17 +396,17 @@ large or recurrent networks need to be evaluated.
     print(amp3.eval(feed_dict=feed))
     >>> 6.0
 
-If we provide a feed dictionary, eval will replace the symbolic numbers by the feed values (independent of use_global_default setting). In this case, eval returns :math:`2\cdot3=6.0`.
+If we provide a feed dictionary, eval will replace the symbolic numbers by the feed values (independent of use_shared_default setting). In this case, eval returns :math:`2\cdot3=6.0`.
 
-** Evaluate with partial feed dictionary **
+**Evaluate with partial feed dictionary**
 
 .. code-block:: python
 
     feed = {'a2': 3}
     print(amp3.eval(feed_dict=feed))
-    >>> 9.0
+    >>> 1.5
 
-If we provide a partial feed dictionary, eval will replace the symbolic numbers present in the feed dictionary by the feed values and all others by their default value (independent of use_global_default setting).
+If we provide a partial feed dictionary, eval will replace the symbolic numbers present in the feed dictionary by the feed values and all others by their default value (independent of use_shared_default setting).
 In this case, eval returns :math:`3\cdot3=9.0`.
 
 Symbolic Networks
@@ -339,31 +419,29 @@ However, for some edge properties symbolic numbers are used.
 
 .. code-block:: python
 
-    from colna.analyticnetwork import Network, Edge, SymNum
-
-    # create symbolic variables for attenuation and phase
-    amp1 = SymNum(name='a1', default=1.5, product=True, global_default=2)
-    amp2 = SymNum(name='a2', default=2, product=True, global_default=2)
-    phi1 = SymNum(name='phi1', default=2, product=False, global_default=3)
-    phi2 = SymNum(name='phi2', default=3, product=False, global_default=3)
-
-    # initialize the network
+    from colna.analyticnetwork import Network, Edge, SymNum, Testbench
+    
+    amp1 = SymNum(name='a1', default=1.5, product=True)
+    amp2 = SymNum(name='a2', default=2.0, product=True)
+    phi1 = SymNum(name='phi1', default=2.0, product=False)
+    phi2 = SymNum(name='phi2', default=3.0, product=False)
+    
     net = Network()
-
+    
     net.add_node(name='a')
     net.add_node(name='b')
     net.add_node(name='c')
     net.add_node(name='d')
-
-    # add edges with symbolic numbers for some phases and amplitudes
+    
     net.add_edge(Edge(start='a',end='b',phase=phi1,attenuation=amp1,delay=1))
     net.add_edge(Edge(start='b',end='c',phase=phi2,attenuation=amp2,delay=2))
     net.add_edge(Edge(start='b',end='d',phase=3,attenuation=0.4,delay=3))
-
+    
     net.add_input(name='a',amplitude=1.0, phase=0)
-
-    # evaluate the network
-    net.evaluate(use_global_default=False, feed_dict=None)
+    
+    net.visualize(path='./visualizations/symbolicfeedforward')
+    
+    net.evaluate(use_shared_default=False, feed_dict=None)
 
     # print the waves arriving at node c and d
     print('waves arriving at c:', net.get_result('c'))
@@ -372,14 +450,14 @@ However, for some edge properties symbolic numbers are used.
     >>> waves arriving at c: [(<SymNum{1.0 * a1**1 * a2**1}>, <SymNum{0.0 + phi1*1 + phi2*1}>, 3.0)]
     >>> waves arriving at d: [(<SymNum{0.4 * a1**1}>, <SymNum{3.0 + phi1*1}>, 4.0)]
 
-:meth:`~.Network.evaluate` returns a symbolic representation of the waves arriving at node c and d. :meth:`~.Network.evaluate` takes two arguments: use_global_default and a feed dictionary.
+:meth:`~.Network.evaluate` returns a symbolic representation of the waves arriving at node c and d. :meth:`~.Network.evaluate` takes two arguments: use_shared_default and a feed dictionary.
 These arguments are used for the evaluation of the network, the are applied in the same way as in the :meth:`.SymNum.eval` method. This settings are especially important when we work with recurrent
 loops in the network, as the cutoff criterion will be evaluated based on the evaluated numeric value of the symbolic numbers.
 
 Once again you can use the three different versions:
 
-    * :code:`feed_dict=None, use_global_default=True`: Do not provide a feed dictionary and set the values of all symbolic numbers to the value of the global_default member of the symbolic number under evaluation (faster)
-    * :code:`feed_dict=None, use_global_default=False`: Do not provide a feed dictionary and set the value of each symbolic number to its default value (more accurate)
+    * :code:`feed_dict=None, use_shared_default=True`: Do not provide a feed dictionary and set the values of all symbolic numbers to the largest shared_default member of the symbolic numbers under evaluation (faster)
+    * :code:`feed_dict=None, use_shared_default=False`: Do not provide a feed dictionary and set the value of each symbolic number to its default value (more accurate)
     * :code:`feed_dict=feed dictionary`: The values of each symbolic number is set to the value given in the feed dicitionary. If a partial feed dictionary is used, missing symbolic numbers are set to their default values.
 
 Independent of the parameters, :meth:`~.Network.evaluate` will always compute the symbolic representation of the network,
@@ -391,7 +469,7 @@ We can evaluate the symbolic expression using the :meth:`SymNum.eval` method as 
 
     # Evaluation with a feed dictionary
     feed = {'a1': 1, 'a2': 2, 'phi1': 2, 'phi2': 4}
-    waves = [tuple([w.eval(feed_dict=feed, use_global_default=True) if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('c')]
+    waves = [tuple([w.eval(feed_dict=feed, use_shared_default=True) if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('c')]
     print('Waves arriving at c:', waves, '\n')
 
     >>> Waves arriving at c: [(2.0, 6.0, 3.0)]
@@ -400,7 +478,7 @@ Symbolic Network with Testbench
 ###############################
 SymNum based networks can be used together with a :class:`.Testbench`.
 
-The use_global_default parameter of the :meth:`.Testbench.evaluate_network` and :meth:`.Testbench.calculate_output` works as discussed
+The use_shared_default parameter of the :meth:`.Testbench.evaluate_network` and :meth:`.Testbench.calculate_output` works as discussed
 previously for the :meth:`.Network.evaluate` method. The main difference is, that the `feed_dict` is an attribute of the :class:`.Testbench` object instead of an argument of the method.
 
 The full code example is given in `/examples/symnum_feedforward_with_tb.py`, here we just show the relevant changes.
@@ -411,16 +489,16 @@ The full code example is given in `/examples/symnum_feedforward_with_tb.py`, her
     tb = Testbench(network=net, timestep=0.1, feed_dict={'a1':0.2,'a2':1.5,'phi1':2,'phi2':3})
 
     # evaluate the network (through the testbench)
-    tb.evaluate_network(amplitude_cutoff=1e-3,use_global_default=False)
+    tb.evaluate_network(amplitude_cutoff=1e-3,use_shared_default=False)
 
     # Calculate the output signal at the output nodes
-    tb.calculate_output(n_threads=8, use_global_default=False) # uses multithreading with at most 8 threads
+    tb.calculate_output(n_threads=8, use_shared_default=False)
     t, x = tb.t_out.transpose(), tb.x_out.transpose()
     plot()
 
     # Set a different feed dict and recompute the
     tb.set_feed_dict({'a1':1.2,'a2':1.5,'phi1':2,'phi2':3})
-    tb.calculate_output(n_threads=8, use_global_default=False) # uses multithreading with at most 8 threads
+    tb.calculate_output(n_threads=8, use_shared_default=False)
     plot()
 
 .. figure:: /figures/symnum_feedforward_tb_output.svg
@@ -432,7 +510,7 @@ without evaluating the network again!
 .. warning::
 
     Keep in mind that for recurrent networks, the cutoff criterion for the network evaluation
-    was based either on local or global default settings of the symbolic numbers or on a specific feed dictionary used during the evaluation.
+    was based either on local or shared default settings of the symbolic numbers or on a specific feed dictionary used during the evaluation.
     This means that the accuracy of the network output might be lowered if a feed dictionary with smaller attenuation in the feedback loops is used!
 
 
@@ -440,7 +518,7 @@ Physical Networks
 -----------------
 
 PhysicalNetwork is a child class of Network that allows for a more natural implementation of physical (hardware) networks.
-Physical networks are made out of :class:`.Device`s and :class:`.DeviceLink`s, which connect devices.
+Physical networks are made out of :class:`.Device` s and :class:`.DeviceLink` s, which connect devices.
 
 Devices and Devicelinks
 ##########################
@@ -451,6 +529,8 @@ device name and port number.
 
 A :class:`.DeviceLink` is an edge that connects to devices.  Devicelinks are given the name of source and target device as well as
 source and target node within the device. Otherwise they function like the parent class :class:`.Edge`.
+
+A simple example of a physical network using devices and devicelinks is given below:
 
 .. code-block:: python
 

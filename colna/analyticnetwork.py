@@ -16,19 +16,19 @@
 # |  Authors: Lorenz K. Mueller, Pascal Stark                                   |
 # +-----------------------------------------------------------------------------+
 
-from time import time
+import warnings
 import numpy as np
 from tqdm import tqdm
 from copy import deepcopy
-import pickle
-import warnings
 from multiprocessing.dummy import Pool as ThreadPool
 import multiprocessing
 
 
 class Edge(object):
     """
-    Edges connect two nodes in a directed manner. Edges add a phase shift (:math:`\phi`), delay (:math:`d`) and
+    Edges connect two nodes in a directed manner.
+
+    Edges add a phase shift (:math:`\phi`), delay (:math:`d`) and
     attenuation (:math:`a`) to the signal. The input to output relation of an edge is given by:
 
     .. math::
@@ -40,10 +40,15 @@ class Edge(object):
     def __init__(self, start, end, phase=.4, attenuation=.8, delay=1.0):
         """
         :param start: name of start vertex connected by this edge
+        :type start: str
         :param end: name of end vertex connected by this edge
+        :type end: str
         :param phase: phase shift added by this element (stacks additively)
+        :type phase: float
         :param attenuation: attenuation caused by element (stacks multiplicatively)
+        :type attenuation: float
         :param delay: time delay added by this element (stacks additively)
+        :type delay: float
         """
         self.start = start
         self.end = end
@@ -54,12 +59,15 @@ class Edge(object):
 
 class Network(object):
     """
-    Networks consist of linear nodes and directed edges. Networks are represented by a directed graph. COLNA computes all paths
-    leading to the output nodes (including recurrent paths) down to a certain accuracy threshold.
+    Networks consist of linear nodes and directed edges.
+
+    Networks are represented by a directed graph. COLNA computes all paths leading from input nodes to the output nodes
+    (including recurrent paths) until the attenuation of each path falls below a given threshold.
 
     .. note::
 
-      If a network contains recurrent paths (loops), the user must ensure that there is no gain in the network (i.e. attenuation < 1), otherwise the amplitude at the output will never fall below the threshold.
+      If a network contains recurrent paths (loops), the user must ensure that there is no gain in the network (i.e.
+      attenuation < 1), otherwise the amplitude at the output will never fall below the threshold.
 
     """
 
@@ -71,35 +79,60 @@ class Network(object):
 
     def add_node(self, name):
         """
-        add a new node to the network
+        Add a new node to the network
 
         :param name: the name of the node
-        :type name: string
+        :type name: str
+
+        :raises ValueError: If a node with the same name already exists.
         """
-        assert not (name in self.nodes), "node of name " + name + " already exists"
+
+        if name in self.nodes:
+            raise(ValueError ( "node of name " + name + " already exists"))
+
         self.nodes.append(name)
 
     def add_edge(self, edge):
         """
         Add a new edge to the network
 
+        The start and end nodes of the edge must already exist in the network.
+
         :param edge: the edge object to add
+        :type edge: :class:`.Edge`
+
+        :raises ValueError: If the start or end node of the edge does not exist in the network.
+
         """
-        assert edge.start in self.nodes, "attempted to add edge from undefined node"
-        assert edge.end in self.nodes, "attempted to add edge to undefined node"
+        if not edge.start in self.nodes:
+            raise(ValueError("attempted to add edge from undefined node" + edge.start))
+        if not edge.end in self.nodes:
+            raise(ValueError("attempted to add edge to an undefined node" + edge.end))
+
         self.edges.append(edge)
 
     def add_input(self, name, amplitude=1.0, phase=0.0, delay=0.0):
         """
-        Define input points of network. The evaluation assumes signals with the given amplitude, phase and delay are
-        propagating through the network when computing the analytical waveforms at each node.
+        Define an input point of the network.
+
+        The evaluation assumes signals with the given amplitude, phase and delay are
+        propagating through the network from the given node when computing the analytical waveforms at each node.
 
         :param name: name of the node that is to receive the input
+        :type name: str
         :param amplitude: amplitude of the input
+        :type amplitude: float
         :param phase: phase of the input (relative to other inputs)
+        :type phase: float
         :param delay: delay of the input (relative to other inputs)
+        :type delay: float
+
+        :raises ValueError: If the node with the provided name does not exist in the network.
         """
-        assert name in self.nodes, "attempted to give input to inexistent node " + name
+
+        if not name in self.nodes:
+            raise(ValueError("attempted to give input to inexistent node " + name))
+
         self.inputs.append((amplitude, phase, delay, name))
 
     def get_result(self, name):
@@ -107,9 +140,15 @@ class Network(object):
         Returns a list of waves mixing at this node
 
         :param name: name of the node to get result from
-        :return: a list of waves mixing at this node (amplitude, phase, delay)
+        :type name: str
+
+        :raises ValueError: If the node with the provided name does not exist in the network.
+
+        :return: a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)
         """
-        assert name in self.nodes, "node does not exist"
+        if not name in self.nodes:
+            raise(ValueError("attempted to retrive wave at non-existing node " + name))
+
         return [entry[0:3] for entry in self.nodes_to_output[name]]
 
     def get_result_np(self, name):
@@ -117,9 +156,15 @@ class Network(object):
         Returns a result at a given node as numpy array
 
         :param name: name of the node to get result from
+        :type name: str
+
+        :raises ValueError: If the node with the provided name does not exist in the network.
+
         :return: x; x[0]: amp, x[1]: phase, x[2]: delay
         """
-        assert name in self.nodes, "node does not exist"
+        if not name in self.nodes:
+            raise(ValueError("attempted to retrive wave at non-existing node " + name))
+
         amp = np.asarray([entry[0] for entry in self.nodes_to_output[name]]).reshape([1, -1])
         phase = np.asarray([entry[1] for entry in self.nodes_to_output[name]]).reshape([1, -1])
         delay = np.asarray([entry[2] for entry in self.nodes_to_output[name]]).reshape([1, -1])
@@ -127,22 +172,42 @@ class Network(object):
 
     def get_paths(self, name):
         """
-        Find all paths leading to node.
+        Find all paths leading to a node.
 
+        :param name: name of the node to get result from
+        :type name: str
+        :raises ValueError: If the node with the provided name does not exist in the network.
         :return: all paths leading to a node
         """
-        assert name in self.nodes, "node does not exist"
+        if not name in self.nodes:
+            raise(ValueError("attempted to retrive path to non-existing node " + name))
+
         return [entry[3] for entry in self.nodes_to_output[name]]
 
     def print_stats(self):
         """
         Prints some statistics of the evaluated network
+
+        Currently this prints the number of evaluated path. In future implementations the statistics method might be
+        enhanced.
         """
         n_paths = sum([len(val) for val in self.nodes_to_output.values()])
         print('total number of paths:', n_paths)
 
     @staticmethod
     def stopping_criterion(amplitude, cutoff):
+        """
+        Stopping criterion
+
+        Used together with network evaluation. If the stopping criterion is fulfilled, the analysis of the current path
+        is stopped.
+
+        :param amplitude: current amplitude
+        :type amplitude: float
+        :param cutoff: threshold for cutoff criterion
+        :type cutoff: float
+        :return: True if amplitude is less than cutoff, otherwise False.
+        """
         return amplitude < cutoff
 
     def evaluate(self, amplitude_cutoff=0.01, max_endpoints=100000, use_shared_default=True, feed_dict=None,
@@ -150,19 +215,26 @@ class Network(object):
         """
         Evaluate the network.
 
-        :param amplitude_cutoff:  amplitude below which a wave is not further propagated through the network
+        The network evaluation method works by walking through the graph from all input nodes, along all possible paths.
+        The evaluation of each path is stopped as soon as the total path amplitude falls below the amplitude_cutoff limit.
+
+        :param amplitude_cutoff: amplitude below which a wave is not further propagated through the network
+        :type amplitude_cutoff: float
         :param max_endpoints: evaluation is interrupted early, if more than max_endpoints exist in evaluation
-        :param use_shared_default: set to true if global defaults should be used with SymNum's (higher speed),
+        :type max_endpoints: int
+        :param use_shared_default: set to true if shared defaults should be used with SymNum's (higher speed),
          set to false if the default value of each SymNum should be used instead (higher accuracy). Default: True
-        :type use_shared_default: Boolean
+        :type use_shared_default: bool
         :param feed_dict: Feed dictionary for SymNum variables. Default: None
+        :type feed_dict: dict
+
         :return:
             updates self.nodes_to_output
             a dictionary whose keys are node names. For each node name a list of quadruplets is given
             [(amplitude, phase, delay, path), (amplitude, phase, delay, path), ...].
 
             .. note::
-                phases are not reset to a finite range, but simply added
+                Phases are simply added together and not reset to a finite range.
 
         """
 
@@ -218,7 +290,20 @@ class Network(object):
             endpoint['phase'] = new_phases
             endpoint['path'] = new_paths
 
-    def visualize(self, show_edge_labels=True, path='network.gv', skip_colon=False, format='pdf'):
+    def visualize(self, show_edge_labels=True, path='network', skip_colon=False, format='pdf'):
+        """
+        Visualize the network
+
+        :param show_edge_labels: if True, edge labels showing the amplitude, phase and delay of the edge are drawn.
+        :type show_edge_labels: bool
+        :param path: output path for file
+        :type path: str
+        :param skip_colon: Skip nodes which contain ':' in their name. This is used for PhysicalNetwork visualization.
+        :type skip_colon: bool
+        :param format: output format (supports all format options of Graphviz), e.g. 'pdf', 'svg'
+        :type format: str
+        :return: Writes a dot file at the given path and renders it to the desired output format using graphviz.
+        """
         try:
             from graphviz import Digraph
         except ModuleNotFoundError as err:
@@ -229,9 +314,8 @@ class Network(object):
                     edge_attr={}, engine='dot')
 
         for node in self.nodes:
-            if skip_colon and ':' in node:
-                continue
-            s.node(node, node)
+            if not (skip_colon and ':' in node):
+                s.node(node, node)
 
         for edge in self.edges:
             if show_edge_labels:
@@ -245,20 +329,23 @@ class Network(object):
 
 class SymNum:
     """
-    symbolic numbers for edge properties in analytic networks
+    Symbolic number class.
+
+    Symbolic numbers can be used for all edge properties in analytic networks.
+
     """
 
     def __init__(self, name, default=0.9, product=True, numerical=None):
         """
-        Symbolic numbers for the analytic network.
-
-        Instantiates a symbolic number (variable) of name 'name' with default value 'default'. 'product' is used
-        to distinguish attenuations (stacking multiplicatively) and phases / delays (stacking additively).
-
         :param name: the name of the variable. The name should be unique for each SymNum present in the network.
-        :param default: the default value substituted, when we evaluate this variable
-        :param product: whether this variable is composed as a product (True) or a sum (False)
-        :param numerical: initial value of numerical part (numerical factor for product variables, numerical addition for additive variables). Can be set to none for automatic initialization (1.0 for product variables, 0.0 for additive variables)
+        :type name: str
+        :param default: the default value substituted, when we evaluate this variable. Default = 0.9
+        :type default: float
+        :param product: whether this variable is composed as a product (True) or a sum (False). Product is used to distinguish attenuations (stacking multiplicatively) and phases / delays (stacking additively). Default: True
+        :type product: bool
+        :param numerical: initial value of numerical part (numerical factor for product variables, numerical addition for additive variables). Can be set to none for automatic initialization (1.0 for product variables, 0.0 for additive variables). Default: None
+        :type numerical: float or None
+
         """
         # the numerical part of the number's value
         self.numerical = numerical if numerical is not None else 1.0 * product
@@ -278,16 +365,26 @@ class SymNum:
         self.shared_default = default
 
     def __copy__(self):
+        """ Creates a copy of a Symbolic Number."""
         copy = SymNum('', product=self.product, numerical=self.numerical)
         copy.symbolic = deepcopy(self.symbolic)
         copy.defaults = deepcopy(self.defaults)
         return copy
 
     def __add__(self, other):
-        assert not self.product, "do not add product variables"
+        """ Adds a Symbolic number.
+
+        :param other: Number to be added to this SymNum
+        :return: New symbolic number which contains addition of this and other SymNum.
+        :rtype: class:`SymNum`
+        """
+        if self.product == True:
+            raise(ValueError("do not add product variables"))
+
         copy = self.__copy__()
         if isinstance(other, SymNum):
-            assert self.product == other.product, "ensure that product type of symbolic numbers are the same"
+            if not self.product == other.product:
+                raise(ValueError("ensure that product type of symbolic numbers are the same"))
             copy.numerical += other.numerical
             copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
@@ -304,10 +401,20 @@ class SymNum:
         return self.__add__(other)
 
     def __mul__(self, other):
-        assert self.product, "do not multiply non-product variables"
+        """
+        Multiplies a symbolic numbers.
+
+        :param other: Symbolic number to be multiplied to this SymNum
+        :return: New symbolic number which contains the result of the multiplication of this and other SymNum.
+        :rtype: class:`SymNum`
+        """
+        if self.product == False:
+            raise(ValueError("do not multiply non-product variables"))
+
         copy = self.__copy__()
         if isinstance(other, SymNum):
-            assert self.product == other.product, "ensure that product type of symbolic numbers are the same"
+            if not self.product == other.product:
+                raise(ValueError("ensure that product type of symbolic numbers are the same"))
             copy.numerical *= other.numerical
             copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
@@ -324,10 +431,19 @@ class SymNum:
         return self.__mul__(other)
 
     def __truediv__(self, other):
-        assert self.product, "do not multiply non-product variables"
+        """
+        Divides symbolic number.
+
+        :param other: The value of this SymNum is divided by the other SymNum.
+        :return: New symbolic number which contains the result of the division of this and other SymNum.
+        :rtype: class:`SymNum`
+        """
+        if self.product == False:
+            raise(ValueError("do not divide non-product variables"))
         copy = self.__copy__()
         if isinstance(other, SymNum):
-            assert self.product == other.product, "ensure that product type of symbolic numbers are the same"
+            if not self.product == other.product:
+                raise(ValueError("ensure that product type of symbolic numbers are the same"))
             copy.numerical /= other.numerical
             copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
@@ -342,21 +458,21 @@ class SymNum:
 
     def eval(self, feed_dict=None, verbose=False, use_shared_default=True):
         """
-        evaluate the numerical value of the number
+        Evaluate the numerical value of the number
 
-        :param feed_dict: a dictionary specifying values of variables by name(if not given default values are used)
+        :param feed_dict: a dictionary specifying values of variables by name. If only some variables are specified, for all other variables the default value will be used.
+        :type feed_dict: dict
         :param verbose: print the number in symbolic form before returning
+        :type verbose: bool
         :param use_shared_default: set to true if shared defaults should be used with SymNums (higher speed) when no \
         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
-        The value is ignored if feed_dict is not none. Default: True
-        :type use_shared_default: Boolean
+        The value is ignored if feed_dict is not None. Default: True
+        :type use_shared_default: bool
         :return: numerical value of the number (float)
         """
         symbolic_evaluated = 1 if self.product else 0
         if feed_dict is None and use_shared_default:
-            # this option leads to the fastest evaluation of the network
-            # we assume all symbols have the same default value
-            assert self.shared_default < 1, "use_shared_default only supports SymNums with default values < 1"
+            # this option leads to the fastest evaluation of the network. It assumes all symbols have the same shared default value.
             total_count = sum(self.symbolic.values())
             if self.product:
                 symbolic_evaluated = self.shared_default ** total_count
@@ -395,15 +511,22 @@ class Device(Network):
     """
     Defines a device object for physical networks.
 
-    All nodes in a device get their 'name' changed to 'devicetype:devicename:name'
+    Device is a child class of network. It provides convenience methods to create the device from it's complex
+    scattering matrix (matrix describing input-output relation). Nodes are renamed automatically, based on the device type,
+    device name and port/node number ('devicetype:devicename:name').
+
     """
 
     def __init__(self, name, devicetype='device', scattering_matrix=None, delay=None):
         """
         :param scattering_matrix: device scattering matrix, if both :attr:`scattering_matrix` and :attr:`delay` are provided, the device will be initalized with the corresponding scattering matrix and delay
+        :type scattering_matrix: numpy.array
         :param delay: device delay, if both :attr:`scattering_matrix` and :attr:`delay` are provided, the device will be initalized with the corresponding scattering matrix and delay
-        :param name: name of the device (str)
-        :param devicetype: typename of the device (str)
+        :type delay: float
+        :param name: name of the device
+        :type name: str
+        :param devicetype: typename of the device
+        :type devicetype: str
         """
         super().__init__()
         self.name = name
@@ -416,7 +539,8 @@ class Device(Network):
         """
         adds a node (by name) to the outputs of the physical network
 
-        :param nodename: name (str) of the node to add to the outputs
+        :param nodename: name of the node to add to the outputs
+        :type nodename: str
         """
         name = self.devicetype + ":" + self.name + ":" + nodename
         assert name in self.nodes, "attempted to add output to inexistent node"
@@ -424,31 +548,52 @@ class Device(Network):
 
     def add_input(self, nodename, amplitude=1.0, phase=0.0, delay=0.0):
         """
-        adds an external input to a node
+        Define an input point of the PhysicalNetwork.
 
-        :param nodename: name (str) of the node
+        The evaluation assumes signals with the given amplitude, phase and delay are
+        propagating through the network from the given node when computing the analytical waveforms at each node.
+
+        :param name: name of the node that is to receive the input
+        :type name: str
         :param amplitude: amplitude of the input
-        :param phase: phase shift of the input
-        :param delay: time delay of the input
+        :type amplitude: float
+        :param phase: phase of the input (relative to other inputs)
+        :type phase: float
+        :param delay: delay of the input (relative to other inputs)
+        :type delay: float
+
+        :raises ValueError: If the node with the provided name does not exist in the network.
         """
+
         name = self.devicetype + ":" + self.name + ":" + nodename
         super().add_input(name, amplitude, phase, delay)
 
     def add_node(self, nodename):
         """
-        add a new node to the network
+        Add a new node to the network
 
-        :param nodename: the name of the node (a string, not containing ':')
+        :param name: the name of the node
+        :type name: str
+
+        :raises ValueError : If a node with the same name already exists.
+        :raises ValueError : If a nodename contains a colon (':').
+
         """
-        assert ":" not in nodename, "avoid use of : in nodenames"
+        if ":" in nodename:
+            raise(ValueError("Use of : in nodenames is forbidden for Devices."))
         name = self.devicetype + ":" + self.name + ":" + nodename
         super().add_node(name)
 
     def add_edge(self, edge):
         """
-        add a new edge to the network
+        Add a new edge to the network
+
+        The start and end nodes of the edge must already exist in the network.
 
         :param edge: the edge object to add
+        :type edge: :class:`.Edge`
+
+        :raises ValueError: If the start or end node of the edge does not exist in the network.
         """
         edge.start = self.devicetype + ":" + self.name + ":" + edge.start
         edge.end = self.devicetype + ":" + self.name + ":" + edge.end
@@ -456,15 +601,18 @@ class Device(Network):
 
     def init_from_scattering_matrix(self, smatrix, delay=1.0):
         """
-        defines a device by its scattering matrix (complex matrix) and a delay
+        Defines a device by its complex scattering matrix and a delay
 
-        for a device with n inputs and m outputs pass a nxm complex matrix specifying attenuation and phase-shift
-        creates n+m nodes linked by n*m edges with the given parameters, all with time delay 'delay'
+        For a device with n inputs and m outputs pass a nxm complex matrix specifying attenuation and phase-shift from
+        input node i to output node j at matrix entry (i, j). Creates n+m nodes linked by n*m edges with the given parameters,
+        all with time delay 'delay'.
         input node number k will be named 'i+str(k)'
         output node number k will be named 'o+str(k)'
 
-        :param smatrix: complex matrix defining the input to output mapping
-        :param delay: scalar time delay
+        :param smatrix: complex scattering matrix defining the input to output mapping
+        :type smatrix: numpy.array
+        :param delay: time delay from input to output
+        :type delay: float
         """
         smatrix = np.atleast_2d(smatrix)
         n_in = smatrix.shape[0]
@@ -492,21 +640,34 @@ class DeviceLink(Edge):
     Device links are special edges that link devices. They are given the name of source and target device as well as
     source and target node within the device. Otherwise they function like the parent class Edge.
 
-    :param startdevice: name of the start device (string)
-    :param enddevice: name of the end device (string)
-    :param startnode: name of the node within the start device (string)
-    :param endnode: name of the node within the end device (string)
-    :param startdevicetype: name of the device type of startdevice (optinal, defaults to 'device')
-    :param enddevicetype: name of the device type of enddevice (optinal, defaults to 'device')
-    :param phase: phase shift of the device link
-    :param attenuation: attenuation of the device link
-    :param delay: time delay of the device link
     """
 
     def __init__(self, startdevice, enddevice, startnode, endnode, startdevicetype='device', enddevicetype='device',
                  phase=.4, attenuation=.8, delay=1.0):
+        """
+        :param startdevice: name of the start device
+        :type startdevice: str
+        :param enddevice: name of the end device
+        :type enddevice: str
+        :param startnode: name of the node within the start device
+        :type startnode: str
+        :param endnode: name of the node within the end device
+        :type endnode: str
+        :param startdevicetype: name of the device type of startdevice (optional, defaults to 'device')
+        :type startdevicetype: str
+        :param enddevicetype: name of the device type of enddevice (optional, defaults to 'device')
+        :type enddevicetype: str
+        :param phase: phase shift of the device link
+        :type phase: float
+        :param attenuation: attenuation of the device link
+        :type attenuation: float
+        :param delay: time delay of the device link
+        :type delay: float
+        """
         for string in [startdevice, enddevice, startnode, endnode, startdevicetype, enddevicetype]:
-            assert isinstance(string, str), "device links require string inputs on some arguments"
+            if not isinstance(string, str):
+                raise(TypeError("device links require string inputs on some arguments"))
+
         super().__init__(startnode, endnode, phase, attenuation, delay)
         self.start = startdevicetype + ":" + startdevice + ":" + startnode
         self.end = enddevicetype + ":" + enddevice + ":" + endnode
@@ -514,7 +675,7 @@ class DeviceLink(Edge):
 
 class PhysicalNetwork(Network):
     """
-    Defines a physical network for simulation.
+    Defines a physical network.
 
     Extension of the Network class that allows for a more natural implementation of physical networks using
     a description as a collection of devices, device links, input and output sites.
@@ -526,9 +687,12 @@ class PhysicalNetwork(Network):
 
     def add_device(self, device):
         """
-        add an device to the network
+        Adds a device to the network
 
-        :param device: device to add
+        Adds all nodes, edges, inputs and outputs of the device to the network.
+
+        :param device: device to be added to the network
+        :type device: :class:`.Device`
         """
         for node in device.nodes:
             self.add_node(node)
@@ -541,29 +705,38 @@ class PhysicalNetwork(Network):
 
     def add_devicelink(self, devicelink):
         """
-        add a device link to the network
+        Adds a device link to the network
 
-        :param devicelink: the device link to add
+        :param devicelink: the device link to be added
+        :type devicelink: :class:`.DeviceLink`
+        :raises ValueError: If either the start or end nodes of the devicelink do not exist.
         """
-        assert devicelink.start in self.nodes, "attempted to add device link from inexistent node " + devicelink.start
-        assert devicelink.end in self.nodes, "attempted to add device link to inexistent node " + devicelink.end
+
+        if not devicelink.start in self.nodes:
+            raise(ValueError("attempted to add device link from inexistent node " + devicelink.start))
+        if not devicelink.end in self.nodes:
+            raise(ValueError("attempted to add device link to inexistent node " + devicelink.end))
         self.add_edge(devicelink)
 
     def get_outputs(self):
         """
-        get the computed wave forms at all output sites
+        Get the computed wave forms at all output sites
 
-        :return: a list of the output waves at all output nodes
+        :returns: a list of the output waves at all output nodes
         """
         return [self.get_result(name) for name in self.outputs]
 
     def visualize(self, show_edge_labels=True, path='network.gv', format='pdf', full_graph=False):
         """
-        Draws the network graph.
+        Visualizes the network
 
-        :param show_edge_labels: If true labels showing attenuation, phase and delay for each edge are drawn in the graph.
-        :param path: output path and filename
-        :param full_graph: if true, inner edges of devices are shown as well
+        :param show_edge_labels: if True, edge labels showing the amplitude, phase and delay of the edge are drawn.
+        :type show_edge_labels: bool
+        :param path: output path for file
+        :type path: str
+        :param format: output format (supports all format options of Graphviz), e.g. 'pdf', 'svg'
+        :type format: str
+        :return: Writes a dot file at the given path and renders it to the desired output format using graphviz.
         """
         if full_graph:
             super().visualize(show_edge_labels, path, True, format=format)
@@ -605,13 +778,18 @@ class PhysicalNetwork(Network):
 
 
 class Testbench():
-    """ Class that allows to find the output sequence for a given input signal sequence. """
+    """
+    Implements a Testbench.
+
+    Calculates the resulting output sequence for a given input signal sequence.
+    """
 
     def __init__(self, network: Network, timestep=1, disable_progress_bars=True, feed_dict=None) -> object:
         """
-
-        :param timestep: timestep on which the network is evaluated. Ideally it should be a factor of all delays in the network.
+        :param timestep: timestep on which the network output signal is evaluated. All delays in the network and of the input signal period should be an integer multiple of the timestep.
+        :type timestep: float
         :param network: network where signals should be applied
+        :type network: :class:`.Network`
         """
 
         self.inputs = []
@@ -629,7 +807,9 @@ class Testbench():
 
     def clear_inputoutput(self):
         """
-        Clears the input and output lists which store the input nodes and corresponding signals and the output node names.
+        Clears the input and output lists.
+
+        The input and output lists store the input nodes together with the corresponding input signals and the output node names.
         """
         self.inputs = []
         self.input_x = []
@@ -639,24 +819,46 @@ class Testbench():
         self.model.inputs = []
 
     def set_feed_dict(self, feed_dict):
+        """
+        Sets the feed dict.
+
+        :param feed_dict: a dictionary specifying values of variables by name. If only some variables are specified, for all other variables the default value will be used.
+        :type feed_dict: dict
+
+        """
         self.feed_dict = feed_dict
 
     def add_output_node(self, node_name):
+        """
+        Add an output node by name.
+
+        Output signals are calculated at each output node.
+
+        :param name: the name of the node
+        :type name: str
+        """
         self.output_nodes.append(node_name)
 
     def add_input_sequence(self, node_name, x, t):
         """
-        Add input signal sequence to network node
+        Add input signal sequence to a node
 
-        :param node_name: Name of node that receives the input
+        :param name: the name of the node that receives the signal
+        :type name: str
         :param x: input signal (complex), dimension: 1xN
+        :type x: numpy.array
         :param t: time of signal, if none we assume that the signal vector provides the signal at each time step. The value x[n] is applied to the input Node during the right-open time interval [t[n], t[n+1]), dimension: 1x(N+1). Time values must be in increasing order.
+        :type t: numpy.array
+
+        :raises ValueError: If the dimensions of signal and time vector do not match
+        :raises ValueError: If the node does not exist in the network.
+        :raises OverflowError: If more than one input sequence is added to a single node.
         """
         if len(x) + 1 != len(t):
             raise ValueError("Size of time vector does not match size of signal vector.")
 
         if not node_name in self.model.nodes:
-            raise NameError("attempted to give input to inexistent node " + node_name)
+            raise ValueError("attempted to give input to inexistent node " + node_name)
 
         if node_name in self.input_nodes:
             raise OverflowError("At most one input sequence can be added per node. You added two at " + node_name)
@@ -668,15 +870,18 @@ class Testbench():
 
     def _extract_min_max_signal_time(self):
         """
-        Extracts the start and stop time of all signals. Stores the minimum (self.t0) and maximum (self.t1)
+        Extracts the start and stop time of all signals.
+
+        Stores the minimum (self.t0) and maximum (self.t1) time.
         """
         self.t0 = min([time[0] for time in self.input_t])
         self.t1 = max([time[-1] for time in self.input_t])
 
     def _prepare_signals(self):
         """
-        Converts all signals to cover the time interval [self.t0, self.t1].
-        Signals are set to zero whenever they were not defined.
+        Prepares the input signals.
+
+        Converts all signals to cover the time interval [self.t0, self.t1].  Signals are set to zero whenever they were not defined.
         Use `extract_min_max_signal_time` to extract t0 and t1 automatically from the provided input signals.
         """
         for i, x in enumerate(tqdm(self.input_x, disable=self.disable_tqdm)):
@@ -687,12 +892,16 @@ class Testbench():
 
     def _convert_signal_to_timestep(self, x, t, timestep):
         """
-        Resamples the input signals with sampling rate according to timestep. Sets signal to 0 if the signal is not defined at that time.
+        Resamples the input signals.
+
+        Sets signal to 0 if the signal is not defined at that time.
 
         :param x: Signal vector
-        :param t: Time vector
-        :param timestep: timestep to which signal is resampled
-        :return: t_sampled, x_sampled: resampled data and time
+        :type: numpy.array
+        :param t: Time vector, sorted in increasing order
+        :type: numpy.array
+        :param timestep: Defines the sampling rate.
+        :return: t_sampled, x_sampled: resampled time and signal vector
         """
         t_sampled = np.linspace(start=self.t0, stop=self.t1, num=1 + round((self.t1 - self.t0) / timestep))
         x_sampled = self._interpolate_constant(x=t_sampled, xp=t, yp=x)
@@ -702,15 +911,19 @@ class Testbench():
         """
         Interpolation method that interpolates signals to the nearest left neighbour of the sampling point.
 
-        This sampling is used, as input signal y[n] is defined to be applied at during a right open time interval
+        This sampling is used, as input signal y[n] is defined to be applied during the right open time interval
         [t[n], t[n+1]).
 
-        :param x: x coordinates where signal should be sampled
+        :param x: x coordinates where signal should be interpolated
+        :type x: numpy.array
         :param xp: x coordinate of signal to be sampled, assuming array is sorted in increasing order (typically time vector)
+        :type xp: numpy.array
         :param yp: y coordinate of signal to be sampled
-        :return: sampled signal, signal is set to zero in regions outside of
+        :type yp: numpy.array
+        :return: interpolated signal, signal is set to zero when it was not defined in that time range.
         """
-        # Interpolate only in the range where xp (typically time vector) is defined, for sampling values outside of this range create zero values.
+        # Interpolate only in the range where xp (typically time vector) is defined,
+        # for sampling values outside of this range create zero values.
         x_l = np.searchsorted(x, xp[0])
         x_r = np.searchsorted(x, xp[-1])
         indices = np.searchsorted(xp, x[x_l:x_r], side='right')
@@ -722,14 +935,17 @@ class Testbench():
 
     def evaluate_network(self, amplitude_cutoff=1e-3, max_endpoints=1e6, use_shared_default=True):
         """
-        Evaluates the network.
+        Evaluate the network.
 
-        :param amplitude_cutoff:
-        :param max_endpoints:
-        :param use_shared_default: set to true if global defaults should be used with SymNum's (higher speed) when no\
-        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy).\
-        The value is ignored if feed_dict is not none. Default: True
-        :type use_shared_default: Boolean
+        Uses the :meth:`.Network.evaluate` method, self.feed_dict is used as a feed dictionary.
+
+        :param amplitude_cutoff: amplitude below which a wave is not further propagated through the network
+        :type amplitude_cutoff: float
+        :param max_endpoints: evaluation is interrupted early, if more than max_endpoints exist in evaluation
+        :type max_endpoints: int
+        :param use_shared_default: set to true if shared defaults should be used with SymNum's (higher speed),
+         set to false if the default value of each SymNum should be used instead (higher accuracy). Default: True
+        :type use_shared_default: bool
         """
         self.model.evaluate(amplitude_cutoff, max_endpoints, use_shared_default=use_shared_default,
                             feed_dict=self.feed_dict)
@@ -738,11 +954,15 @@ class Testbench():
         """
         Calculates the output signals for the given input signals.
 
-        :param use_shared_default: set to true if global defaults should be used with SymNum's (higher speed) when no \
-        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
-        The value is ignored if feed_dict is not none. Default: False
+        self.feed_dict is used as the feed dictionary.
+
+        :param use_shared_default: set to true if shared defaults should be used with SymNum's (higher speed),
+         set to false if the default value of each SymNum should be used instead (higher accuracy). Default: False
+        :type use_shared_default: bool
         :param n_threads: Number of threads that are used for evaluation (set to 0 to disable multithreading)
-        :type use_shared_default: Boolean
+        :type n_threads: int
+
+        :raises ValueError: If the output node does not exist.
 
         """
 
@@ -751,7 +971,9 @@ class Testbench():
 
         if n_threads == 0:
             for ind, node_out in enumerate(self.output_nodes):
-                assert node_out in self.model.nodes, "node {} does not exist".format(node_out)
+                if not node_out in self.model.nodes:
+                    raise(ValueError("node {} does not exist".format(node_out)))
+
                 t, x = self.calculate_output_sequence(node_name=node_out, use_shared_default=use_shared_default)
                 self.x_out.append(x)
                 self.t_out.append(t)
@@ -759,9 +981,11 @@ class Testbench():
         else:
             args = []
             for ind, node_out in enumerate(self.output_nodes):
-                assert node_out in self.model.nodes, "node {} does not exist".format(node_out)
-                args.append((node_out, use_shared_default))
+                if not node_out in self.model.nodes:
+                    raise(ValueError("node {} does not exist".format(node_out)))
 
+                args.append((node_out, use_shared_default))
+            # Creates a thread per output node
             pool = ThreadPool(n_threads)
             result = pool.starmap(self.calculate_output_sequence, args)
             pool.close()
@@ -776,9 +1000,10 @@ class Testbench():
 
     def add_const_output(self, bias):
         """
-        Adds a constant signal to the output vector.
+        Adds a constant bias signal to the output vector.
 
-        :param bias: value of constant output signal
+        :param bias: value of constant output bias signal
+        :type bias: float
         """
         self.x_out = np.concatenate((self.x_out, np.atleast_2d(bias * np.ones(shape=self.input_t[0].shape))))
         self.t_out = np.concatenate((self.t_out, np.atleast_2d(self.input_t[0])))
@@ -787,15 +1012,20 @@ class Testbench():
         """
         Calculates the output sequence at a given node.
 
-        The output sequence is calculated according to the input sequence(s) added prior to executing this method to the
-        testbench. Before executing make sure :meth:`self.evaluate_network()` was executed.
+        The output sequence is calculated for the input sequence(s) added prior to executing this method to the
+        testbench. self.feed_dict is used as the feed dictionary.
+
+        .. note::
+            Before executing make sure :meth:`~.Testbench.evaluate_network()` was executed.
 
         :param node_name: Name of node for which the output is returned.
+        :type node_name: str
         :param use_shared_default: set to true if global defaults should be used with SymNum's (higher speed) when no \
         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
         The value is ignored if feed_dict is not none. Default: False
-        :type use_shared_default: Boolean
+        :type use_shared_default: bool
         :return: tuple containing time and signal vector at the given output node
+        :rtype: tuple of numpy.array
         """
         assert node_name in self.model.nodes, "node does not exist"
         self._extract_min_max_signal_time()

@@ -1,3 +1,9 @@
+"""
+Creates a physical network.
+
+This demonstrates how devices and devicelinks can be used to create a PhysicalNetwork.
+"""
+
 from colna.analyticnetwork import PhysicalNetwork, Device, DeviceLink
 import numpy as np
 

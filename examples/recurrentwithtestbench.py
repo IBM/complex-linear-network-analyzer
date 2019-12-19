@@ -1,4 +1,4 @@
-""" Creates a very simple feedforward network with a testbench.
+""" Creates a very simple recurrent network with a testbench.
 
 This is the example used in the basic usage guide.
 The network topology is as follows:
@@ -9,7 +9,6 @@ D <- C
 
 A testbench is used to inject time varying signals at node A and B.
 """
-
 from colna.analyticnetwork import Network, Edge, Testbench
 import numpy as np
 import matplotlib.pyplot as plt

@@ -1,15 +1,20 @@
+"""
+Network topology:
+
+P <- N <- L <- J
+v    v    v    ^
+O <- M <- K <- I
+v    v    ^    ^
+A -> C -> E -> G
+v    v    ^    ^
+B -> D -> F -> H
+"""
 from colna.analyticnetwork import Network, Edge, SymNum
 import numpy as np
 import matplotlib.pyplot as plt
 
 # 4x4 network
-# P <- N <- L <- J
-# v    v    v    ^
-# O <- M <- K <- I
-# v    v    ^    ^
-# A -> C -> E -> G
-# v    v    ^    ^
-# B -> D -> F -> H
+
 
 
 class SymbolicEdge(Edge):
@@ -17,7 +22,7 @@ class SymbolicEdge(Edge):
         super().__init__(start, end, phase, attenuation, delay)
         if name is None:
             name = "Edge_"+start+end
-        self.attenuation = SymNum(name, default=0.75, global_default=0.75)
+        self.attenuation = SymNum(name, default=0.75)
 
 
 ####
@@ -43,7 +48,7 @@ for i, edge in enumerate(net.edges):
 ####
 # Evaluate Network
 ####
-net.evaluate(amplitude_cutoff=1e-3, max_endpoints=1e6,use_global_default=True)
+net.evaluate(amplitude_cutoff=1e-3, max_endpoints=1e6,use_shared_default=True)
 waves = [tuple([w.eval() if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('a')]
 
 ####

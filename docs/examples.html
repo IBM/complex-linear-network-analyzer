@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="COLNA Reference" href="colna.html" />
+    <link rel="next" title="Reference" href="colna.html" />
     <link rel="prev" title="User Manual" href="manual.html" /> 
 </head>
 
@@ -81,11 +81,21 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="manual.html">User Manual</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="colna.html">COLNA Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#feedforward-network">Feedforward Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#feedforward-network-with-testbench">Feedforward Network with Testbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#physical-network">Physical Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#small-recurrent-network">Small Recurrent Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recurrent-network-with-testbench">Recurrent Network with Testbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#symbolic-feedforward-network">Symbolic Feedforward Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#symbolic-feedforward-network-with-testbench">Symbolic Feedforward Network with Testbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#symbolic-recurrent-network">Symbolic Recurrent Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#large-symbolic-recurrent-network">Large Symbolic Recurrent Network</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="colna.html">Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 
@@ -153,6 +163,1057 @@
             
   <div class="section" id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>The following code examples are included in the examples/ directory of the COLNA project.</p>
+<div class="section" id="feedforward-network">
+<h2>Feedforward Network<a class="headerlink" href="#feedforward-network" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; Creates a simple feedforward network with constant input.</span>
+
+<span class="sd">This example is part of the :ref:`User Manual`.</span>
+
+<span class="sd">The network topology is as follows:</span>
+
+<span class="sd">A &gt; B &gt; D</span>
+<span class="sd">    v</span>
+<span class="sd">    C</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span>
+
+<span class="c1"># Create a network</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+
+<span class="c1"># Add nodes</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add edges</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># Add input</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Visualize the network</span>
+<span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/feedforward&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Evaluate the network</span>
+<span class="n">net</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+
+<span class="c1"># Compute output and show results</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;paths leading to c:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_paths</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;paths leading to d:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_paths</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;waves arriving at d:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<div class="figure align-center">
+<img alt="_images/feedforward.svg" src="_images/feedforward.svg" /></div>
+</div>
+<div class="section" id="feedforward-network-with-testbench">
+<h2>Feedforward Network with Testbench<a class="headerlink" href="#feedforward-network-with-testbench" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; Creates a simple feedforward network with a testbench.</span>
+
+<span class="sd">This is the example used in the basic usage guide.</span>
+<span class="sd">The network topology is as follows:</span>
+
+<span class="sd">A -&gt; B &gt; D</span>
+<span class="sd">     v</span>
+<span class="sd">     C</span>
+
+<span class="sd">A testbench is used to inject time varying signals at node A and B.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Testbench</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1">### Create the Network and add the nodes</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># Visualize the network</span>
+<span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/feedforward_with_testbench&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create a testbench</span>
+<span class="n">tb</span> <span class="o">=</span> <span class="n">Testbench</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> <span class="c1"># Timestep should be factor of all delays</span>
+
+<span class="c1"># add an input signal to the testbench</span>
+<span class="n">x_in_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">500</span><span class="p">))</span><span class="o">+</span><span class="mf">1.5</span> <span class="c1"># create the input signal (Dimensino N)</span>
+<span class="n">t_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">501</span><span class="p">)</span> <span class="c1"># create the input time vector (Dimension N+1)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_input_sequence</span><span class="p">(</span><span class="n">node_name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">x_in_a</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t_in</span><span class="p">)</span>
+
+<span class="c1"># add output nodes to testbench (nodes at which output signal should be recorded)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_output_node</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_output_node</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="c1"># evaluate the network (through the testbench)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">evaluate_network</span><span class="p">()</span>
+
+<span class="c1"># Calculate the output signal at the output nodes</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># uses multithreading with at most 8 threads</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tb</span><span class="o">.</span><span class="n">t_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">tb</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+<span class="c1">### Plot the signals</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">input_x</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span> <span class="c1"># Input signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="c1"># Output signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;|x|&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Input&#39;</span><span class="p">,</span> <span class="s1">&#39;Output C&#39;</span><span class="p">,</span> <span class="s1">&#39;Output D&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;./visualizations/feedforward_with_testbench_output.svg&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<div class="figure align-center">
+<img alt="_images/feedforward_with_testbench_output.svg" src="_images/feedforward_with_testbench_output.svg" /></div>
+</div>
+<div class="section" id="physical-network">
+<h2>Physical Network<a class="headerlink" href="#physical-network" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Creates a physical network.</span>
+
+<span class="sd">This demonstrates how devices and devicelinks can be used to create a PhysicalNetwork.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">PhysicalNetwork</span><span class="p">,</span> <span class="n">Device</span><span class="p">,</span> <span class="n">DeviceLink</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># define a physical network</span>
+<span class="n">physnet</span> <span class="o">=</span> <span class="n">PhysicalNetwork</span><span class="p">()</span>
+
+<span class="c1"># create a splitter and a combiner Device based on their scattering matrix</span>
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">devicetype</span><span class="o">=</span><span class="s1">&#39;Splitter&#39;</span><span class="p">,</span> <span class="n">scattering_matrix</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)]]),</span>
+                  <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">combiner</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">devicetype</span><span class="o">=</span><span class="s1">&#39;Combiner&#39;</span><span class="p">,</span> <span class="n">scattering_matrix</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span> <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)]]),</span>
+                  <span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># add input and output nodes to the devices</span>
+<span class="n">splitter</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;i0&#39;</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">combiner</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s1">&#39;o0&#39;</span><span class="p">)</span>
+
+<span class="c1"># add the devices to the physical network</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">splitter</span><span class="p">)</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">combiner</span><span class="p">)</span>
+
+<span class="c1"># connect the devices using two DeviceLinks</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">add_devicelink</span><span class="p">(</span>
+    <span class="n">DeviceLink</span><span class="p">(</span><span class="n">startdevice</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">startdevicetype</span><span class="o">=</span><span class="s1">&#39;Splitter&#39;</span><span class="p">,</span> <span class="n">startnode</span><span class="o">=</span><span class="s1">&#39;o0&#39;</span><span class="p">,</span> <span class="n">enddevicetype</span><span class="o">=</span><span class="s1">&#39;Combiner&#39;</span><span class="p">,</span> <span class="n">enddevice</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span>
+               <span class="n">endnode</span><span class="o">=</span><span class="s1">&#39;i0&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">add_devicelink</span><span class="p">(</span>
+    <span class="n">DeviceLink</span><span class="p">(</span><span class="n">startdevice</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="n">startdevicetype</span><span class="o">=</span><span class="s1">&#39;Splitter&#39;</span><span class="p">,</span> <span class="n">startnode</span><span class="o">=</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">enddevicetype</span><span class="o">=</span><span class="s1">&#39;Combiner&#39;</span><span class="p">,</span> <span class="n">enddevice</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">,</span>
+               <span class="n">endnode</span><span class="o">=</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># visualize the full and simplified</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">full_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/Physical_Network_Full&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">full_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/Physical_Network_Simplified&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
+
+<span class="c1"># evaluate network</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">physnet</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<div class="figure align-center" id="id1">
+<img alt="_images/PhysicalNetworkSimplified.svg" src="_images/PhysicalNetworkSimplified.svg" /><p class="caption"><span class="caption-text">Simplified visualization of physical network.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<div class="figure align-center" id="id2">
+<img alt="_images/PhysicalNetworkFull.svg" src="_images/PhysicalNetworkFull.svg" /><p class="caption"><span class="caption-text">Full visualization of physical network.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="small-recurrent-network">
+<h2>Small Recurrent Network<a class="headerlink" href="#small-recurrent-network" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; Example of a basic recurrent network.</span>
+
+<span class="sd">Network topology:</span>
+
+<span class="sd">A -&gt; B</span>
+<span class="sd">^    v</span>
+<span class="sd">D &lt;- C</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span>
+
+<span class="c1">###Define Network</span>
+
+<span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">Edge</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">1.95</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+         <span class="n">Edge</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span>
+         <span class="n">Edge</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.98</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+         <span class="n">Edge</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)]</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/recurrent&#39;</span><span class="p">)</span>
+
+<span class="c1">####</span>
+<span class="c1">#Evaluate Network</span>
+<span class="c1">####</span>
+<span class="n">net</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span> <span class="n">max_endpoints</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>
+
+
+<span class="c1">####</span>
+<span class="c1">#Print data</span>
+<span class="c1">####</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;paths leading to a:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_paths</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;waves arriving at a:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<div class="figure align-center">
+<img alt="_images/recurrent_net.svg" src="_images/recurrent_net.svg" /></div>
+</div>
+<div class="section" id="recurrent-network-with-testbench">
+<h2>Recurrent Network with Testbench<a class="headerlink" href="#recurrent-network-with-testbench" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; Creates a very simple recurrent network with a testbench.</span>
+
+<span class="sd">This is the example used in the basic usage guide.</span>
+<span class="sd">The network topology is as follows:</span>
+
+<span class="sd">A -&gt; B</span>
+<span class="sd">^    v</span>
+<span class="sd">D &lt;- C</span>
+
+<span class="sd">A testbench is used to inject time varying signals at node A and B.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Testbench</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1">### Create the Network and add the nodes</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/recurrent_with_testbench&#39;</span><span class="p">)</span>
+
+<span class="c1">### Create a testbench</span>
+<span class="n">tb</span> <span class="o">=</span> <span class="n">Testbench</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span> <span class="c1"># Timestep should be factor of all delays</span>
+
+<span class="n">x_in_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">500</span><span class="p">))</span><span class="o">+</span><span class="mf">1.5</span> <span class="c1"># create the input signal (Dimensino N)</span>
+<span class="n">t_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">501</span><span class="p">)</span> <span class="c1"># create the input time vector (Dimension N+1)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_input_sequence</span><span class="p">(</span><span class="n">node_name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">x_in_a</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t_in</span><span class="p">)</span>
+
+<span class="c1"># add output nodes to testbench (nodes at which output signal should be recorded)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_output_node</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_output_node</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="c1"># evaluate the network (through the testbench)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">evaluate_network</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+<span class="c1"># Calculate the output signal at the output nodes</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># uses multithreading with at most 8 threads</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tb</span><span class="o">.</span><span class="n">t_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">tb</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+<span class="c1">### Plot the signals</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">input_x</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span> <span class="c1"># Input signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="c1"># Output signal</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;|x|&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Input&#39;</span><span class="p">,</span> <span class="s1">&#39;Output C&#39;</span><span class="p">,</span> <span class="s1">&#39;Output D&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="c1"># plt.savefig(&#39;basic_feedforward_tb_output.svg&#39;)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="symbolic-feedforward-network">
+<h2>Symbolic Feedforward Network<a class="headerlink" href="#symbolic-feedforward-network" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; Creates a very simple feedforward network with constant input and some symbolic edge properties.</span>
+
+<span class="sd">The network topology is as follows:</span>
+
+<span class="sd">A -&gt; B &gt; D</span>
+<span class="sd">     v</span>
+<span class="sd">     C</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">,</span> <span class="n">Testbench</span>
+
+<span class="n">amp1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">amp2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phi1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;phi1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">phi2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;phi2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="n">phi1</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="n">amp1</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="n">phi2</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="n">amp2</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/symbolicfeedforward&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">)</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># print(&#39;paths leading to c:&#39;, net.get_paths(&#39;c&#39;))</span>
+<span class="c1"># print(&#39;paths leading to d:&#39;, net.get_paths(&#39;d&#39;))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;waves arriving at d:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">))</span>
+
+<span class="c1"># Evaluation without feed dictionary, using the default value of each SymNum</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Evaluation without feed dictionary, with global defaults</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Evaluation with a feed dictionary</span>
+<span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;a2&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;phi1&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;phi2&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Evaluation with a partial feed dictionary</span>
+<span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;phi2&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<div class="figure align-center">
+<img alt="_images/symbolicfeedforward.svg" src="_images/symbolicfeedforward.svg" /></div>
+</div>
+<div class="section" id="symbolic-feedforward-network-with-testbench">
+<h2>Symbolic Feedforward Network with Testbench<a class="headerlink" href="#symbolic-feedforward-network-with-testbench" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; Creates a very simple recurrent network with some symbolic edge properties and a testbench.</span>
+
+<span class="sd">The network topology is as follows:</span>
+
+<span class="sd">A -&gt; B &gt; D</span>
+<span class="sd">     v</span>
+<span class="sd">     C</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">SymNum</span>
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Testbench</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">amp1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">amp2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phi1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;phi1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">phi2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;phi2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="n">phi1</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="n">amp1</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="n">phi2</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="n">amp2</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="c1">### Create a testbench with a feed dictionary</span>
+<span class="n">tb</span> <span class="o">=</span> <span class="n">Testbench</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,</span><span class="s1">&#39;a2&#39;</span><span class="p">:</span><span class="mf">1.5</span><span class="p">,</span><span class="s1">&#39;phi1&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;phi2&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">})</span>
+
+<span class="n">x_in_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">500</span><span class="p">))</span><span class="o">+</span><span class="mf">1.5</span> <span class="c1"># create the input signal (Dimensino N)</span>
+<span class="n">t_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">501</span><span class="p">)</span> <span class="c1"># create the input time vector (Dimension N+1)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_input_sequence</span><span class="p">(</span><span class="n">node_name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">x_in_a</span><span class="p">,</span><span class="n">t</span><span class="o">=</span><span class="n">t_in</span><span class="p">)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_output_node</span><span class="p">(</span><span class="n">node_name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_output_node</span><span class="p">(</span><span class="n">node_name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+
+<span class="c1"># evaluate the network (through the testbench)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">evaluate_network</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Calculate the output signal at the output nodes</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># uses multithreading with at most 8 threads</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tb</span><span class="o">.</span><span class="n">t_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">tb</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+<span class="c1">### Plot the signals</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">input_x</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span> <span class="c1"># Input signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="c1"># Output signal</span>
+
+
+<span class="c1"># Set a different feed dict and recompute the</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">set_feed_dict</span><span class="p">({</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span><span class="mf">1.2</span><span class="p">,</span><span class="s1">&#39;a2&#39;</span><span class="p">:</span><span class="mf">1.5</span><span class="p">,</span><span class="s1">&#39;phi1&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;phi2&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">})</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># uses multithreading with at most 8 threads</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tb</span><span class="o">.</span><span class="n">t_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">tb</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+<span class="c1">### Plot the signals</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="c1"># Output signal</span>
+
+<span class="c1">### Format the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;|x|&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Input&#39;</span><span class="p">,</span> <span class="s1">&#39;Output C&#39;</span><span class="p">,</span> <span class="s1">&#39;Output D&#39;</span><span class="p">,</span> <span class="s1">&#39;Output C (Feed Dict 2)&#39;</span><span class="p">,</span> <span class="s1">&#39;Output D (Feed Dict 2)&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;./visualizations/symnum_feedforward_tb_output.svg&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="symbolic-recurrent-network">
+<h2>Symbolic Recurrent Network<a class="headerlink" href="#symbolic-recurrent-network" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot; Example of a basic recurrent network with symbolic variables.</span>
+
+<span class="sd">Network topology:</span>
+
+<span class="sd">A -&gt; B</span>
+<span class="sd">^    v</span>
+<span class="sd">D &lt;- C</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">SymNum</span>
+
+
+<span class="c1">####</span>
+<span class="c1"># Define Network</span>
+<span class="c1">####</span>
+<span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">Edge</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;ph1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+         <span class="n">Edge</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;amp1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.95</span><span class="p">),</span> <span class="mf">1.</span><span class="p">),</span>
+         <span class="n">Edge</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;del1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span> <span class="kc">False</span><span class="p">)),</span>
+         <span class="n">Edge</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)]</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/symbolicrecurrent&#39;</span><span class="p">)</span>
+
+<span class="c1">####</span>
+<span class="c1"># Evaluate Network</span>
+<span class="c1">####</span>
+<span class="n">net</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span> <span class="n">max_endpoints</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;paths leading to a:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_paths</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">))</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;waves arriving at a:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
+
+<span class="c1">####</span>
+<span class="c1"># Inserting variable values</span>
+<span class="c1">###</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;amp1&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;ph1&#39;</span><span class="p">:</span> <span class="o">.</span><span class="mi">2</span><span class="p">})</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span>
+         <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;waves arriving at a (different variable values):&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1">####</span>
+<span class="c1"># Showing symbolic values</span>
+<span class="c1">####</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;symbolic values&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="large-symbolic-recurrent-network">
+<h2>Large Symbolic Recurrent Network<a class="headerlink" href="#large-symbolic-recurrent-network" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Network topology:</span>
+
+<span class="sd">P &lt;- N &lt;- L &lt;- J</span>
+<span class="sd">v    v    v    ^</span>
+<span class="sd">O &lt;- M &lt;- K &lt;- I</span>
+<span class="sd">v    v    ^    ^</span>
+<span class="sd">A -&gt; C -&gt; E -&gt; G</span>
+<span class="sd">v    v    ^    ^</span>
+<span class="sd">B -&gt; D -&gt; F -&gt; H</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">SymNum</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># 4x4 network</span>
+
+
+
+<span class="k">class</span> <span class="nc">SymbolicEdge</span><span class="p">(</span><span class="n">Edge</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">phase</span><span class="o">=.</span><span class="mi">4</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=.</span><span class="mi">75</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">attenuation</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Edge_&quot;</span><span class="o">+</span><span class="n">start</span><span class="o">+</span><span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attenuation</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>
+
+
+<span class="c1">####</span>
+<span class="c1"># Define Network</span>
+<span class="c1">####</span>
+<span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">]</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">),</span>
+         <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;e&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">),</span>
+         <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">),</span>
+         <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;j&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">),</span>
+         <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;n&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">),</span>
+         <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">),</span> <span class="n">SymbolicEdge</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)]</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">edge</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">edges</span><span class="p">):</span>
+    <span class="n">edge</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="c1">####</span>
+<span class="c1"># Evaluate Network</span>
+<span class="c1">####</span>
+<span class="n">net</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">max_endpoints</span><span class="o">=</span><span class="mf">1e6</span><span class="p">,</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)]</span>
+
+<span class="c1">####</span>
+<span class="c1"># Print and plot</span>
+<span class="c1">####</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of paths to &#39;</span> <span class="o">+</span> <span class="n">node</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">get_paths</span><span class="p">(</span><span class="n">node</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;final path to a added:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_paths</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;10 first waves arriving at a:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">net</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
+
+<span class="c1">#####</span>
+<span class="c1"># Reset variable</span>
+<span class="c1">#####</span>
+<span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Edge_ab&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">}</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;10 first waves arriving at a:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1">####</span>
+<span class="c1"># Print Symbolic values</span>
+<span class="c1">####</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;3 last waves at a (symbolic)&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">3</span><span class="p">:],</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1">#####</span>
+<span class="c1"># Plot</span>
+<span class="c1">#####</span>
+<span class="n">phases</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)])</span>
+<span class="n">phases</span> <span class="o">=</span> <span class="n">phases</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">amplitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">phases</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">amplitudes</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;amplitude weighted, binned phase contributions to a&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;amplitude&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+</div>
 </div>
 
 
@@ -163,7 +1224,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="colna.html" class="btn btn-neutral float-right" title="COLNA Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="colna.html" class="btn btn-neutral float-right" title="Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="manual.html" class="btn btn-neutral float-left" title="User Manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

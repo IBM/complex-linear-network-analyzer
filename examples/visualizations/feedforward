@@ -1,0 +1,11 @@
+digraph structs {
+	graph [constraint=true nodesep=2 overlap=false rankdir=TB ranksep=0.5 splines=true]
+	node [shape=record]
+	a [label=a]
+	b [label=b]
+	c [label=c]
+	d [label=d]
+	a -> b [label="a0.8, p1, d1"]
+	b -> c [label="a0.6, p2, d2"]
+	b -> d [label="a0.4, p3, d3"]
+}

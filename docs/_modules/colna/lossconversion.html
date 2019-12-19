@@ -79,11 +79,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../manual.html">User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../colna.html">COLNA Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../colna.html">Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
 </ul>
 
@@ -153,24 +152,25 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">e</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-
 <div class="viewcode-block" id="dBcm_to_loss_per_m"><a class="viewcode-back" href="../../colna.html#colna.lossconversion.dBcm_to_loss_per_m">[docs]</a><span class="k">def</span> <span class="nf">dBcm_to_loss_per_m</span><span class="p">(</span><span class="n">dBcm</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converts dB/cm loss value to loss per meter (alpha)</span>
+<span class="sd">    Converts dB/cm to loss per meter (alpha)</span>
 
 <span class="sd">    :param dBcm: Loss in dB/cm</span>
-<span class="sd">    :type dBcm: Numeric</span>
-<span class="sd">    :return: Loss per meter (alpha)</span>
+<span class="sd">    :type dBcm: float</span>
+<span class="sd">    :returns: Loss per meter (alpha)</span>
+<span class="sd">    :rtype: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="mi">10</span><span class="o">*</span><span class="n">dBcm</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="loss_per_m_to_dBcm"><a class="viewcode-back" href="../../colna.html#colna.lossconversion.loss_per_m_to_dBcm">[docs]</a><span class="k">def</span> <span class="nf">loss_per_m_to_dBcm</span><span class="p">(</span><span class="n">loss_per_m</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converts loss per meter (alpha) in dB/cm</span>
+<span class="sd">    Converts loss per meter (alpha) to dB/cm</span>
 
 <span class="sd">    :param loss_per_m: Loss per meter (alpha)</span>
-<span class="sd">    :type loss_per_m: Numeric</span>
-<span class="sd">    :return: Loss in dB/cm</span>
+<span class="sd">    :type loss_per_m: float</span>
+<span class="sd">    :retursn: Loss in dB/cm</span>
+<span class="sd">    :rtype: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">*</span><span class="n">loss_per_m</span><span class="o">/</span><span class="mf">10.0</span></div>
 
@@ -179,9 +179,11 @@
 <span class="sd">    Converts attenuation to loss per meter</span>
 
 <span class="sd">    :param attenuation: Attenuation</span>
-<span class="sd">    :type attenuation: Numeric</span>
+<span class="sd">    :type attenuation: float</span>
 <span class="sd">    :param length: propagation distance in meters</span>
-<span class="sd">    :return: loss per meter</span>
+<span class="sd">    :type length: float</span>
+<span class="sd">    :returns: loss per meter</span>
+<span class="sd">    :rtype: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">attenuation</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="n">length</span></div>
@@ -191,7 +193,11 @@
 <span class="sd">    Converts loss per meter to attenuation</span>
 
 <span class="sd">    :param loss_per_m: Loss per meter (alpha)</span>
+<span class="sd">    :type loss_per_m: float</span>
 <span class="sd">    :param length: propagation distance in meters</span>
+<span class="sd">    :type length: float</span>
+<span class="sd">    :returns: Attenuation value</span>
+<span class="sd">    :rtype: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">loss_per_m</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span></div>
@@ -202,7 +208,11 @@
 <span class="sd">    Converts dB/cm to attenuation</span>
 
 <span class="sd">    :param dBcm: Loss in dB/cm</span>
+<span class="sd">    :type dBcm: float</span>
 <span class="sd">    :param length: propagation distance in meters</span>
+<span class="sd">    :type length: float</span>
+<span class="sd">    :returns: Attenuation value</span>
+<span class="sd">    :rtype: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">dBcm_to_loss_per_m</span><span class="p">(</span><span class="n">dBcm</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">length</span><span class="p">)</span></div>
@@ -213,8 +223,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts attenuation to dB/cm</span>
 
-<span class="sd">    :param attenuation:</span>
+<span class="sd">    :param attenuation: Attenuation</span>
+<span class="sd">    :type attenuation: float</span>
 <span class="sd">    :param length: propagation distance in meters</span>
+<span class="sd">    :type length: float</span>
+<span class="sd">    :returns: loss in dB/cm</span>
+<span class="sd">    :rtype: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">loss_per_m_to_dBcm</span><span class="p">(</span><span class="n">attenuation_to_loss_per_meter</span><span class="p">(</span><span class="n">attenuation</span><span class="p">,</span> <span class="n">length</span><span class="p">))</span></div>
 </pre></div>

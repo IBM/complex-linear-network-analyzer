@@ -1,6 +1,4 @@
-""" Creates a very simple feedforward network with and some symbolic edge properties.
-
-The network is embedded into a testbench, which applies
+""" Creates a very simple recurrent network with some symbolic edge properties and a testbench.
 
 The network topology is as follows:
 
@@ -14,10 +12,10 @@ from colna.analyticnetwork import Testbench
 import numpy as np
 import matplotlib.pyplot as plt
 
-amp1 = SymNum(name='a1', default=1.5, product=True, global_default=2)
-amp2 = SymNum(name='a2', default=2, product=True, global_default=2)
-phi1 = SymNum(name='phi1', default=2, product=False, global_default=3)
-phi2 = SymNum(name='phi2', default=3, product=False, global_default=3)
+amp1 = SymNum(name='a1', default=1.5, product=True)
+amp2 = SymNum(name='a2', default=2, product=True)
+phi1 = SymNum(name='phi1', default=2, product=False)
+phi2 = SymNum(name='phi2', default=3, product=False)
 
 net = Network()
 
@@ -40,10 +38,10 @@ tb.add_output_node(node_name='c')
 tb.add_output_node(node_name='d')
 
 # evaluate the network (through the testbench)
-tb.evaluate_network(amplitude_cutoff=1e-3,use_global_default=False)
+tb.evaluate_network(amplitude_cutoff=1e-3,use_shared_default=False)
 
 # Calculate the output signal at the output nodes
-tb.calculate_output(n_threads=8, use_global_default=False) # uses multithreading with at most 8 threads
+tb.calculate_output(n_threads=8, use_shared_default=False) # uses multithreading with at most 8 threads
 t, x = tb.t_out.transpose(), tb.x_out.transpose()
 
 ### Plot the signals
@@ -53,7 +51,7 @@ plt.plot(t, np.abs(x), 'x') # Output signal
 
 # Set a different feed dict and recompute the
 tb.set_feed_dict({'a1':1.2,'a2':1.5,'phi1':2,'phi2':3})
-tb.calculate_output(n_threads=8, use_global_default=False) # uses multithreading with at most 8 threads
+tb.calculate_output(n_threads=8, use_shared_default=False) # uses multithreading with at most 8 threads
 t, x = tb.t_out.transpose(), tb.x_out.transpose()
 
 ### Plot the signals
@@ -64,5 +62,5 @@ plt.xlabel('Time')
 plt.ylabel('|x|')
 plt.legend(['Input', 'Output C', 'Output D', 'Output C (Feed Dict 2)', 'Output D (Feed Dict 2)'], loc='lower left')
 plt.grid()
-plt.savefig('symnum_feedforward_tb_output.svg')
+plt.savefig('./visualizations/symnum_feedforward_tb_output.svg')
 plt.show()

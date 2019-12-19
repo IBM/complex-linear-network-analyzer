@@ -1,0 +1,10 @@
+digraph structs {
+	graph [constraint=true nodesep=2 overlap=false rankdir=TB ranksep=0.5 splines=true]
+	node [shape=record]
+	Splitter0i0 -> Splitter0o0 [label="a0.7071067811865475, p0.0, d1"]
+	Splitter0i0 -> Splitter0o1 [label="a0.7071067811865475, p0.0, d1"]
+	Combiner0i0 -> Combiner0o0 [label="a0.7071067811865475, p0.0, d1"]
+	Combiner0i1 -> Combiner0o0 [label="a0.7071067811865475, p0.0, d1"]
+	Splitter0o0 -> Combiner0i0 [label="a0.5, p15.707963267948966, d2"]
+	Splitter0o1 -> Combiner0i1 [label="a0.7, p18.84955592153876, d3"]
+}

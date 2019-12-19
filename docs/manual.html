@@ -81,15 +81,15 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+              <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#optional-features">Optional Features</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#simple-network">Simple Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testbench">Testbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testbenches">Testbenches</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#recurrent-network">Recurrent Network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#symbolic-numbers">Symbolic Numbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#symbolic-networks">Symbolic Networks</a><ul>
@@ -104,7 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="colna.html">COLNA Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="colna.html">Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 
@@ -190,6 +190,70 @@ and add it to your system path (get Graphviz here <a class="reference external" 
 <p>to install the COLNA package and all its dependencies, including the Graphviz Python wrapper.</p>
 </div>
 </div>
+<div class="section" id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<p>Create a network object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Testbench</span><span class="p">,</span> <span class="n">SymNum</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Define Network</span>
+<span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Add three nodes and edges, some edge properties are defined through symbolic numbers.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add three nodes</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add three edges (with mixed symbolic and numeric values)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;ph_ab&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;ph_bc&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                  <span class="n">attenuation</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;amp_bc&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>If you have installed graphviz, you can visualize the network:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize the network (if graphviz is installed)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./quickstart&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Will create a network visualization that looks as follows:</p>
+<div class="figure align-center">
+<img alt="_images/quickstart2.svg" src="_images/quickstart2.svg" /></div>
+<p>Create a testbench, send an input signal to the network and register an output node.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a testbench</span>
+<span class="n">tb</span> <span class="o">=</span> <span class="n">Testbench</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Add an input signal</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_input_sequence</span><span class="p">(</span><span class="n">node_name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="n">t</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">]))</span>
+
+<span class="c1"># register an output node</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">add_output_node</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Feed the symbolic values, evaluate the network up to a certain accuracy and calculate and plot the output signals.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set the feed dictionary for the symbolic numbers</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">set_feed_dict</span><span class="p">({</span><span class="s1">&#39;amp_bc&#39;</span><span class="p">:</span><span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;ph_bc&#39;</span><span class="p">:</span> <span class="mf">3.1</span><span class="p">,</span> <span class="s1">&#39;ph_ab&#39;</span><span class="p">:</span> <span class="mf">4.9</span><span class="p">})</span>
+
+<span class="c1"># evaluate the network (through the testbench)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">evaluate_network</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+<span class="c1"># Calculate the output signal at the output nodes</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tb</span><span class="o">.</span><span class="n">t_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">tb</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+
+<span class="c1">### Plot the Input and Output Signals</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">input_t</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">input_x</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span> <span class="c1"># Input signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="c1"># Output signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;|x|&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Input&#39;</span><span class="p">,</span> <span class="s1">&#39;Output C&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="simple-network">
 <h2>Simple Network<a class="headerlink" href="#simple-network" title="Permalink to this headline">¶</a></h2>
 <p>The fundamental class of the COLNA module is the <a class="reference internal" href="colna.html#colna.analyticnetwork.Network" title="colna.analyticnetwork.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">Network</span></code></a> class. The network class describes
@@ -252,8 +316,8 @@ You can print the evaluated paths using the <code class="xref py py-meth docutil
 <p>The visualization method creates a dot file (at the given output path) and renders it into a pdf file, using Graphviz.
 The resulting visualization is shown in <a class="reference internal" href="#simplenetworklabel"><span class="std std-ref">the figure above</span></a>.</p>
 </div>
-<div class="section" id="testbench">
-<h2>Testbench<a class="headerlink" href="#testbench" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="testbenches">
+<h2>Testbenches<a class="headerlink" href="#testbenches" title="Permalink to this headline">¶</a></h2>
 <p>So far we have only injected constant signals into the network. To inject time dependant signals, we can use a <a class="reference internal" href="colna.html#colna.analyticnetwork.Testbench" title="colna.analyticnetwork.Testbench"><code class="xref py py-class docutils literal notranslate"><span class="pre">Testbench</span></code></a> object.
 The Testbench is used to inject signals to nodes of the network and read the output. This is illustrated in the figure
 below.</p>
@@ -312,7 +376,7 @@ In addition the resampled input signal is available through input_t, input_x att
 <div class="section" id="recurrent-network">
 <h2>Recurrent Network<a class="headerlink" href="#recurrent-network" title="Permalink to this headline">¶</a></h2>
 <p>COLNA supports the analysis of recurrent connections (loops) in the network. COLNA computes all paths
-leading to the output nodes (including the recurrent paths) down to a certain accuracy threshold.</p>
+leading from input nodes to output nodes (including the recurrent paths) down to a certain accuracy threshold.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If a network contains recurrent paths (loops), the user must ensure that there is no gain in the network (i.e. attenuation &lt; 1), otherwise the amplitude at the output will never fall below the threshold.</p>
@@ -339,8 +403,12 @@ leading to the output nodes (including the recurrent paths) down to a certain ac
 <p>The network is visualized below.</p>
 <div class="figure align-center">
 <img alt="_images/recurrent_net.svg" src="_images/recurrent_net.svg" /></div>
-<p>When evaluating the network you can specify the amplitude_cutoff limit. When the amplitude falls below this limit, the
-evaluation will be stopped. In our example a lower cutoff level leads to more cycles through the recurrent path.</p>
+<p>When evaluating the network you can specify the amplitude_cutoff limit. When the amplitude of the current analyzed path falls below this limit, the
+evaluation of the current path will be stopped. The evaluation ends, when all paths fall below the threshold. In our example a lower cutoff level leads to more cycles through the recurrent path.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The amplitude_cutoff defines the amplitude, at which the analysis of the path will be stopped. The accuracy at the output can be lower than this value, as multiple paths might lead to the same output!</p>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -369,60 +437,75 @@ is slower, but the values can be feed after the evaluation when the output is co
 full network multiple times with different edge parameters. Additionally, the use of symbolic numbers allows to extract an analytic
 description of the network output.</p>
 <p>COLNA symbolic numbers are provided through the <a class="reference internal" href="colna.html#colna.analyticnetwork.SymNum" title="colna.analyticnetwork.SymNum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SymNum</span></code></a> class. The following code snippet creats two symbolic numbers and mulitplies them together:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">SymNum</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">SymNum</span>
 
-<span class="n">amp1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">global_default</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">amp2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">global_default</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">amp1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">amp2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 <span class="n">amp3</span> <span class="o">=</span> <span class="n">amp1</span> <span class="o">*</span> <span class="n">amp2</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">amp1</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">amp2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">amp3</span><span class="p">)</span>
-
-<span class="o">&gt;&gt;&gt;</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">a1</span><span class="o">**</span><span class="mi">1</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">a2</span><span class="o">**</span><span class="mi">1</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">a1</span><span class="o">**</span><span class="mi">1</span> <span class="o">*</span> <span class="n">a2</span><span class="o">**</span><span class="mi">1</span>
+</pre></div>
+</td></tr></table></div>
+<p>Returns:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span>&gt;&gt; <span class="m">1</span>.0 * a1**1
+<span class="gp">&gt;</span>&gt;&gt; <span class="m">1</span>.0 * a2**1
+<span class="gp">&gt;</span>&gt;&gt; <span class="m">1</span>.0 * a1**1 * a2**1
 </pre></div>
 </div>
 <p>SymNum’s can either be additive or multiplicative, their behaviour is controlled through the product argument (product = True: mulitiplicative variable, product = False: additative variable).
 In the example above we created two multiplicative, symbolic numbers and multiplied them together. As you might have noticed, SymNum takes not
-only the variable name but also a default and a global_default value as arguments. The difference will become clear, when we start to evaluate the symbolic term.
+only the variable name but also a default numeric value as arguments.
 To evaluate the symbolic numbers use the SymNums <a class="reference internal" href="colna.html#colna.analyticnetwork.SymNum.eval" title="colna.analyticnetwork.SymNum.eval"><code class="xref py py-meth docutils literal notranslate"><span class="pre">eval()</span></code></a> method. Take a look at the four different variants
 that we can use to compute the numeric value:</p>
-<p>** Evaluate without feed dictionary and use individual defaults **</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">amp3</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="mf">12.0</span>
+<p><strong>Evaluate without feed dictionary and use defaults</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">amp3</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mf">0.4</span>
 </pre></div>
 </div>
-<p>If we do not provide a feed dictionary and we set the use_global_default argument to false, the default values of the SymNums will be used for the evaluation.
-So in this case, eval computes <span class="math notranslate nohighlight">\(3.0\cdot4.0=12.0\)</span>.</p>
-<p>** Evaluate without feed dictionary and use global defaults **</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Evaluate without feed dictionary, but use global defaults</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;amp3 global default: &#39;</span><span class="p">,</span> <span class="n">amp3</span><span class="o">.</span><span class="n">global_default</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">amp3</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">amp3</span> <span class="k">global</span> <span class="n">default</span><span class="p">:</span>  <span class="mi">5</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="mf">25.0</span>
+<p>If we do not provide a feed dictionary and we set the use_shared_default argument to false, the default values of the SymNums will be used for the evaluation.
+So in this case, eval computes <span class="math notranslate nohighlight">\(0.5\cdot0.8=0.4\)</span>.</p>
+<p><strong>Evaluate without feed dictionary and use shared defaults</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Evaluate without feed dictionary, but use shared defaults</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;amp3 shared default: &#39;</span><span class="p">,</span> <span class="n">amp3</span><span class="o">.</span><span class="n">shared_default</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">amp3</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">amp3</span> <span class="n">shared</span> <span class="n">default</span><span class="p">:</span>  <span class="mf">0.8</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mf">0.64</span>
 </pre></div>
 </div>
-<p>If we do not provide a feed dictionary and we set the use_global_default argument to true, SymNum will assume that all
-symbolic values are set to the global_default value of the SymNum which is evaluated. So in this case this would be the
-global_default value of the <cite>amp3</cite> object which was set to 5.0. In this case, eval returns <span class="math notranslate nohighlight">\(5.0\cdot5.0=25.0\)</span>.
-Evaluating a symbolic expression with use_global_default is faster than using individual default values, this can be helpful when
-large or recurrent networks need to be evaluated.</p>
-<p>** Evaluate with feed dictionary **</p>
+<p>If we do not provide a feed dictionary and we set the use_shared_default argument to true, SymNum will assume that all
+symbolic values are set to the shared_default value of the SymNum which is evaluated. The shared_default value is initialized
+automatically to be the same as the default value. If we add or multiply two SymNum’s a new SymNum is generated. It’s
+shared_default value  will be the maximum of the shared_default values of the two SymNum’s which are added or multiplied
+together.</p>
+<p>So in this case the shared default of <cite>amp3</cite> is set to 0.8 and eval returns <span class="math notranslate nohighlight">\(0.8\cdot0.8=0.64\)</span>.
+Evaluating a symbolic expression with use_shared_default is faster than using individual default values, this can be helpful when
+very large or recurrent networks need to be evaluated.</p>
+<p><strong>Evaluate with feed dictionary</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;a2&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">amp3</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">))</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="mf">6.0</span>
 </pre></div>
 </div>
-<p>If we provide a feed dictionary, eval will replace the symbolic numbers by the feed values (independent of use_global_default setting). In this case, eval returns <span class="math notranslate nohighlight">\(2\cdot3=6.0\)</span>.</p>
-<p>** Evaluate with partial feed dictionary **</p>
+<p>If we provide a feed dictionary, eval will replace the symbolic numbers by the feed values (independent of use_shared_default setting). In this case, eval returns <span class="math notranslate nohighlight">\(2\cdot3=6.0\)</span>.</p>
+<p><strong>Evaluate with partial feed dictionary</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a2&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">amp3</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="mf">9.0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mf">1.5</span>
 </pre></div>
 </div>
-<p>If we provide a partial feed dictionary, eval will replace the symbolic numbers present in the feed dictionary by the feed values and all others by their default value (independent of use_global_default setting).
+<p>If we provide a partial feed dictionary, eval will replace the symbolic numbers present in the feed dictionary by the feed values and all others by their default value (independent of use_shared_default setting).
 In this case, eval returns <span class="math notranslate nohighlight">\(3\cdot3=9.0\)</span>.</p>
 </div>
 <div class="section" id="symbolic-networks">
@@ -431,15 +514,13 @@ In this case, eval returns <span class="math notranslate nohighlight">\(3\cdot3=
 <h3>Simple Symbolic Network<a class="headerlink" href="#simple-symbolic-network" title="Permalink to this headline">¶</a></h3>
 <p>We can use symbolic numbers (<a class="reference internal" href="colna.html#colna.analyticnetwork.SymNum" title="colna.analyticnetwork.SymNum"><code class="xref py py-class docutils literal notranslate"><span class="pre">SymNum</span></code></a>) for the edge properties of our network. Below is an example using the same network topology as the network discussed in <a class="reference internal" href="#simple-network"><span class="std std-ref">Simple Network</span></a>.
 However, for some edge properties symbolic numbers are used.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">SymNum</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">Network</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">,</span> <span class="n">Testbench</span>
 
-<span class="c1"># create symbolic variables for attenuation and phase</span>
-<span class="n">amp1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">global_default</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">amp2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">global_default</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">phi1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;phi1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">global_default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">phi2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;phi2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">global_default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">amp1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">amp2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phi1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;phi1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">phi2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;phi2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="c1"># initialize the network</span>
 <span class="n">net</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
 
 <span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
@@ -447,15 +528,15 @@ However, for some edge properties symbolic numbers are used.</p>
 <span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
 <span class="n">net</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
 
-<span class="c1"># add edges with symbolic numbers for some phases and amplitudes</span>
 <span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="n">phi1</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="n">amp1</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="n">phi2</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="n">amp2</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 <span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="n">phase</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">attenuation</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
 
 <span class="n">net</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="c1"># evaluate the network</span>
-<span class="n">net</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">use_global_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/symbolicfeedforward&#39;</span><span class="p">)</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
 <span class="c1"># print the waves arriving at node c and d</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">))</span>
@@ -465,14 +546,14 @@ However, for some edge properties symbolic numbers are used.</p>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">waves</span> <span class="n">arriving</span> <span class="n">at</span> <span class="n">d</span><span class="p">:</span> <span class="p">[(</span><span class="o">&lt;</span><span class="n">SymNum</span><span class="p">{</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">a1</span><span class="o">**</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">SymNum</span><span class="p">{</span><span class="mf">3.0</span> <span class="o">+</span> <span class="n">phi1</span><span class="o">*</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)]</span>
 </pre></div>
 </div>
-<p><a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate()</span></code></a> returns a symbolic representation of the waves arriving at node c and d. <a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate()</span></code></a> takes two arguments: use_global_default and a feed dictionary.
+<p><a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate()</span></code></a> returns a symbolic representation of the waves arriving at node c and d. <a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate()</span></code></a> takes two arguments: use_shared_default and a feed dictionary.
 These arguments are used for the evaluation of the network, the are applied in the same way as in the <a class="reference internal" href="colna.html#colna.analyticnetwork.SymNum.eval" title="colna.analyticnetwork.SymNum.eval"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SymNum.eval()</span></code></a> method. This settings are especially important when we work with recurrent
 loops in the network, as the cutoff criterion will be evaluated based on the evaluated numeric value of the symbolic numbers.</p>
 <p>Once again you can use the three different versions:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="code docutils literal notranslate"><span class="pre">feed_dict=None,</span> <span class="pre">use_global_default=True</span></code>: Do not provide a feed dictionary and set the values of all symbolic numbers to the value of the global_default member of the symbolic number under evaluation (faster)</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">feed_dict=None,</span> <span class="pre">use_global_default=False</span></code>: Do not provide a feed dictionary and set the value of each symbolic number to its default value (more accurate)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">feed_dict=None,</span> <span class="pre">use_shared_default=True</span></code>: Do not provide a feed dictionary and set the values of all symbolic numbers to the largest shared_default member of the symbolic numbers under evaluation (faster)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">feed_dict=None,</span> <span class="pre">use_shared_default=False</span></code>: Do not provide a feed dictionary and set the value of each symbolic number to its default value (more accurate)</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">feed_dict=feed</span> <span class="pre">dictionary</span></code>: The values of each symbolic number is set to the value given in the feed dicitionary. If a partial feed dictionary is used, missing symbolic numbers are set to their default values.</p></li>
 </ul>
 </div></blockquote>
@@ -481,7 +562,7 @@ the feed values are only used for the evaluation of the cutoff criterion.</p>
 <p>We can evaluate the symbolic expression using the <code class="xref py py-meth docutils literal notranslate"><span class="pre">SymNum.eval()</span></code> method as discussed in the <a class="reference internal" href="#symbolic-numbers"><span class="std std-ref">Symbolic Numbers</span></a> section.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Evaluation with a feed dictionary</span>
 <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;a2&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;phi1&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;phi2&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
-<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
+<span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">Waves</span> <span class="n">arriving</span> <span class="n">at</span> <span class="n">c</span><span class="p">:</span> <span class="p">[(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)]</span>
@@ -491,23 +572,23 @@ the feed values are only used for the evaluation of the cutoff criterion.</p>
 <div class="section" id="symbolic-network-with-testbench">
 <h3>Symbolic Network with Testbench<a class="headerlink" href="#symbolic-network-with-testbench" title="Permalink to this headline">¶</a></h3>
 <p>SymNum based networks can be used together with a <a class="reference internal" href="colna.html#colna.analyticnetwork.Testbench" title="colna.analyticnetwork.Testbench"><code class="xref py py-class docutils literal notranslate"><span class="pre">Testbench</span></code></a>.</p>
-<p>The use_global_default parameter of the <a class="reference internal" href="colna.html#colna.analyticnetwork.Testbench.evaluate_network" title="colna.analyticnetwork.Testbench.evaluate_network"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Testbench.evaluate_network()</span></code></a> and <a class="reference internal" href="colna.html#colna.analyticnetwork.Testbench.calculate_output" title="colna.analyticnetwork.Testbench.calculate_output"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Testbench.calculate_output()</span></code></a> works as discussed
+<p>The use_shared_default parameter of the <a class="reference internal" href="colna.html#colna.analyticnetwork.Testbench.evaluate_network" title="colna.analyticnetwork.Testbench.evaluate_network"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Testbench.evaluate_network()</span></code></a> and <a class="reference internal" href="colna.html#colna.analyticnetwork.Testbench.calculate_output" title="colna.analyticnetwork.Testbench.calculate_output"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Testbench.calculate_output()</span></code></a> works as discussed
 previously for the <a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Network.evaluate()</span></code></a> method. The main difference is, that the <cite>feed_dict</cite> is an attribute of the <a class="reference internal" href="colna.html#colna.analyticnetwork.Testbench" title="colna.analyticnetwork.Testbench"><code class="xref py py-class docutils literal notranslate"><span class="pre">Testbench</span></code></a> object instead of an argument of the method.</p>
 <p>The full code example is given in <cite>/examples/symnum_feedforward_with_tb.py</cite>, here we just show the relevant changes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### Create a testbench with a feed dictionary</span>
 <span class="n">tb</span> <span class="o">=</span> <span class="n">Testbench</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">net</span><span class="p">,</span> <span class="n">timestep</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,</span><span class="s1">&#39;a2&#39;</span><span class="p">:</span><span class="mf">1.5</span><span class="p">,</span><span class="s1">&#39;phi1&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;phi2&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">})</span>
 
 <span class="c1"># evaluate the network (through the testbench)</span>
-<span class="n">tb</span><span class="o">.</span><span class="n">evaluate_network</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span><span class="n">use_global_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">evaluate_network</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># Calculate the output signal at the output nodes</span>
-<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># uses multithreading with at most 8 threads</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">t</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tb</span><span class="o">.</span><span class="n">t_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">tb</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
 <span class="n">plot</span><span class="p">()</span>
 
 <span class="c1"># Set a different feed dict and recompute the</span>
 <span class="n">tb</span><span class="o">.</span><span class="n">set_feed_dict</span><span class="p">({</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span><span class="mf">1.2</span><span class="p">,</span><span class="s1">&#39;a2&#39;</span><span class="p">:</span><span class="mf">1.5</span><span class="p">,</span><span class="s1">&#39;phi1&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;phi2&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">})</span>
-<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">use_global_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># uses multithreading with at most 8 threads</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">calculate_output</span><span class="p">(</span><span class="n">n_threads</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -518,7 +599,7 @@ without evaluating the network again!</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Keep in mind that for recurrent networks, the cutoff criterion for the network evaluation
-was based either on local or global default settings of the symbolic numbers or on a specific feed dictionary used during the evaluation.
+was based either on local or shared default settings of the symbolic numbers or on a specific feed dictionary used during the evaluation.
 This means that the accuracy of the network output might be lowered if a feed dictionary with smaller attenuation in the feedback loops is used!</p>
 </div>
 </div>
@@ -526,7 +607,7 @@ This means that the accuracy of the network output might be lowered if a feed di
 <div class="section" id="physical-networks">
 <h2>Physical Networks<a class="headerlink" href="#physical-networks" title="Permalink to this headline">¶</a></h2>
 <p>PhysicalNetwork is a child class of Network that allows for a more natural implementation of physical (hardware) networks.
-Physical networks are made out of <code class="xref py py-class docutils literal notranslate"><span class="pre">Device`s</span> <span class="pre">and</span> <span class="pre">:class:</span></code>.DeviceLink`s, which connect devices.</p>
+Physical networks are made out of <a class="reference internal" href="colna.html#colna.analyticnetwork.Device" title="colna.analyticnetwork.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">Device</span></code></a> s and <a class="reference internal" href="colna.html#colna.analyticnetwork.DeviceLink" title="colna.analyticnetwork.DeviceLink"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeviceLink</span></code></a> s, which connect devices.</p>
 <div class="section" id="devices-and-devicelinks">
 <h3>Devices and Devicelinks<a class="headerlink" href="#devices-and-devicelinks" title="Permalink to this headline">¶</a></h3>
 <p>A <a class="reference internal" href="colna.html#colna.analyticnetwork.Device" title="colna.analyticnetwork.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">Device</span></code></a> has a number of input and output nodes (ports) and the input-to-output relation is given by a scattering matrix
@@ -535,6 +616,7 @@ scattering matrix (matrix describing input-output relation). Nodes are renamed a
 device name and port number.</p>
 <p>A <a class="reference internal" href="colna.html#colna.analyticnetwork.DeviceLink" title="colna.analyticnetwork.DeviceLink"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeviceLink</span></code></a> is an edge that connects to devices.  Devicelinks are given the name of source and target device as well as
 source and target node within the device. Otherwise they function like the parent class <a class="reference internal" href="colna.html#colna.analyticnetwork.Edge" title="colna.analyticnetwork.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a>.</p>
+<p>A simple example of a physical network using devices and devicelinks is given below:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">PhysicalNetwork</span><span class="p">,</span> <span class="n">Device</span><span class="p">,</span> <span class="n">DeviceLink</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 

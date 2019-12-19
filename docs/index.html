@@ -80,11 +80,10 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="manual.html">User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="colna.html">COLNA Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="colna.html">Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 
@@ -152,47 +151,49 @@
             
   <div class="section" id="complex-linear-network-analyzer-colna">
 <h1>Complex Linear Network Analyzer (COLNA)<a class="headerlink" href="#complex-linear-network-analyzer-colna" title="Permalink to this headline">¶</a></h1>
-<p>The complex linear network analyzer package can be used to compute analytically the propagation of coherent, complex
-signals in complex valued networks. The network consists of linear nodes and directed, complex valued and delayed edges.
-Originally, COLNA was developed to compute coherent wave propagation in linear photonic circuits.</p>
-<p>COLNA computes all paths leading to output nodes (including recurrent paths) down to a certain accuracy
-threshold. Using a testbench, complex valued signals can be injected to the network and the output signal is computed.</p>
-<p>COLNA supports the mixed use of constants and symbolic numbers (variable). It is for example possible to describe</p>
-<div class="section" id="quickstart">
-<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="install">
-<h3>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h3>
-<p>Pip install the COLNA package. All required packages are installed automatically.
-If you intend to use the visualization feature, Graphviz must be installed manually.</p>
+<p>The complex linear network analyzer package can be used to compute analytically the propagation of complex valued
+signals in networks with linear nodes and directed, complex valued and delayed edges.</p>
+<p>COLNA computes all paths leading from input to output nodes (including recurrent paths) down to a certain amplitude accuracy threshold.</p>
+<p>COLNA supports the mixed use of numeric and symbolic numbers (variable) for all edge properties, returning either a numeric or</p>
+<p>COLNA can inject complex valued signals to the network and the compute the resulting signals at the output nodes using a testbench.</p>
+<p>COLNA was developed to compute coherent wave propagation in linear photonic circuits but it can be used
+in other areas, where signal propagation through linear complex networks is of relevance.</p>
 </div>
-</div>
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p>Numpy, Scipy, Matplotlib, tqdm</p>
-<p>For visualization: Graphviz + Graphviz Python Package (see installation instructions for details)</p>
+<div class="section" id="contents">
+<h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
+<p>To start working with COLNA we suggest to take a look at the user manual and some of the examples.</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="manual.html">User Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="manual.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual.html#quickstart">Quickstart</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manual.html#simple-network">Simple Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="manual.html#testbench">Testbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="manual.html#testbenches">Testbenches</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manual.html#recurrent-network">Recurrent Network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manual.html#symbolic-numbers">Symbolic Numbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manual.html#symbolic-networks">Symbolic Networks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="manual.html#physical-networks">Physical Networks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="colna.html">COLNA Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="colna.html#module-colna.analyticnetwork">Analyticnetwork module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="colna.html#module-colna.lossconversion">Lossconversion module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="colna.html#module-colna">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#feedforward-network">Feedforward Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#feedforward-network-with-testbench">Feedforward Network with Testbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#physical-network">Physical Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#small-recurrent-network">Small Recurrent Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#recurrent-network-with-testbench">Recurrent Network with Testbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#symbolic-feedforward-network">Symbolic Feedforward Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#symbolic-feedforward-network-with-testbench">Symbolic Feedforward Network with Testbench</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#symbolic-recurrent-network">Symbolic Recurrent Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#large-symbolic-recurrent-network">Large Symbolic Recurrent Network</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="colna.html">Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="colna.html#analyticnetwork-module">Analyticnetwork module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colna.html#lossconversion-module">Lossconversion module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">

@@ -7,7 +7,6 @@ A -> B
 D <- C
 
 """
-
 from colna.analyticnetwork import Network, Edge
 
 ###Define Network

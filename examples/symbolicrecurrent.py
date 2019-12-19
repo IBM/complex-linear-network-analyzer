@@ -1,9 +1,14 @@
+""" Example of a basic recurrent network with symbolic variables.
+
+Network topology:
+
+A -> B
+^    v
+D <- C
+
+"""
 from colna.analyticnetwork import Network, Edge, SymNum
 
-# 2x2 grid (cycle)
-# A -> B
-# ^    v
-# D <- C
 
 ####
 # Define Network
@@ -11,7 +16,7 @@ from colna.analyticnetwork import Network, Edge, SymNum
 nodes = ['a', 'b', 'c', 'd']
 edges = [Edge('a', 'b', phase=SymNum('ph1', default=0.4, product=False), attenuation=0.95, delay=1.0),
          Edge('b', 'c', .5, SymNum('amp1', default=0.95), 1.),
-         Edge('c', 'd', .5, 0.95, SymNum('del1', default=1.2, product= False, global_default=1.2)),
+         Edge('c', 'd', .5, 0.95, SymNum('del1', default=1.2, product= False)),
          Edge('d', 'a', .5, 0.95, 1.)]
 
 net = Network()
@@ -26,7 +31,7 @@ net.visualize(path='./visualizations/symbolicrecurrent')
 ####
 # Evaluate Network
 ####
-net.evaluate(amplitude_cutoff=1e-2, max_endpoints=1e6, use_global_default=False)
+net.evaluate(amplitude_cutoff=1e-2, max_endpoints=1e6, use_shared_default=False)
 
 print('paths leading to a:', net.get_paths('a'))
 waves = [tuple([w.eval() if hasattr(w, 'eval') else w for w in inner]) for inner in net.get_result('a')]
