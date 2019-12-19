@@ -1,11 +1,14 @@
 """ Creates a very simple feedforward network with constant input.
 
-This is the example used in the basic usage guide.
+This example is part of the :ref:`User Manual`.
+
 The network topology is as follows:
 
-A -> B > D
-     v
-     C
+.. code-block:: text
+
+    A > B > D
+        v
+        C
 """
 
 from colna.analyticnetwork import Network, Edge
@@ -33,4 +36,4 @@ print('waves arriving at c:', net.get_result('c'))
 print('waves arriving at d:', net.get_result('d'))
 
 
-# net.visualize(path='simple_network')
+net.visualize(path='./visualizations/feedforward')
