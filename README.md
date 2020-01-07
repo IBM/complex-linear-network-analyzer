@@ -20,7 +20,7 @@ The full documentation can be found at ....., including a full reference, tutori
 Installation
 ------------
 Pip install the COLNA package. All required packages are installed automatically.
-If you intend to use the visualization feature, Graphviz must be installed manually.
+If you intend to use the visualization feature, Graphviz must be installed and added to the path.
 
 More details for the installation are given in the User Manual.
 
