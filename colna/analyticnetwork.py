@@ -353,7 +353,7 @@ class SymNum:
         # the symbolic part of the number's value
         self.symbolic = {name: 1}
 
-        # dict. of the values that are inserted for each variable if no particular value is specified at evaluation
+        # dict of the values that are inserted for each variable if no particular value is specified at evaluation
         self.defaults = {name: default}
 
         # indicates whether the number stacks multiplicatively or additively
@@ -364,9 +364,15 @@ class SymNum:
         # max(a.shared_default, b.shared_default)
         self.shared_default = default
 
+    def __eq__(self, other):
+        return self.symbolic == other.symbolic and self.numerical == other.numerical and self.defaults == other.defaults and self.product == other.product and self.shared_default == other.shared_default
+
+
+
     def __copy__(self):
         """ Creates a copy of a Symbolic Number."""
         copy = SymNum('', product=self.product, numerical=self.numerical)
+        copy.shared_default = self.shared_default
         copy.symbolic = deepcopy(self.symbolic)
         copy.defaults = deepcopy(self.defaults)
         return copy
@@ -907,7 +913,8 @@ class Testbench():
         x_sampled = self._interpolate_constant(x=t_sampled, xp=t, yp=x)
         return t_sampled, x_sampled
 
-    def _interpolate_constant(self, x, xp, yp):
+    @staticmethod
+    def _interpolate_constant(x, xp, yp):
         """
         Interpolation method that interpolates signals to the nearest left neighbour of the sampling point.
 
@@ -928,7 +935,7 @@ class Testbench():
         x_r = np.searchsorted(x, xp[-1])
         indices = np.searchsorted(xp, x[x_l:x_r], side='right')
         y = np.concatenate(([0], yp))
-        # create zeros for times where the signal
+        # create zero entries wherever the signal is not specified
         z_l = np.zeros(shape=(x_l,), dtype=np.complex128)
         z_r = np.zeros(shape=(len(x) - x_r,), dtype=np.complex128)
         return np.concatenate((z_l, y[indices], z_r))
