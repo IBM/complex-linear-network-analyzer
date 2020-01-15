@@ -1,9 +1,9 @@
+""" Unittests for analyticnetwork and lossconversion module. """
 import unittest
 import numpy as np
-from unittest.mock import MagicMock
 from colna.lossconversion import dBcm_to_loss_per_m, loss_per_m_to_dBcm, attenuation_to_dBcm, \
-    attenuation_to_loss_per_meter, loss_per_meter_to_attenuation, dBcm_to_attenuation
-from colna.analyticnetwork import Network, Edge, SymNum, Testbench
+    attenuation_to_loss_per_meter, loss_per_meter_to_attenuation, dBcm_to_attenuation, imag_index_to_dBcm
+from colna.analyticnetwork import Network, Edge, SymNum, Testbench, Device, DeviceLink, PhysicalNetwork
 
 
 class TestUnitconverter(unittest.TestCase):
@@ -28,6 +28,20 @@ class TestEdge(unittest.TestCase):
         self.assertEqual(self.edge.phase, 0.5)
         self.assertEqual(self.edge.attenuation, 0.6)
         self.assertEqual(self.edge.delay, 0.7)
+
+    def test_equal(self):
+        b = Edge(start='a', end='b', phase=.5, attenuation=.6, delay=0.7)
+        self.assertEqual(self.edge == b, True)
+        b = Edge(start='c', end='b', phase=.5, attenuation=.6, delay=0.7)
+        self.assertEqual(self.edge == b, False)
+        b = Edge(start='a', end='c', phase=.5, attenuation=.6, delay=0.7)
+        self.assertEqual(self.edge == b, False)
+        b = Edge(start='a', end='b', phase=.51, attenuation=.6, delay=0.7)
+        self.assertEqual(self.edge == b, False)
+        b = Edge(start='a', end='b', phase=.5, attenuation=.61, delay=0.7)
+        self.assertEqual(self.edge == b, False)
+        b = Edge(start='a', end='b', phase=.5, attenuation=.6, delay=0.71)
+        self.assertEqual(self.edge == b, False)
 
 
 class TestNetwork(unittest.TestCase):
@@ -252,7 +266,7 @@ class TestSymNum(unittest.TestCase):
         add_0 = self.add_1
         add_1 = self.add_5
 
-        sum =   add_0 + add_1
+        sum = add_0 + add_1
         self.assertEqual(sum.product, False)
         self.assertEqual(sum.shared_default, max(add_0.shared_default, add_1.shared_default))
         self.assertEqual(sum.numerical, 0.0)
@@ -274,7 +288,7 @@ class TestSymNum(unittest.TestCase):
         mult_0 = self.mult_1
         mult_1 = self.mult_5
 
-        mult =   mult_0*mult_1
+        mult = mult_0 * mult_1
         self.assertEqual(mult.product, True)
         self.assertEqual(mult.shared_default, max(mult_0.shared_default, mult_1.shared_default))
         self.assertEqual(mult.numerical, 1.0)
@@ -287,8 +301,6 @@ class TestSymNum(unittest.TestCase):
         self.assertEqual(mult_2.numerical, 2.0)
         self.assertEqual(mult_2.symbolic, {'mult_5': 1})
         self.assertEqual(mult_2.defaults, {'mult_5': 5})
-
-
 
     def test_div_add(self):
         """ Tests if multypling additive numbers does raise a Value error"""
@@ -305,7 +317,7 @@ class TestSymNum(unittest.TestCase):
         mult_0 = self.mult_1
         mult_1 = self.mult_5
 
-        mult =   mult_0/mult_1
+        mult = mult_0 / mult_1
 
         self.assertEqual(mult.product, True)
         self.assertEqual(mult.shared_default, max(mult_0.shared_default, mult_1.shared_default))
@@ -315,80 +327,81 @@ class TestSymNum(unittest.TestCase):
 
     def test_eval(self):
         ## using default values
-        self.assertEqual(self.mult_1.eval(use_shared_default=False, feed_dict=None),1)
-        self.assertEqual(self.add_5.eval(use_shared_default=False, feed_dict=None),5)
+        self.assertEqual(self.mult_1.eval(use_shared_default=False, feed_dict=None), 1)
+        self.assertEqual(self.add_5.eval(use_shared_default=False, feed_dict=None), 5)
 
         ## using shared defaults
-        self.assertEqual(self.mult_1.eval(use_shared_default=True, feed_dict=None),1)
-        self.assertEqual(self.add_5.eval(use_shared_default=True, feed_dict=None),5)
+        self.assertEqual(self.mult_1.eval(use_shared_default=True, feed_dict=None), 1)
+        self.assertEqual(self.add_5.eval(use_shared_default=True, feed_dict=None), 5)
 
         ## using feed dictionary
-        self.assertEqual(self.mult_1.eval(use_shared_default=False, feed_dict={'mult_1':2}),2)
-        self.assertEqual(self.add_5.eval(use_shared_default=False, feed_dict={'add_5':7}),7)
+        self.assertEqual(self.mult_1.eval(use_shared_default=False, feed_dict={'mult_1': 2}), 2)
+        self.assertEqual(self.add_5.eval(use_shared_default=False, feed_dict={'add_5': 7}), 7)
 
         ## the following lines are not strictly speaking a unit test and could be classified as integration test
         # Test addition
-        addition = self.add_5+self.add_6
+        addition = self.add_5 + self.add_6
         self.assertEqual(addition.eval(use_shared_default=False), 11)
         self.assertEqual(addition.eval(use_shared_default=True), 12)
-        self.assertEqual(addition.eval(use_shared_default=False, feed_dict={'add_5':4}), 10)
-        self.assertEqual(addition.eval(use_shared_default=False, feed_dict={'add_5':4, 'add_6':5}), 9)
+        self.assertEqual(addition.eval(use_shared_default=False, feed_dict={'add_5': 4}), 10)
+        self.assertEqual(addition.eval(use_shared_default=False, feed_dict={'add_5': 4, 'add_6': 5}), 9)
 
         # Test addition
-        addition = self.add_5+6
+        addition = self.add_5 + 6
         self.assertEqual(addition.eval(use_shared_default=False), 11)
         self.assertEqual(addition.eval(use_shared_default=True), 11)
-        self.assertEqual(addition.eval(use_shared_default=False, feed_dict={'add_5':4}), 10)
+        self.assertEqual(addition.eval(use_shared_default=False, feed_dict={'add_5': 4}), 10)
 
         # Test addition
         addition = 6 + self.add_5
         self.assertEqual(addition.eval(use_shared_default=False), 11)
         self.assertEqual(addition.eval(use_shared_default=True), 11)
-        self.assertEqual(addition.eval(use_shared_default=False, feed_dict={'add_5':4}), 10)
+        self.assertEqual(addition.eval(use_shared_default=False, feed_dict={'add_5': 4}), 10)
 
         # Test Multiplication symnum * symnum
-        mult = self.mult_6*self.mult_5
+        mult = self.mult_6 * self.mult_5
         self.assertEqual(mult.eval(use_shared_default=False), 30)
         self.assertEqual(mult.eval(use_shared_default=True), 36)
-        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5':4}), 24)
-        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5':4, 'mult_6':5}), 20)
+        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5': 4}), 24)
+        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5': 4, 'mult_6': 5}), 20)
 
         # Test Multiplication constant * symnum
-        mult = 3*self.mult_5
+        mult = 3 * self.mult_5
         self.assertEqual(mult.eval(use_shared_default=False), 15)
         self.assertEqual(mult.eval(use_shared_default=True), 15)
-        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5':4}), 12)
+        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5': 4}), 12)
 
         # Test Multiplication symnum * constant
-        mult = self.mult_5*3
+        mult = self.mult_5 * 3
         self.assertEqual(mult.eval(use_shared_default=False), 15)
         self.assertEqual(mult.eval(use_shared_default=True), 15)
-        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5':4}), 12)
+        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5': 4}), 12)
 
         # Test division symnum/symnum
-        mult = self.mult_1/self.mult_5
+        mult = self.mult_1 / self.mult_5
         self.assertEqual(mult.eval(use_shared_default=False), 0.2)
         self.assertEqual(mult.eval(use_shared_default=True), 1.0)
-        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5':4}), 0.25)
-        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5':4, 'mult_1':2}), 0.5)
+        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5': 4}), 0.25)
+        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_5': 4, 'mult_1': 2}), 0.5)
 
         # Test division symnum/constant
-        mult = self.mult_1/5
+        mult = self.mult_1 / 5
         self.assertEqual(mult.eval(use_shared_default=False), 0.2)
         self.assertEqual(mult.eval(use_shared_default=True), 0.2)
-        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_1':2}), 0.4)
+        self.assertEqual(mult.eval(use_shared_default=False, feed_dict={'mult_1': 2}), 0.4)
 
     def test_str(self):
         """ Tests the conversion of SymNum to string."""
 
         self.assertEqual(self.mult_0.__str__(), '1.0 * mult_0**1')
         self.assertEqual(self.add_0.__str__(), '0.0 + add_0*1')
-        self.assertEqual(str(self.mult_1/self.mult_5), '1.0 * mult_1**1 * mult_5**-1')
-        self.assertEqual(str(self.mult_1/self.mult_5/2), '0.5 * mult_1**1 * mult_5**-1')
-        self.assertEqual(str(self.mult_1*self.mult_5), '1.0 * mult_1**1 * mult_5**1')
-        self.assertEqual(str(3*self.mult_1*self.mult_5), '3.0 * mult_1**1 * mult_5**1')
+        self.assertEqual(str(self.mult_1 / self.mult_5), '1.0 * mult_1**1 * mult_5**-1')
+        self.assertEqual(str(self.mult_1 / self.mult_5 / 2), '0.5 * mult_1**1 * mult_5**-1')
+        self.assertEqual(str(self.mult_1 * self.mult_5), '1.0 * mult_1**1 * mult_5**1')
+        self.assertEqual(str(3 * self.mult_1 * self.mult_5), '3.0 * mult_1**1 * mult_5**1')
         self.assertEqual(str(self.add_5 + self.add_6), '0.0 + add_5*1 + add_6*1')
-        self.assertEqual(str(2+self.add_5 + self.add_6), '2.0 + add_5*1 + add_6*1')
+        self.assertEqual(str(2 + self.add_5 + self.add_6), '2.0 + add_5*1 + add_6*1')
+
 
 class TestTestbench(unittest.TestCase):
 
@@ -404,51 +417,53 @@ class TestTestbench(unittest.TestCase):
         ff_net.add_edge(Edge('b', 'c', phase=-5, attenuation=1.5, delay=-1))
         self.ff_net = ff_net
 
-        self.tb_ff = Testbench(network=self.ff_net,timestep=1)
+        self.tb_ff = Testbench(network=self.ff_net, timestep=1)
 
-        self.x1 = np.array([0,1,6,7])
-        self.x2 = np.array([0,2,3])
-        self.t1 = np.array([0,2,5,7,9])
-        self.t2 = np.array([0,2,5,12])
-
+        self.x1 = np.array([0, 1, 6, 7])
+        self.x2 = np.array([0, 2, 3])
+        self.t1 = np.array([0, 2, 5, 7, 9])
+        self.t2 = np.array([0, 2, 5, 12])
 
     def test_set_feed_dict(self):
-        self.tb_empty.set_feed_dict({'a':2,'b':3})
-        self.assertEqual(self.tb_empty.feed_dict,{'a':2,'b':3})
+        self.tb_empty.set_feed_dict({'a': 2, 'b': 3})
+        self.assertEqual(self.tb_empty.feed_dict, {'a': 2, 'b': 3})
 
     def test_add_input(self):
-
         x1 = self.x1
         x2 = self.x2
         t1 = self.t1
         t2 = self.t2
 
-        t_short = np.array([0,2,5,7])
+        t_short = np.array([0, 2, 5, 7])
 
         with self.assertRaises(ValueError):
-            self.tb_ff.add_input_sequence('a',x=x1, t=t_short)
+            self.tb_ff.add_input_sequence('a', x=x1, t=t_short)
 
         with self.assertRaises(ValueError):
-            self.tb_ff.add_input_sequence('d',x=x1, t=t1)
+            self.tb_ff.add_input_sequence('d', x=x1, t=t1)
 
-        self.tb_ff.add_input_sequence('a',x=x1, t=t1)
+        self.tb_ff.add_input_sequence('a', x=x1, t=t1)
         self.assertEqual(self.tb_ff.input_nodes, ['a'])
-        self.assertEqual(self.tb_ff.model.inputs, [(1.0,0.0,0.0,'a')])
-        self.assertEqual(self.tb_ff.input_x, [x1] )
-        self.assertEqual(self.tb_ff.input_t, [t1] )
+        self.assertEqual(self.tb_ff.model.inputs, [(1.0, 0.0, 0.0, 'a')])
+        self.assertEqual(self.tb_ff.input_x, [x1])
+        self.assertEqual(self.tb_ff.input_t, [t1])
 
-        self.tb_ff.add_input_sequence('b',x=x2, t=t2)
-        self.assertEqual(self.tb_ff.input_nodes, ['a','b'])
-        self.assertEqual(self.tb_ff.model.inputs, [(1.0,0.0,0.0,'a'),(1.0,0.0,0.0,'b')])
-        self.assertEqual(self.tb_ff.input_x, [x1, x2] )
-        self.assertEqual(self.tb_ff.input_t, [t1, t2] )
+        self.tb_ff.add_input_sequence('b', x=x2, t=t2)
+        self.assertEqual(self.tb_ff.input_nodes, ['a', 'b'])
+        self.assertEqual(self.tb_ff.model.inputs, [(1.0, 0.0, 0.0, 'a'), (1.0, 0.0, 0.0, 'b')])
+        self.assertEqual(self.tb_ff.input_x, [x1, x2])
+        self.assertEqual(self.tb_ff.input_t, [t1, t2])
+
+        with self.assertRaises(ValueError):
+            self.tb_ff.add_output_node('c')
+            self.tb_ff.add_input_sequence('c', x=x1, t=t1)
 
         with self.assertRaises(OverflowError):
-            self.tb_ff.add_input_sequence('a',x=x1, t=t1)
+            self.tb_ff.add_input_sequence('b', x=x1, t=t1)
 
     def test_extract_min_max_signal_time(self):
-        self.tb_ff.add_input_sequence('a',x=self.x1, t=self.t1)
-        self.tb_ff.add_input_sequence('b',x=self.x2, t=self.t2)
+        self.tb_ff.add_input_sequence('a', x=self.x1, t=self.t1)
+        self.tb_ff.add_input_sequence('b', x=self.x2, t=self.t2)
         self.tb_ff._extract_min_max_signal_time()
         self.assertEqual(self.tb_ff.t0, 0)
         self.assertEqual(self.tb_ff.t1, 12)
@@ -458,26 +473,207 @@ class TestTestbench(unittest.TestCase):
         self.tb_ff.t1 = 2
 
         t_sampled, x_sampled = self.tb_ff._convert_signal_to_timestep(x=self.x1, t=self.t1, timestep=0.5)
-        self.assertEqual(np.all(t_sampled==[0,0.5,1,1.5,2]), True)
-        self.assertEqual(np.all(x_sampled==np.array([0,0,0,0,1], dtype=np.complex)),True )
+        self.assertEqual(np.all(t_sampled == [0, 0.5, 1, 1.5, 2]), True)
+        self.assertEqual(np.all(x_sampled == np.array([0, 0, 0, 0, 1], dtype=np.complex)), True)
 
     def test_interpolate_constant(self):
         # Case 1: no padding required, critical matching points (e.g. step = 0.5; change at 1)
-        expected_result = np.array([2,2,4,4,4,4,1,1,1,1,1],dtype=np.complex)
-        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0,5,11), xp=[0, 1, 3, 6], yp=[2,4,1])==expected_result), True)
+        expected_result = np.array([2, 2, 4, 4, 4, 4, 1, 1, 1, 1, 1], dtype=np.complex)
+        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0, 5, 11), xp=[0, 1, 3, 6],
+                                                                    yp=[2, 4, 1]) == expected_result), True)
 
         # Case 2:  right boundary case
-        expected_result = np.array([2,2,4,4,4,4,1,1,1,1,0],dtype=np.complex)
-        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0,5,11), xp=[0, 1, 3, 5], yp=[2,4,1])==expected_result), True)
+        expected_result = np.array([2, 2, 4, 4, 4, 4, 1, 1, 1, 1, 0], dtype=np.complex)
+        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0, 5, 11), xp=[0, 1, 3, 5],
+                                                                    yp=[2, 4, 1]) == expected_result), True)
 
         # Case 3:  left boundary case
-        expected_result = np.array([0,2,4,4,4,4,1,1,1,1,1],dtype=np.complex)
-        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0,5,11), xp=[0.5, 1, 3, 6], yp=[2,4,1])==expected_result), True)
+        expected_result = np.array([0, 2, 4, 4, 4, 4, 1, 1, 1, 1, 1], dtype=np.complex)
+        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0, 5, 11), xp=[0.5, 1, 3, 6],
+                                                                    yp=[2, 4, 1]) == expected_result), True)
 
         # Case 4:  right + left boundary case
-        expected_result = np.array([0,2,4,4,4,4,1,1,1,1,0],dtype=np.complex)
-        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0,5,11), xp=[0.5, 1, 3, 5], yp=[2,4,1])==expected_result), True)
+        expected_result = np.array([0, 2, 4, 4, 4, 4, 1, 1, 1, 1, 0], dtype=np.complex)
+        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0, 5, 11), xp=[0.5, 1, 3, 5],
+                                                                    yp=[2, 4, 1]) == expected_result), True)
 
         # Case 5:  non-matching timesteps with left boundary case
-        expected_result = np.array([0,0, 2, 4,4,4,4,1,1,1,1,1],dtype=np.complex)
-        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0,5,12), xp=[0.5, 1, 3, 6], yp=[2,4,1])==expected_result), True)
+        expected_result = np.array([0, 0, 2, 4, 4, 4, 4, 1, 1, 1, 1, 1], dtype=np.complex)
+        self.assertEqual(np.all(self.tb_empty._interpolate_constant(x=np.linspace(0, 5, 12), xp=[0.5, 1, 3, 6],
+                                                                    yp=[2, 4, 1]) == expected_result), True)
+
+
+    def test_evaluate_loop(self):
+
+        """ computes an output sequence for an input sequence passing through a 3 node network."""
+        edge_1 = Edge('a', 'b', phase=1, attenuation=0.4, delay=2)
+        edge_2 = Edge('b', 'c', phase=2, attenuation=0.3, delay=1)
+        edge_3 = Edge('c', 'a', phase=3, attenuation=0.2, delay=0)
+
+        loop_net = Network()
+        loop_net.add_node('a')
+        loop_net.add_node('b')
+        loop_net.add_node('c')
+        loop_net.add_edge(edge_1)
+        loop_net.add_edge(edge_2)
+        loop_net.add_edge(edge_3)
+        loop_net.add_input('a', amplitude=1)
+
+        tb = Testbench(network=loop_net)
+        tb.add_input_sequence('b',x=[1,2],t=[0,5,7])
+
+        tb.add_output_node('c')
+
+        # evaluate the network (through the testbench)
+        tb.evaluate_network(amplitude_cutoff=1e-3)
+
+        # Calculate the output signal at the output nodes
+        tb.calculate_output(n_threads=8)  # uses multithreading with at most 8 threads
+
+        t_expected = np.arange(0,8,1)
+        x_expected = np.array([0, 0.3*np.exp(1j*2),0.3*np.exp(1j*2), 0.3*np.exp(1j*2),
+                               0.3*np.exp(1j*2)+0.3*0.2*0.4*0.3*np.exp(1j*8),
+                               0.3*np.exp(1j*2)+0.3*0.2*0.4*0.3*np.exp(1j*8),
+                               0.6 * np.exp(1j * 2) + 0.3 * 0.2 * 0.4 * 0.3 * np.exp(1j * 8),
+                               0.6 * np.exp(1j * 2) + 0.3 * 0.2 * 0.4 * 0.3 * np.exp(1j * 8)]).transpose()
+
+        self.assertEqual(np.allclose(tb.x_out, x_expected, atol=1e-3, rtol=0),True)
+        self.assertEqual(np.allclose(tb.t_out, t_expected, atol=1e-3, rtol=0),True)
+
+
+class TestDevice(unittest.TestCase):
+
+    def setUp(self):
+        self.splitter = Device(name='split_0', devicetype='pd',
+                               scattering_matrix=np.array([[1 / np.sqrt(2), 1 / np.sqrt(2)]]), delay=1)
+
+    def test_add_output(self):
+        self.splitter.add_output('o0')
+        self.assertEqual(self.splitter.outputs, ['pd:split_0:o0'])
+
+    def test_add_output_error(self):
+        """
+        Tests if adding an inexistent node raises a ValueError.
+        """
+        with self.assertRaises(ValueError):
+            self.splitter.add_output('o5')
+
+    def test_add_input(self):
+        # add inputs to node i0
+        self.splitter.add_input('i0', amplitude=0.2, phase=0.1, delay=0.1)
+        self.assertEqual(self.splitter.inputs, [(0.2, 0.1, 0.1, 'pd:split_0:i0')])
+
+        # add input to node o0
+        self.splitter.add_input('o0', amplitude=0.5, phase=0.2, delay=0.0)
+        self.assertEqual(self.splitter.inputs, [(0.2, 0.1, 0.1, 'pd:split_0:i0'), (0.5, 0.2, 0.0, 'pd:split_0:o0')])
+
+        # add second input to node i0
+        self.splitter.add_input('i0', amplitude=1.8, phase=-0.1, delay=-0.1)
+        self.assertEqual(self.splitter.inputs, [(0.2, 0.1, 0.1, 'pd:split_0:i0'), (0.5, 0.2, 0.0, 'pd:split_0:o0'),
+                                                (1.8, -0.1, -0.1, 'pd:split_0:i0')])
+
+    def test_add_input_errors(self):
+        # add input at non-existing node
+        with self.assertRaises(ValueError):
+            self.splitter.add_input('d', amplitude=1, phase=0.1, delay=2)
+
+    def test_add_node(self):
+        self.splitter.add_node('abc')
+        self.assertEqual(self.splitter.nodes, ['pd:split_0:i0', 'pd:split_0:o0', 'pd:split_0:o1', 'pd:split_0:abc'])
+
+    def test_add_node_errors(self):
+        # nodename with : is invalid
+        with self.assertRaises(ValueError):
+            self.splitter.add_node('abc:')
+
+        # node duplication
+        self.splitter.add_node('abc')
+        with self.assertRaises(ValueError):
+            self.splitter.add_node('abc')
+
+    def test_init_from_scattering_matrix(self):
+        test_dev = Device(name='test')
+
+        # splitter 1x2
+        test_dev.init_from_scattering_matrix(np.array([[1 / np.sqrt(2) * np.exp(1j * np.pi), 1 / np.sqrt(2)]]),
+                                             delay=2.0)
+
+        expected_net = Network()
+        expected_net.add_node('device:test:i0')
+        expected_net.add_node('device:test:o0')
+        expected_net.add_node('device:test:o1')
+        expected_net.add_edge(
+            Edge(start='device:test:i0', end='device:test:o0', phase=np.pi, attenuation=1 / np.sqrt(2), delay=2.0))
+        expected_net.add_edge(
+            Edge(start='device:test:i0', end='device:test:o1', phase=0, attenuation=1 / np.sqrt(2), delay=2.0))
+
+        self.assertEqual(test_dev.nodes, expected_net.nodes)
+        self.assertEqual(test_dev.edges, expected_net.edges)
+
+        # mixing 2x2
+        test_dev = Device(name='test')
+
+        # splitter 1x2
+        test_dev.init_from_scattering_matrix(np.array([[0.5, 0.4], [np.exp(1j * np.pi), -0.4]]), delay=1.0)
+
+        expected_net = Network()
+        expected_net.add_node('device:test:i0')
+        expected_net.add_node('device:test:o0')
+        expected_net.add_node('device:test:o1')
+        expected_net.add_node('device:test:i1')
+        expected_net.add_edge(Edge(start='device:test:i0', end='device:test:o0', phase=0, attenuation=0.5, delay=1.0))
+        expected_net.add_edge(Edge(start='device:test:i0', end='device:test:o1', phase=0, attenuation=0.4, delay=1.0))
+        expected_net.add_edge(
+            Edge(start='device:test:i1', end='device:test:o0', phase=np.pi, attenuation=1.0, delay=1.0))
+        expected_net.add_edge(
+            Edge(start='device:test:i1', end='device:test:o1', phase=np.pi, attenuation=0.4, delay=1.0))
+        self.assertEqual(test_dev.nodes, expected_net.nodes)
+        self.assertEqual(test_dev.edges, expected_net.edges)
+
+
+class TestDevicelink(unittest.TestCase):
+
+    def test_init(self):
+        dl0 = DeviceLink(startdevice='a', startdevicetype='td', startnode='i0', enddevice='b', enddevicetype='td2',
+                         endnode='o0')
+        self.assertEqual(dl0.start, 'td:a:i0')
+        self.assertEqual(dl0.end, 'td2:b:o0')
+
+        with self.assertRaises(TypeError):
+            dl0 = DeviceLink(startdevice='a', startdevicetype='td', startnode='i0', enddevice='b', enddevicetype='td2',
+                             endnode=1)
+        with self.assertRaises(TypeError):
+            dl0 = DeviceLink(startdevice='a', startdevicetype='td', startnode='i0', enddevice='b', enddevicetype=1,
+                             endnode='o0')
+        with self.assertRaises(TypeError):
+            dl0 = DeviceLink(startdevice='a', startdevicetype='td', startnode='i0', enddevice=1, enddevicetype='td2',
+                             endnode='o0')
+        with self.assertRaises(TypeError):
+
+            dl0 = DeviceLink(startdevice='a', startdevicetype='td', startnode=1, enddevice='b', enddevicetype='td2',
+                             endnode='o0')
+        with self.assertRaises(TypeError):
+            dl0 = DeviceLink(startdevice='a', startdevicetype=1, startnode='i0', enddevice='b', enddevicetype='td2',
+                             endnode='o0')
+        with self.assertRaises(TypeError):
+            dl0 = DeviceLink(startdevice=1, startdevicetype='td', startnode='i0', enddevice='b', enddevicetype='td2',
+                             endnode='o0')
+
+class TestPhysicalNetwork(unittest.TestCase):
+
+    def setUp(self):
+        self.net = PhysicalNetwork()
+        self.splitter = Device(name='split_0', devicetype='pd',
+                               scattering_matrix=np.array([[1 / np.sqrt(2), 1 / np.sqrt(2)]]), delay=1)
+        self.combiner = Device(name='combine_0', devicetype='pd',
+                               scattering_matrix=np.array([[1 / np.sqrt(2)],[1 / np.sqrt(2)]]), delay=1)
+
+    def test_add_device(self):
+        self.net.add_device(self.splitter)
+        self.assertEqual(self.net.nodes,['pd:split_0:i0', 'pd:split_0:o0', 'pd:split_0:o1'])
+        self.assertEqual(self.net.edges,[Edge('pd:split_0:i0', 'pd:split_0:o0',0,1/np.sqrt(2)),
+                                         Edge('pd:split_0:i0', 'pd:split_0:o1', 0, 1 / np.sqrt(2))])
+
+    def test_add_devicelink_error(self):
+        with self.assertRaises(ValueError):
+            self.net.add_devicelink(DeviceLink('a','b','1','2'))
