@@ -56,6 +56,8 @@ class Edge(object):
         self.attenuation = attenuation
         self.delay = delay
 
+    def __eq__(self, other):
+        return self.start==other.start and self.end == other.end and self.phase == other.phase and self.attenuation == other.attenuation and self.delay == other.delay
 
 class Network(object):
     """
@@ -549,7 +551,9 @@ class Device(Network):
         :type nodename: str
         """
         name = self.devicetype + ":" + self.name + ":" + nodename
-        assert name in self.nodes, "attempted to add output to inexistent node"
+        if not name in self.nodes:
+            raise(ValueError("attempted to add output to inexistent node " + str(nodename)))
+
         self.outputs.append(name)
 
     def add_input(self, nodename, amplitude=1.0, phase=0.0, delay=0.0):
@@ -868,6 +872,10 @@ class Testbench():
 
         if node_name in self.input_nodes:
             raise OverflowError("At most one input sequence can be added per node. You added two at " + node_name)
+
+        if node_name in self.output_nodes:
+            raise ValueError("A node must be an input or output sequence node, it can not be both. You added both for node " + node_name)
+
 
         self.model.add_input(node_name)
         self.input_nodes.append(node_name)
