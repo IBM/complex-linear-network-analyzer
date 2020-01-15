@@ -100,3 +100,17 @@ def attenuation_to_dBcm(attenuation, length):
     :rtype: float
     """
     return loss_per_m_to_dBcm(attenuation_to_loss_per_meter(attenuation, length))
+
+def imag_index_to_dBcm(k, wavelength):
+    """
+    Converts complex part of effective index to loss in dB/cm
+
+    :param k: complex part of mode index (neff = n+ik)
+    :type k: float
+    :param wavelength: in m
+    :type wavelength: float
+    :return: loss in dB/cm
+    :type: float
+    """
+
+    return (4*np.pi*k*10*np.log10(np.e)/(100*wavelength))
