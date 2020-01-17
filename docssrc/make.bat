@@ -34,6 +34,5 @@ goto end
 :end
 popd
 
-echo The build files were moved to docs directory.
+echo The build files were copied to the docs directory.
 robocopy %BUILDDIR%\html\ ..\docs\ /S >NUL
-rmdir %BUILDDIR%\html\ /S
