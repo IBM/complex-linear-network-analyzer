@@ -151,13 +151,19 @@
             
   <div class="section" id="complex-linear-network-analyzer-colna">
 <h1>Complex Linear Network Analyzer (COLNA)<a class="headerlink" href="#complex-linear-network-analyzer-colna" title="Permalink to this headline">¶</a></h1>
-<p>The complex linear network analyzer package can be used to compute analytically the propagation of complex valued
-signals in networks with linear nodes and directed, complex valued and delayed edges.</p>
+<p>The complex linear network analyzer (COLNA) python package analytically computes the propagation of complex valued signals in networks with linear nodes and directed, complex valued and delayed edges (Fig. 1).</p>
+<p>COLNA was developed to compute coherent wave propagation in linear photonic circuits but it can be used in other areas, where signal propagation through linear complex networks is of relevance.</p>
+<p>COLNA offers an easy and well documented interface, which allows to quickly build network models and understand their behaviour.</p>
 <p>COLNA computes all paths leading from input to output nodes (including recurrent paths) down to a certain amplitude accuracy threshold.</p>
-<p>COLNA supports the mixed use of numeric and symbolic numbers (variable) for all edge properties, returning either a numeric or</p>
+<p>COLNA supports the mixed use of numeric and symbolic numbers (variable) for all edge properties.</p>
 <p>COLNA can inject complex valued signals to the network and the compute the resulting signals at the output nodes using a testbench.</p>
-<p>COLNA was developed to compute coherent wave propagation in linear photonic circuits but it can be used
-in other areas, where signal propagation through linear complex networks is of relevance.</p>
+<p>The core functionality of COLNA is visualized in the figure below.</p>
+<div class="figure align-center" id="id1">
+<img alt="_images/colna_features.png" src="_images/colna_features.png" />
+<p class="caption"><span class="caption-text">Visualization of the basic functions of COLNA. With COLNA one can quickly assemble a network and visulize it,
+evaluate how waves propagate from input to output nodes and with a testbench signals can be injected to the network
+and the corresponding output signals are computed.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
 </div>
 <div class="section" id="contents">
 <h1>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
