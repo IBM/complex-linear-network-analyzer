@@ -911,6 +911,26 @@ set to false if the default value of each SymNum should be used instead (higher 
 </dd></dl>
 
 <dl class="function">
+<dt id="colna.lossconversion.imag_index_to_dBcm">
+<code class="sig-prename descclassname">colna.lossconversion.</code><code class="sig-name descname">imag_index_to_dBcm</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">wavelength</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/lossconversion.html#imag_index_to_dBcm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.lossconversion.imag_index_to_dBcm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts complex part of effective index to loss in dB/cm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – complex part of mode index (neff = n+ik)</p></li>
+<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – in m</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>loss in dB/cm</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="colna.lossconversion.loss_per_m_to_dBcm">
 <code class="sig-prename descclassname">colna.lossconversion.</code><code class="sig-name descname">loss_per_m_to_dBcm</code><span class="sig-paren">(</span><em class="sig-param">loss_per_m</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/lossconversion.html#loss_per_m_to_dBcm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.lossconversion.loss_per_m_to_dBcm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts loss per meter (alpha) to dB/cm</p>

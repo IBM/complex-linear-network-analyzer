@@ -147,7 +147,25 @@
            <div itemprop="articleBody">
             
   <h1>Source code for colna.lossconversion</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Convenience module that contains functionality do convert optical propagation loss between different units. &quot;&quot;&quot;</span>
+<span></span><span class="c1"># +-----------------------------------------------------------------------------+</span>
+<span class="c1"># |  Copyright 2019 IBM Research - Zurich                                       |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |  Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);            |</span>
+<span class="c1"># |  you may not use this file except in compliance with the License.           |</span>
+<span class="c1"># |  You may obtain a copy of the License at                                    |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |      http://www.apache.org/licenses/LICENSE-2.0                             |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |  Unless required by applicable law or agreed to in writing, software        |</span>
+<span class="c1"># |  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,          |</span>
+<span class="c1"># |  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   |</span>
+<span class="c1"># |  See the License for the specific language governing permissions and        |</span>
+<span class="c1"># |  limitations under the License.                                             |</span>
+<span class="c1"># +-----------------------------------------------------------------------------+</span>
+<span class="c1"># |  Authors: Lorenz K. Mueller, Pascal Stark                                   |</span>
+<span class="c1"># +-----------------------------------------------------------------------------+</span>
+
+<span class="sd">&quot;&quot;&quot; Convenience module that contains functionality do convert optical propagation loss between different units. &quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">e</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -231,6 +249,20 @@
 <span class="sd">    :rtype: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">loss_per_m_to_dBcm</span><span class="p">(</span><span class="n">attenuation_to_loss_per_meter</span><span class="p">(</span><span class="n">attenuation</span><span class="p">,</span> <span class="n">length</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="imag_index_to_dBcm"><a class="viewcode-back" href="../../colna.html#colna.lossconversion.imag_index_to_dBcm">[docs]</a><span class="k">def</span> <span class="nf">imag_index_to_dBcm</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">wavelength</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts complex part of effective index to loss in dB/cm</span>
+
+<span class="sd">    :param k: complex part of mode index (neff = n+ik)</span>
+<span class="sd">    :type k: float</span>
+<span class="sd">    :param wavelength: in m</span>
+<span class="sd">    :type wavelength: float</span>
+<span class="sd">    :return: loss in dB/cm</span>
+<span class="sd">    :type: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">wavelength</span><span class="p">))</span></div>
 </pre></div>
 
            </div>

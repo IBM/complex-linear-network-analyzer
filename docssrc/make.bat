@@ -36,3 +36,4 @@ popd
 
 echo The build files were moved to docs directory.
 robocopy %BUILDDIR%\html\ ..\docs\ /S >NUL
+rmdir %BUILDDIR%\html\ /S

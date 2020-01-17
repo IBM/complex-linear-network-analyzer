@@ -203,8 +203,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">=</span> <span class="n">phase</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attenuation</span> <span class="o">=</span> <span class="n">attenuation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">delay</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">delay</span>
 
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="o">==</span><span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">phase</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">attenuation</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">attenuation</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delay</span></div>
 
 <div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -502,7 +504,7 @@
         <span class="c1"># the symbolic part of the number&#39;s value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 
-        <span class="c1"># dict. of the values that are inserted for each variable if no particular value is specified at evaluation</span>
+        <span class="c1"># dict of the values that are inserted for each variable if no particular value is specified at evaluation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">default</span><span class="p">}</span>
 
         <span class="c1"># indicates whether the number stacks multiplicatively or additively</span>
@@ -513,9 +515,15 @@
         <span class="c1"># max(a.shared_default, b.shared_default)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shared_default</span> <span class="o">=</span> <span class="n">default</span>
 
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerical</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">numerical</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">defaults</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">product</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared_default</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">shared_default</span>
+
+
+
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Creates a copy of a Symbolic Number.&quot;&quot;&quot;</span>
         <span class="n">copy</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="n">numerical</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">numerical</span><span class="p">)</span>
+        <span class="n">copy</span><span class="o">.</span><span class="n">shared_default</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared_default</span>
         <span class="n">copy</span><span class="o">.</span><span class="n">symbolic</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="p">)</span>
         <span class="n">copy</span><span class="o">.</span><span class="n">defaults</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">defaults</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">copy</span>
@@ -692,7 +700,9 @@
 <span class="sd">        :type nodename: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">nodename</span>
-        <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;attempted to add output to inexistent node&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add output to inexistent node &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nodename</span><span class="p">)))</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Device.add_input"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device.add_input">[docs]</a>    <span class="k">def</span> <span class="nf">add_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nodename</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
@@ -1012,6 +1022,10 @@
         <span class="k">if</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;At most one input sequence can be added per node. You added two at &quot;</span> <span class="o">+</span> <span class="n">node_name</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A node must be an input or output sequence node, it can not be both. You added both for node &quot;</span> <span class="o">+</span> <span class="n">node_name</span><span class="p">)</span>
+
+
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -1056,7 +1070,8 @@
         <span class="n">x_sampled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate_constant</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t_sampled</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">yp</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">t_sampled</span><span class="p">,</span> <span class="n">x_sampled</span>
 
-    <span class="k">def</span> <span class="nf">_interpolate_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_interpolate_constant</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">,</span> <span class="n">yp</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interpolation method that interpolates signals to the nearest left neighbour of the sampling point.</span>
 
@@ -1077,7 +1092,7 @@
         <span class="n">x_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xp</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">xp</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">x_l</span><span class="p">:</span><span class="n">x_r</span><span class="p">],</span> <span class="n">side</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mi">0</span><span class="p">],</span> <span class="n">yp</span><span class="p">))</span>
-        <span class="c1"># create zeros for times where the signal</span>
+        <span class="c1"># create zero entries wherever the signal is not specified</span>
         <span class="n">z_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">x_l</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
         <span class="n">z_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x_r</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">z_l</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">indices</span><span class="p">],</span> <span class="n">z_r</span><span class="p">))</span>
