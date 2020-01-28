@@ -16,6 +16,7 @@ affiliations:
  - name: IBM Research – Zürich, Säumerstrasse 4, 8803 Rüschlikon, Switzerland
    index: 1
 date: 15 January 2020
+bibliography: paper.bib
 ---
 
 ## Summary
