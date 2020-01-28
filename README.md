@@ -15,19 +15,26 @@ COLNA can inject complex valued signals to the network and the compute the resul
 
 The core functionality of COLNA is visualized in the figure below.
 
+![](docs/_images/colna_features.png)
+
 Documentation
 -------------
-Documentation including a full reference, tutorials and examples is available here: 
+Documentation including a full reference, tutorials and examples is available [here](https://ibm.github.io/complex-linear-network-analyzer/)
 
 Installation
 ------------
 Pip install the COLNA package. All required packages are installed automatically.
 If you intend to use the visualization feature, Graphviz must be installed and added to the path.
 
-More details for the installation are given in the user manual.
+More details for the installation are given in the [user manual](https://ibm.github.io/complex-linear-network-analyzer/).
 
 Requirements
 ------------
 Numpy, Scipy, Matplotlib, tqdm
 
 For visualization: Graphviz + Graphviz Python Package (see installation instructions for details)
+
+Contributing
+------------
+
+Contributions are very welcome! Please follow the the [contribution guidelines](CONTRIBUTING.md).
