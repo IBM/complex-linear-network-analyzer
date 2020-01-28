@@ -49,7 +49,7 @@ analytic expression of the systems transfer matrix. The analytic expression is o
 system parameters' (i.e. edge parameters) variation on the output signal. With its simple interface COLNA is also well 
 suited for educational purposes, where analytic expression help to better understand the functionality of simple photonic 
 networks, like for example a Mach-Zehnder interferometer. Commercial alternatives to model photonic circuits include for 
-example Lumerical Intereconnect [LumericalInc] or Caphe [@Fiers2012a], which both simulate the signal propagation through 
+example Lumerical Intereconnect [@LumericalInc] or Caphe [@Fiers2012a], which both simulate the signal propagation through 
 photonic systems using time- and frequency domain methods. In contrast to COLNA they support non-linear components, but 
 do not provide an analytic description of the network. 
 
@@ -60,5 +60,6 @@ This project has received funding from the EU-H2020 research and innovation prog
 688579 (PHRESCO).
 
 # References
+
 
 
