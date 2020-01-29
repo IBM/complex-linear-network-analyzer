@@ -52,11 +52,14 @@ net.add_edge(Edge(start='a',end='b',phase=2,attenuation=amp1,delay=1))
 net.add_edge(Edge(start='b',end='c',phase=1,attenuation=amp2,delay=2))
 net.add_edge(Edge(start='c',end='a',phase=phi3,attenuation=0.5*amp3,delay=3))
 net.add_input('a')
+net.add_input('b')
+
 net.evaluate(amplitude_cutoff=0.001)
 net.visualize(path='./visualizations/docdemo',format='png')
 
 print(net.get_result('b'))
-
+print(net.get_latex_result('b'))
+net.get_html_result(['c','b'],path='./visualizations/docdemo_latex.html')
 ### Create a testbench with a feed dictionary
 tb = Testbench(network=net, timestep=0.01, feed_dict={'v1':0.8,'v2':0.8,'v3':0.9,'v4':3})
 

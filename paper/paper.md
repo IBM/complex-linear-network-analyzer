@@ -6,6 +6,9 @@ tags:
   - Integrated Photonics
   - Complex networks
   - Simulation
+  - Circuit Simulation
+  - Photonic Circuits
+  
 authors:
   - name: Pascal Stark
     affiliation: 1
@@ -58,7 +61,8 @@ do not provide an analytic description of the network.
 # Acknowledgements
 
 This project has received funding from the EU-H2020 research and innovation program under grant no.
-688579 (PHRESCO).
+688579 (PHRESCO) and from Swiss National Science Foundation under grant no. 175801 (Novel Architectures for Photonic
+Reservoir Computing).
 
 # References
 
