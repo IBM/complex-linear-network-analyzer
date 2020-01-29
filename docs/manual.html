@@ -209,9 +209,9 @@ and add it to your system path (get Graphviz here <a class="reference external" 
 
 <span class="c1"># Add three edges (with mixed symbolic and numeric values)</span>
 <span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
-<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;ph_ab&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
-<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;ph_bc&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-                  <span class="n">attenuation</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;amp_bc&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;ph_</span><span class="si">{ab}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">attenuation</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">Edge</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;ph_</span><span class="si">{bc}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                  <span class="n">attenuation</span><span class="o">=</span><span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;amp_</span><span class="si">{bc}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.1</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>If you have installed graphviz, you can visualize the network:</p>
@@ -235,7 +235,7 @@ and add it to your system path (get Graphviz here <a class="reference external" 
 </div>
 <p>Feed the symbolic values, evaluate the network up to a certain accuracy and calculate and plot the output signals.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set the feed dictionary for the symbolic numbers</span>
-<span class="n">tb</span><span class="o">.</span><span class="n">set_feed_dict</span><span class="p">({</span><span class="s1">&#39;amp_bc&#39;</span><span class="p">:</span><span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;ph_bc&#39;</span><span class="p">:</span> <span class="mf">3.1</span><span class="p">,</span> <span class="s1">&#39;ph_ab&#39;</span><span class="p">:</span> <span class="mf">4.9</span><span class="p">})</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">set_feed_dict</span><span class="p">({</span><span class="s1">&#39;amp_</span><span class="si">{bc}</span><span class="s1">&#39;</span><span class="p">:</span><span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;ph_</span><span class="si">{bc}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="mf">3.1</span><span class="p">,</span> <span class="s1">&#39;ph_</span><span class="si">{ab}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="mf">4.9</span><span class="p">})</span>
 
 <span class="c1"># evaluate the network (through the testbench)</span>
 <span class="n">tb</span><span class="o">.</span><span class="n">evaluate_network</span><span class="p">(</span><span class="n">amplitude_cutoff</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
@@ -253,6 +253,22 @@ and add it to your system path (get Graphviz here <a class="reference external" 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<div class="figure align-center">
+<img alt="_images/quickstart.svg" src="_images/quickstart.svg" /></div>
+<p>And output the paths leading to node c, as a string or html file which renders the equations in a human readable way.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show paths leading to node c and output waves arriving at node c</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tb</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">))</span>
+<span class="n">tb</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_html_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/quickstart.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>HTML output:</p>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<p> Waves at node c<br><br> \(\begin{equation}\begin{split}&0.95 amp_{bc}^1\cdot\exp(j 0 + ph_{ab} \cdot 1 + ph_{bc} \cdot 1)\cdot a_{in}(t-0.3)\\+&0.541 amp_{bc}^2\cdot\exp(j 0.5 + ph_{ab} \cdot 2 + ph_{bc} \cdot 2)\cdot a_{in}(t-0.7)\\+&0.309 amp_{bc}^3\cdot\exp(j 1 + ph_{ab} \cdot 3 + ph_{bc} \cdot 3)\cdot a_{in}(t-1.1)\\+&0.176 amp_{bc}^4\cdot\exp(j 1.5 + ph_{ab} \cdot 4 + ph_{bc} \cdot 4)\cdot a_{in}(t-1.5)\\+&0.1 amp_{bc}^5\cdot\exp(j 2 + ph_{ab} \cdot 5 + ph_{bc} \cdot 5)\cdot a_{in}(t-1.9)\\+&0.0572 amp_{bc}^6\cdot\exp(j 2.5 + ph_{ab} \cdot 6 + ph_{bc} \cdot 6)\cdot a_{in}(t-2.3)\\+&0.0326 amp_{bc}^7\cdot\exp(j 3 + ph_{ab} \cdot 7 + ph_{bc} \cdot 7)\cdot a_{in}(t-2.7)\\+&0.0186 amp_{bc}^8\cdot\exp(j 3.5 + ph_{ab} \cdot 8 + ph_{bc} \cdot 8)\cdot a_{in}(t-3.1)\\+&0.0106 amp_{bc}^9\cdot\exp(j 4 + ph_{ab} \cdot 9 + ph_{bc} \cdot 9)\cdot a_{in}(t-3.5)\\+&0.00603 amp_{bc}^10\cdot\exp(j 4.5 + ph_{ab} \cdot 10 + ph_{bc} \cdot 10)\cdot a_{in}(t-3.9)\\+&0.00344 amp_{bc}^11\cdot\exp(j 5 + ph_{ab} \cdot 11 + ph_{bc} \cdot 11)\cdot a_{in}(t-4.3)\\+&0.00196 amp_{bc}^12\cdot\exp(j 5.5 + ph_{ab} \cdot 12 + ph_{bc} \cdot 12)\cdot a_{in}(t-4.7)\\+&0.00112 amp_{bc}^13\cdot\exp(j 6 + ph_{ab} \cdot 13 + ph_{bc} \cdot 13)\cdot a_{in}(t-5.1)\\+&0.000637 amp_{bc}^14\cdot\exp(j 6.5 + ph_{ab} \cdot 14 + ph_{bc} \cdot 14)\cdot a_{in}(t-5.5)\\+&0.000363 amp_{bc}^15\cdot\exp(j 7 + ph_{ab} \cdot 15 + ph_{bc} \cdot 15)\cdot a_{in}(t-5.9)\\\end{split}\end{equation}\)</p>
+
 </div>
 <div class="section" id="simple-network">
 <h2>Simple Network<a class="headerlink" href="#simple-network" title="Permalink to this headline">¶</a></h2>
@@ -309,6 +325,22 @@ You can print the evaluated paths using the <code class="xref py py-meth docutil
 <span class="o">&gt;&gt;&gt;</span> <span class="n">waves</span> <span class="n">arriving</span> <span class="n">at</span> <span class="n">d</span><span class="p">:</span> <span class="p">[(</span><span class="mf">0.32000000000000006</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)]</span>
 </pre></div>
 </div>
+<p>You can also retrive the waves arriving at the nodes as a LaTeX string:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;latex string for waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">net</span><span class="o">.</span><span class="n">get_latex_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">))</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">latex</span> <span class="n">string</span> <span class="k">for</span> <span class="n">waves</span> <span class="n">arriving</span> <span class="n">at</span> <span class="n">c</span><span class="p">:</span> <span class="mf">0.48</span>\<span class="n">cdot</span>\<span class="n">exp</span><span class="p">(</span><span class="n">j</span> <span class="mi">3</span><span class="p">)</span>\<span class="n">cdot</span> <span class="n">a_</span><span class="p">{</span><span class="ow">in</span><span class="p">}(</span><span class="n">t</span><span class="o">-</span><span class="mf">3.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or if you want you can even generate an html file, that renders the output equations using MathJax .</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">get_html_result</span><span class="p">([</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">],</span> <span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/feedforward.html&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Results in the following output:</p>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+                  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<p> Waves at node c<br><br> \(\begin{equation}\begin{split}&0.48\cdot\exp(j 3)\cdot a_{in}(t-3)\\\end{split}\end{equation}\)</p><p> Waves at node d<br><br> \(\begin{equation}\begin{split}&0.32\cdot\exp(j 4)\cdot a_{in}(t-4)\\\end{split}\end{equation}\)</p>
 <p>If you have installed the visualization feature (see <a class="reference internal" href="#installation"><span class="std std-ref">Installation</span></a>), you can visualize the graph by running:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;simple_network&#39;</span><span class="p">)</span>
 </pre></div>
@@ -446,16 +478,16 @@ description of the network output.</p>
  7
  8
  9
-10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">colna.analyticnetwork</span> <span class="kn">import</span> <span class="n">SymNum</span>
-
-<span class="n">amp1</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">amp2</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;a2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">amp3</span> <span class="o">=</span> <span class="n">amp1</span> <span class="o">*</span> <span class="n">amp2</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">amp1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">amp2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">amp3</span><span class="p">)</span>
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># +-----------------------------------------------------------------------------+</span>
+<span class="c1"># |  Copyright 2019-2020 IBM Corp. All Rights Reserved.                         |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |  Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);            |</span>
+<span class="c1"># |  you may not use this file except in compliance with the License.           |</span>
+<span class="c1"># |  You may obtain a copy of the License at                                    |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |      http://www.apache.org/licenses/LICENSE-2.0                             |</span>
+<span class="c1"># |                                                                             |</span>
+<span class="c1"># |  Unless required by applicable law or agreed to in writing, software        |</span>
 </pre></div>
 </td></tr></table></div>
 <p>Returns:</p>
@@ -546,7 +578,13 @@ However, for some edge properties symbolic numbers are used.</p>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">waves</span> <span class="n">arriving</span> <span class="n">at</span> <span class="n">d</span><span class="p">:</span> <span class="p">[(</span><span class="o">&lt;</span><span class="n">SymNum</span><span class="p">{</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">a1</span><span class="o">**</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">SymNum</span><span class="p">{</span><span class="mf">3.0</span> <span class="o">+</span> <span class="n">phi1</span><span class="o">*</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)]</span>
 </pre></div>
 </div>
-<p><a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate()</span></code></a> returns a symbolic representation of the waves arriving at node c and d. <a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate()</span></code></a> takes two arguments: use_shared_default and a feed dictionary.
+<p>or using the <a class="reference internal" href="colna.html#colna.analyticnetwork.Network.get_html_result" title="colna.analyticnetwork.Network.get_html_result"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_html_result()</span></code></a> we get the following rendered output:</p>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+<p> Waves at node c<br><br> \(\begin{equation}\begin{split}&1.0 a1^1 a2^1\cdot\exp(j 0.0 + phi1 \cdot 1 + phi2 \cdot 1)\cdot a_{in}(t-3.0)\\\end{split}\end{equation}\)</p><p> Waves at node d<br><br> \(\begin{equation}\begin{split}&0.4 a1^1\cdot\exp(j 3.0 + phi1 \cdot 1)\cdot a_{in}(t-4.0)\\\end{split}\end{equation}\)</p>
+<p><a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Network.evaluate()</span></code></a> returns a symbolic representation of the waves arriving at node c and d. <a class="reference internal" href="colna.html#colna.analyticnetwork.Network.evaluate" title="colna.analyticnetwork.Network.evaluate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">evaluate()</span></code></a> takes two arguments: use_shared_default and a feed dictionary.
 These arguments are used for the evaluation of the network, the are applied in the same way as in the <a class="reference internal" href="colna.html#colna.analyticnetwork.SymNum.eval" title="colna.analyticnetwork.SymNum.eval"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SymNum.eval()</span></code></a> method. This settings are especially important when we work with recurrent
 loops in the network, as the cutoff criterion will be evaluated based on the evaluated numeric value of the symbolic numbers.</p>
 <p>Once again you can use the three different versions:</p>

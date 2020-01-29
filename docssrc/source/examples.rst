@@ -33,6 +33,11 @@ Feedforward Network
 .. figure:: /figures/feedforward.svg
     :align: center
 
+Output of the :meth:`.Network.get_html_result`:
+
+.. raw:: html
+   :file: ./figures/feedforward.html
+
 Feedforward Network with Testbench
 ------------------------------------
 

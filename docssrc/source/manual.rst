@@ -68,9 +68,9 @@ Add three nodes and edges, some edge properties are defined through symbolic num
 
     # Add three edges (with mixed symbolic and numeric values)
     net.add_edge(Edge(start='c',end='a', phase=0.5, attenuation=0.6, delay=0.1))
-    net.add_edge(Edge(start='a', end='b', phase=SymNum('ph_ab', default=5, product=False), attenuation=0.95, delay=0.2))
-    net.add_edge(Edge(start='b', end='c', phase=SymNum('ph_bc', default=3, product=False),
-                      attenuation=SymNum('amp_bc', default=0.8, product=True), delay=0.1))
+    net.add_edge(Edge(start='a', end='b', phase=SymNum('ph_{ab}', default=5, product=False), attenuation=0.95, delay=0.2))
+    net.add_edge(Edge(start='b', end='c', phase=SymNum('ph_{bc}', default=3, product=False),
+                      attenuation=SymNum('amp_{bc}', default=0.8, product=True), delay=0.1))
 
 If you have installed graphviz, you can visualize the network:
 
@@ -102,7 +102,7 @@ Feed the symbolic values, evaluate the network up to a certain accuracy and calc
 .. code-block:: python
 
     # set the feed dictionary for the symbolic numbers
-    tb.set_feed_dict({'amp_bc':0.7, 'ph_bc': 3.1, 'ph_ab': 4.9})
+    tb.set_feed_dict({'amp_{bc}':0.7, 'ph_{bc}': 3.1, 'ph_{ab}': 4.9})
 
     # evaluate the network (through the testbench)
     tb.evaluate_network(amplitude_cutoff=1e-6)
@@ -118,6 +118,22 @@ Feed the symbolic values, evaluate the network up to a certain accuracy and calc
     plt.ylabel('|x|')
     plt.legend(['Input', 'Output C'], loc='lower left')
     plt.show()
+
+.. figure:: /figures/quickstart.svg
+    :align: center
+
+And output the paths leading to node c, as a string or html file which renders the equations in a human readable way.
+
+.. code-block:: python
+
+    # Show paths leading to node c and output waves arriving at node c
+    print(tb.model.get_result('c'))
+    tb.model.get_html_result('c', precision=3, path='./visualizations/quickstart.html')
+
+HTML output:
+
+.. raw:: html
+   :file: ./figures/quickstart.html
 
 
 Simple Network
@@ -191,6 +207,25 @@ You can calculate the waves arriving at the output node, for this we use the
 
     >>> waves arriving at c: [(0.48, 3, 3.0)]
     >>> waves arriving at d: [(0.32000000000000006, 4, 4.0)]
+
+You can also retrive the waves arriving at the nodes as a LaTeX string:
+
+.. code-block:: python
+
+    print('latex string for waves arriving at c:', net.get_latex_result('c'))
+
+    >>> latex string for waves arriving at c: 0.48\cdot\exp(j 3)\cdot a_{in}(t-3.0)
+
+Or if you want you can even generate an html file, that renders the output equations using MathJax .
+
+.. code-block:: python
+
+    net.get_html_result(['c','d'], precision=2, path='./visualizations/feedforward.html')
+
+Results in the following output:
+
+.. raw:: html
+   :file: ./figures/feedforward.html
 
 If you have installed the visualization feature (see :ref:`Installation`), you can visualize the graph by running:
 
@@ -469,7 +504,13 @@ However, for some edge properties symbolic numbers are used.
     >>> waves arriving at c: [(<SymNum{1.0 * a1**1 * a2**1}>, <SymNum{0.0 + phi1*1 + phi2*1}>, 3.0)]
     >>> waves arriving at d: [(<SymNum{0.4 * a1**1}>, <SymNum{3.0 + phi1*1}>, 4.0)]
 
-:meth:`~.Network.evaluate` returns a symbolic representation of the waves arriving at node c and d. :meth:`~.Network.evaluate` takes two arguments: use_shared_default and a feed dictionary.
+or using the :meth:`~.Network.get_html_result` we get the following rendered output:
+
+.. raw:: html
+   :file: ./figures/symbolicfeedforward.html
+
+
+:meth:`.Network.evaluate` returns a symbolic representation of the waves arriving at node c and d. :meth:`~.Network.evaluate` takes two arguments: use_shared_default and a feed dictionary.
 These arguments are used for the evaluation of the network, the are applied in the same way as in the :meth:`.SymNum.eval` method. This settings are especially important when we work with recurrent
 loops in the network, as the cutoff criterion will be evaluated based on the evaluated numeric value of the symbolic numbers.
 

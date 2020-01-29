@@ -41,9 +41,9 @@ net.add_node(name='c')
 
 # Add three edges (with mixed symbolic and numeric values)
 net.add_edge(Edge(start='c',end='a', phase=0.5, attenuation=0.6, delay=0.1))
-net.add_edge(Edge(start='a', end='b', phase=SymNum('ph_ab', default=5, product=False), attenuation=0.95, delay=0.2))
-net.add_edge(Edge(start='b', end='c', phase=SymNum('ph_bc', default=3, product=False),
-                  attenuation=SymNum('amp_bc', default=0.8, product=True), delay=0.1))
+net.add_edge(Edge(start='a', end='b', phase=SymNum('ph_{ab}', default=5, product=False), attenuation=0.95, delay=0.2))
+net.add_edge(Edge(start='b', end='c', phase=SymNum('ph_{bc}', default=3, product=False),
+                  attenuation=SymNum('amp_{bc}', default=0.8, product=True), delay=0.1))
 
 # Visualize the network (if graphviz is installed)
 net.visualize(path='./visualizations/quickstart2', format='svg')
@@ -58,7 +58,7 @@ tb.add_input_sequence(node_name='a',x=np.array([1,2,0]),t=np.array([0,2,7,10]))
 tb.add_output_node('c')
 
 # set the feed dictionary for the symbolic numbers
-tb.set_feed_dict({'amp_bc':0.7, 'ph_bc': 3.1, 'ph_ab': 4.9})
+tb.set_feed_dict({'amp_{bc}': 0.7, 'ph_{bc}': 3.1, 'ph_{ab}': 4.9})
 
 # evaluate the network (through the testbench)
 tb.evaluate_network(amplitude_cutoff=1e-6)
@@ -73,8 +73,10 @@ plt.plot(t, np.abs(x), 'x') # Output signal
 plt.xlabel('Time')
 plt.ylabel('|x|')
 plt.legend(['Input', 'Output C'], loc='lower left')
+plt.savefig('./visualizations/quickstart.svg')
 plt.show()
 
 # Show paths leading to node c and output waves arriving at node c
 print(tb.model.get_paths('c'))
 print(tb.model.get_result('c'))
+tb.model.get_html_result('c',path='./visualizations/quickstart.html', precision=3)
