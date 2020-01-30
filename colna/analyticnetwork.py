@@ -453,7 +453,7 @@ class Network(object):
                     latex_string += '+' + str_elem_value + '\cdot' if align_next_line == False else '+&' + str_elem_value + '\cdot'
                     align_next_line = False
                 elif elem_type == 1:  # phase
-                    latex_string += '\exp(j ' + str_elem_value + ')\cdot '
+                    latex_string += '\exp(j (' + str_elem_value + '))\cdot '
                 elif elem_type == 2:  # delay
                     in_node_name = value[3].split('-')[1]
                     latex_string += in_node_name + '_{in}(' + time_symbol + '-' + str_elem_value + ')'
