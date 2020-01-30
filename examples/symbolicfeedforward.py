@@ -53,7 +53,7 @@ net.evaluate(use_shared_default=False, feed_dict=None)
 
 print('waves arriving at c:', net.get_result('c'))
 print('waves arriving at d:', net.get_result('d'))
-
+net.get_html_result(['c','d'],path='./visualizations/symbolicfeedforward.html')
 # Evaluation without feed dictionary, using the default value of each SymNum
 waves = [tuple([w.eval(feed_dict=None, use_shared_default=False) if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('c')]
 print('Waves arriving at c:', waves, '\n')

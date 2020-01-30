@@ -56,3 +56,7 @@ print('paths leading to c:', net.get_paths('c'))
 print('paths leading to d:', net.get_paths('d'))
 print('waves arriving at c:', net.get_result('c'))
 print('waves arriving at d:', net.get_result('d'))
+print('latex string for waves arriving at c:', net.get_latex_result('c'))
+
+# render output in a html file
+net.get_html_result(['c','d'], precision=2, path='./visualizations/feedforward.html')

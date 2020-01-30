@@ -206,7 +206,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">delay</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="o">==</span><span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">phase</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">attenuation</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">attenuation</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delay</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">phase</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">attenuation</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">attenuation</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delay</span></div>
+
 
 <div class="viewcode-block" id="Network"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network">[docs]</a><span class="k">class</span> <span class="nc">Network</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -239,7 +240,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span> <span class="p">(</span> <span class="s2">&quot;node of name &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; already exists&quot;</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;node of name &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; already exists&quot;</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -256,9 +257,9 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">edge</span><span class="o">.</span><span class="n">start</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add edge from undefined node&quot;</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add edge from undefined node&quot;</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add edge to an undefined node&quot;</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add edge to an undefined node&quot;</span> <span class="o">+</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div>
 
@@ -282,7 +283,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to give input to inexistent node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to give input to inexistent node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span></div>
 
@@ -298,7 +299,7 @@
 <span class="sd">        :return: a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to retrive wave at non-existing node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to retrive wave at non-existing node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span></div>
 
@@ -314,7 +315,7 @@
 <span class="sd">        :return: x; x[0]: amp, x[1]: phase, x[2]: delay</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to retrive wave at non-existing node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to retrive wave at non-existing node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
 
         <span class="n">amp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">entry</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">entry</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -331,7 +332,7 @@
 <span class="sd">        :return: all paths leading to a node</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to retrive path to non-existing node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to retrive path to non-existing node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="p">[</span><span class="n">entry</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span></div>
 
@@ -475,7 +476,147 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">s</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
-        <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span></div></div>
+        <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Network.get_html_result"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_html_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_html_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time_symbol</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">linebreak_limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;out.html&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a html file with a rendered math equation describing all waves arriving at the given node.</span>
+
+<span class="sd">        .. warning:: To correctly render the equations in the browser, MathJax is required. The script is loaded automatically when you open the html file in a browser, if an internet connection is available.</span>
+
+<span class="sd">        :param name: Name of the node to get result from. If it is a list, results will be retrieved for all nodes in the list and compiled in a single html file.</span>
+<span class="sd">        :type name: str or list</span>
+<span class="sd">        :param time_symbol: character used to describe time/delays in the equation</span>
+<span class="sd">        :type time_symbol: str</span>
+<span class="sd">        :param evaluate: If evaluate is True, SymNum&#39;s will be evaluated using the feed_dict and use_shared_default values specified. Otherwise SymNums are represented by their name as variables.</span>
+<span class="sd">        :type evaluate: bool</span>
+<span class="sd">        :param feed_dict: a dictionary specifying values of variables by name. If only some variables are specified, for all other variables the default value will be used.</span>
+<span class="sd">        :type feed_dict: dict</span>
+<span class="sd">        :param use_shared_default: set to true if shared defaults should be used with SymNums (higher speed) when no \</span>
+<span class="sd">        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \</span>
+<span class="sd">        The value is ignored if feed_dict is not None. Default: False</span>
+<span class="sd">        :type use_shared_default: bool</span>
+<span class="sd">        :param linebreak_limit: A line break will be added roughly every linebreak_limit chars in the latex string. Set to 1 for a linebreak after each term. Set to 0 to get a latex string on a single line. Default: 1</span>
+<span class="sd">        :type linebreak_limit: int</span>
+<span class="sd">        :param path: Output path where html file containing the MathJax code is stored</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param precision: Number of significant digits to be output. Set to 0 to use the default value of str() method.</span>
+<span class="sd">        :type precision: int</span>
+
+<span class="sd">        :raises ValueError: If the node with the provided name does not exist in the network.</span>
+
+<span class="sd">        :return: writes a html file at</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;!DOCTYPE html&gt;</span>
+<span class="s2">        &lt;html&gt;</span>
+<span class="s2">        &lt;head&gt;</span>
+<span class="s2">          &lt;meta charset=&quot;utf-8&quot;&gt;</span>
+<span class="s2">          &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;</span>
+<span class="s2">          &lt;title&gt;</span><span class="si">{}</span><span class="s2">&lt;/title&gt;</span>
+<span class="s2">          &lt;script src=&quot;https://polyfill.io/v3/polyfill.min.js?features=es6&quot;&gt;&lt;/script&gt;</span>
+<span class="s2">          &lt;script id=&quot;MathJax-script&quot; async</span>
+<span class="s2">                  src=&quot;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js&quot;&gt;</span>
+<span class="s2">          &lt;/script&gt;</span>
+<span class="s2">        &lt;/head&gt;</span>
+<span class="s2">        &lt;body&gt;</span>
+<span class="s2">        </span><span class="si">{}</span><span class="s2"></span>
+<span class="s2">        &lt;/body&gt;</span>
+<span class="s2">        &lt;/html&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="n">raw_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to retrive wave at non-existing node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
+
+            <span class="n">raw_string</span> <span class="o">+=</span> <span class="s1">&#39;&lt;p&gt; Waves at node &#39;</span> <span class="o">+</span> <span class="n">node</span> <span class="o">+</span> <span class="s1">&#39;&lt;br&gt;&lt;br&gt; \(&#39;</span> \
+                          <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latex_result</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">node</span><span class="p">,</span>
+                                                  <span class="n">time_symbol</span><span class="o">=</span><span class="n">time_symbol</span><span class="p">,</span>
+                                                  <span class="n">evaluate</span><span class="o">=</span><span class="n">evaluate</span><span class="p">,</span>
+                                                  <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">,</span>
+                                                  <span class="n">use_shared_default</span><span class="o">=</span><span class="n">use_shared_default</span><span class="p">,</span>
+                                                  <span class="n">linebreak_limit</span><span class="o">=</span><span class="n">linebreak_limit</span><span class="p">,</span>
+                                                  <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;\)&lt;/p&gt;&#39;</span>
+
+        <span class="n">output_html</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;waves at nodes&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">raw_string</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_html</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Network.get_latex_result"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_latex_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_latex_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time_symbol</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">linebreak_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a latex string that describes all waves arriving at the given node.</span>
+
+<span class="sd">        SymNums are shown as variables, unless evaluate is set to True.</span>
+
+<span class="sd">        :param name: Name of the node to get result from</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param time_symbol: character used to describe time/delays in the equation</span>
+<span class="sd">        :type time_symbol: str</span>
+<span class="sd">        :param evaluate: If evaluate is True, SymNum&#39;s will be evaluated using the feed_dict and use_shared_default values specified. Otherwise SymNums are represented by their name as variables.</span>
+<span class="sd">        :type evaluate: bool</span>
+<span class="sd">        :param feed_dict: a dictionary specifying values of variables by name. If only some variables are specified, for all other variables the default value will be used.</span>
+<span class="sd">        :type feed_dict: dict</span>
+<span class="sd">        :param use_shared_default: set to true if shared defaults should be used with SymNums (higher speed) when no \</span>
+<span class="sd">        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \</span>
+<span class="sd">        The value is ignored if feed_dict is not None. Default: False</span>
+<span class="sd">        :type use_shared_default: bool</span>
+<span class="sd">        :param linebreak_limit: A line break will be added roughly every linebreak_limit chars in the latex string. Set to 1 for a linebreak after each term. Set to 0 to get a latex string on a single line. Default: 1</span>
+<span class="sd">        :type linebreak_limit: int</span>
+<span class="sd">        :param precision: Number of significant digits to be output. Set to 0 to use the default value of str() method.</span>
+<span class="sd">        :type precision: int</span>
+
+<span class="sd">        :raises ValueError: If the node with the provided name does not exist in the network.</span>
+
+<span class="sd">        :return: a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to retrive wave at non-existing node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
+
+        <span class="n">latex_string</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;&#39;</span>
+        <span class="n">last_linebreak</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">align_next_line</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_to_output</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]):</span>
+                <span class="n">elem_type</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">4</span>
+                <span class="c1"># get the string representation of the value</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="o">==</span> <span class="n">SymNum</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">evaluate</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="n">temp_eval_val</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="n">use_shared_default</span><span class="p">)</span>
+                        <span class="n">str_elem_value</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%.*g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">temp_eval_val</span><span class="p">)</span> <span class="k">if</span> <span class="n">precision</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">temp_eval_val</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">str_elem_value</span> <span class="o">=</span> <span class="n">elem</span><span class="o">.</span><span class="n">to_latex</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">temp_val</span> <span class="o">=</span> <span class="n">elem</span>
+                    <span class="n">str_elem_value</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%.*g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">temp_val</span><span class="p">)</span> <span class="k">if</span> <span class="n">precision</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">temp_val</span><span class="p">)</span>
+
+                <span class="c1"># stich together the latex string depending on the type of the element (amplitude, phase, delay)</span>
+                <span class="k">if</span> <span class="n">elem_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># amplitude</span>
+                    <span class="n">latex_string</span> <span class="o">+=</span> <span class="s1">&#39;+&#39;</span> <span class="o">+</span> <span class="n">str_elem_value</span> <span class="o">+</span> <span class="s1">&#39;\cdot&#39;</span> <span class="k">if</span> <span class="n">align_next_line</span> <span class="o">==</span> <span class="kc">False</span> <span class="k">else</span> <span class="s1">&#39;+&amp;&#39;</span> <span class="o">+</span> <span class="n">str_elem_value</span> <span class="o">+</span> <span class="s1">&#39;\cdot&#39;</span>
+                    <span class="n">align_next_line</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">elif</span> <span class="n">elem_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># phase</span>
+                    <span class="n">latex_string</span> <span class="o">+=</span> <span class="s1">&#39;\exp(j (&#39;</span> <span class="o">+</span> <span class="n">str_elem_value</span> <span class="o">+</span> <span class="s1">&#39;))\cdot &#39;</span>
+                <span class="k">elif</span> <span class="n">elem_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># delay</span>
+                    <span class="n">in_node_name</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">latex_string</span> <span class="o">+=</span> <span class="n">in_node_name</span> <span class="o">+</span> <span class="s1">&#39;_</span><span class="si">{in}</span><span class="s1">(&#39;</span> <span class="o">+</span> <span class="n">time_symbol</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">str_elem_value</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+                    <span class="c1"># Linebreak</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">latex_string</span><span class="p">)</span> <span class="o">-</span> <span class="n">last_linebreak</span> <span class="o">&gt;</span> <span class="n">linebreak_limit</span> <span class="ow">and</span> <span class="n">linebreak_limit</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">last_linebreak</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">latex_string</span><span class="p">)</span>
+                        <span class="n">latex_string</span> <span class="o">+=</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span>
+                        <span class="n">align_next_line</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">latex_string</span> <span class="o">=</span> <span class="n">latex_string</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># removes the leading +</span>
+        <span class="k">if</span> <span class="n">linebreak_limit</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">latex_string</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\begin</span><span class="si">{equation}</span><span class="s1">\begin</span><span class="si">{split}</span><span class="s1">&amp;&#39;</span> <span class="o">+</span> <span class="n">latex_string</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;\end</span><span class="si">{split}</span><span class="s1">\end</span><span class="si">{equation}</span><span class="s1">&#39;</span>
+
+        <span class="k">return</span> <span class="n">latex_string</span></div></div>
 
 
 <div class="viewcode-block" id="SymNum"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.SymNum">[docs]</a><span class="k">class</span> <span class="nc">SymNum</span><span class="p">:</span>
@@ -518,8 +659,6 @@
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerical</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">numerical</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">defaults</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">defaults</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">product</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared_default</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">shared_default</span>
 
-
-
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Creates a copy of a Symbolic Number.&quot;&quot;&quot;</span>
         <span class="n">copy</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">product</span><span class="p">,</span> <span class="n">numerical</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">numerical</span><span class="p">)</span>
@@ -536,12 +675,12 @@
 <span class="sd">        :rtype: class:`SymNum`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;do not add product variables&quot;</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;do not add product variables&quot;</span><span class="p">))</span>
 
         <span class="n">copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">product</span><span class="p">:</span>
-                <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span><span class="p">))</span>
             <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">+=</span> <span class="n">other</span><span class="o">.</span><span class="n">numerical</span>
             <span class="n">copy</span><span class="o">.</span><span class="n">shared_default</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shared_default</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">shared_default</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -566,12 +705,12 @@
 <span class="sd">        :rtype: class:`SymNum`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;do not multiply non-product variables&quot;</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;do not multiply non-product variables&quot;</span><span class="p">))</span>
 
         <span class="n">copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">product</span><span class="p">:</span>
-                <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span><span class="p">))</span>
             <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">*=</span> <span class="n">other</span><span class="o">.</span><span class="n">numerical</span>
             <span class="n">copy</span><span class="o">.</span><span class="n">shared_default</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shared_default</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">shared_default</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -596,11 +735,11 @@
 <span class="sd">        :rtype: class:`SymNum`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;do not divide non-product variables&quot;</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;do not divide non-product variables&quot;</span><span class="p">))</span>
         <span class="n">copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">SymNum</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">product</span><span class="p">:</span>
-                <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ensure that product type of symbolic numbers are the same&quot;</span><span class="p">))</span>
             <span class="n">copy</span><span class="o">.</span><span class="n">numerical</span> <span class="o">/=</span> <span class="n">other</span><span class="o">.</span><span class="n">numerical</span>
             <span class="n">copy</span><span class="o">.</span><span class="n">shared_default</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shared_default</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">shared_default</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -657,11 +796,25 @@
 
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numerical</span><span class="p">)</span> <span class="o">+</span> <span class="n">out</span>
 
+<div class="viewcode-block" id="SymNum.to_latex"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.SymNum.to_latex">[docs]</a>    <span class="k">def</span> <span class="nf">to_latex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="n">op1</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="k">else</span> <span class="s2">&quot; + &quot;</span>
+        <span class="n">op2</span> <span class="o">=</span> <span class="s2">&quot;^&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">product</span> <span class="k">else</span> <span class="s2">&quot; \cdot &quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="n">op1</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="n">key</span> <span class="o">+</span> <span class="n">op2</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">symbolic</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">precision</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">numerical_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numerical</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">numerical_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%.*g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numerical</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">numerical_str</span> <span class="o">+</span> <span class="n">out</span></div>
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        convenience overload to print lists of these numbers easily.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;&lt;SymNum{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;}&gt;&#39;</span></div>
+        <span class="k">return</span> <span class="s1">&#39;&lt;SymNum{&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&gt;&#39;</span></div>
 
 
 <div class="viewcode-block" id="Device"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device">[docs]</a><span class="k">class</span> <span class="nc">Device</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
@@ -701,7 +854,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">nodename</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add output to inexistent node &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nodename</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add output to inexistent node &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nodename</span><span class="p">)))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -739,7 +892,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;:&quot;</span> <span class="ow">in</span> <span class="n">nodename</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Use of : in nodenames is forbidden for Devices.&quot;</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Use of : in nodenames is forbidden for Devices.&quot;</span><span class="p">))</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">nodename</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -825,7 +978,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="p">[</span><span class="n">startdevice</span><span class="p">,</span> <span class="n">enddevice</span><span class="p">,</span> <span class="n">startnode</span><span class="p">,</span> <span class="n">endnode</span><span class="p">,</span> <span class="n">startdevicetype</span><span class="p">,</span> <span class="n">enddevicetype</span><span class="p">]:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="k">raise</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;device links require string inputs on some arguments&quot;</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;device links require string inputs on some arguments&quot;</span><span class="p">))</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">startnode</span><span class="p">,</span> <span class="n">endnode</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">attenuation</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">startdevicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">startdevice</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">startnode</span>
@@ -872,9 +1025,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">start</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add device link from inexistent node &quot;</span> <span class="o">+</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add device link from inexistent node &quot;</span> <span class="o">+</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">start</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">end</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-            <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add device link to inexistent node &quot;</span> <span class="o">+</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">end</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to add device link to inexistent node &quot;</span> <span class="o">+</span> <span class="n">devicelink</span><span class="o">.</span><span class="n">end</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">devicelink</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PhysicalNetwork.get_outputs"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.PhysicalNetwork.get_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1023,8 +1176,8 @@
             <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span><span class="s2">&quot;At most one input sequence can be added per node. You added two at &quot;</span> <span class="o">+</span> <span class="n">node_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;A node must be an input or output sequence node, it can not be both. You added both for node &quot;</span> <span class="o">+</span> <span class="n">node_name</span><span class="p">)</span>
-
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;A node must be an input or output sequence node, it can not be both. You added both for node &quot;</span> <span class="o">+</span> <span class="n">node_name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_name</span><span class="p">)</span>
@@ -1136,7 +1289,7 @@
         <span class="k">if</span> <span class="n">n_threads</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">node_out</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">node_out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-                    <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;node </span><span class="si">{}</span><span class="s2"> does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_out</span><span class="p">)))</span>
+                    <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;node </span><span class="si">{}</span><span class="s2"> does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_out</span><span class="p">)))</span>
 
                 <span class="n">t</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_output_sequence</span><span class="p">(</span><span class="n">node_name</span><span class="o">=</span><span class="n">node_out</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="n">use_shared_default</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">x_out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -1146,7 +1299,7 @@
             <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">node_out</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_nodes</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">node_out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-                    <span class="k">raise</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;node </span><span class="si">{}</span><span class="s2"> does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_out</span><span class="p">)))</span>
+                    <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;node </span><span class="si">{}</span><span class="s2"> does not exist&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_out</span><span class="p">)))</span>
 
                 <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">node_out</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="p">))</span>
             <span class="c1"># Creates a thread per output node</span>

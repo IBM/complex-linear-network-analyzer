@@ -57,7 +57,8 @@ class Edge(object):
         self.delay = delay
 
     def __eq__(self, other):
-        return self.start==other.start and self.end == other.end and self.phase == other.phase and self.attenuation == other.attenuation and self.delay == other.delay
+        return self.start == other.start and self.end == other.end and self.phase == other.phase and self.attenuation == other.attenuation and self.delay == other.delay
+
 
 class Network(object):
     """
@@ -90,7 +91,7 @@ class Network(object):
         """
 
         if name in self.nodes:
-            raise(ValueError ( "node of name " + name + " already exists"))
+            raise (ValueError("node of name " + name + " already exists"))
 
         self.nodes.append(name)
 
@@ -107,9 +108,9 @@ class Network(object):
 
         """
         if not edge.start in self.nodes:
-            raise(ValueError("attempted to add edge from undefined node" + edge.start))
+            raise (ValueError("attempted to add edge from undefined node" + edge.start))
         if not edge.end in self.nodes:
-            raise(ValueError("attempted to add edge to an undefined node" + edge.end))
+            raise (ValueError("attempted to add edge to an undefined node" + edge.end))
 
         self.edges.append(edge)
 
@@ -133,7 +134,7 @@ class Network(object):
         """
 
         if not name in self.nodes:
-            raise(ValueError("attempted to give input to inexistent node " + name))
+            raise (ValueError("attempted to give input to inexistent node " + name))
 
         self.inputs.append((amplitude, phase, delay, name))
 
@@ -149,7 +150,7 @@ class Network(object):
         :return: a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)
         """
         if not name in self.nodes:
-            raise(ValueError("attempted to retrive wave at non-existing node " + name))
+            raise (ValueError("attempted to retrive wave at non-existing node " + name))
 
         return [entry[0:3] for entry in self.nodes_to_output[name]]
 
@@ -165,7 +166,7 @@ class Network(object):
         :return: x; x[0]: amp, x[1]: phase, x[2]: delay
         """
         if not name in self.nodes:
-            raise(ValueError("attempted to retrive wave at non-existing node " + name))
+            raise (ValueError("attempted to retrive wave at non-existing node " + name))
 
         amp = np.asarray([entry[0] for entry in self.nodes_to_output[name]]).reshape([1, -1])
         phase = np.asarray([entry[1] for entry in self.nodes_to_output[name]]).reshape([1, -1])
@@ -182,7 +183,7 @@ class Network(object):
         :return: all paths leading to a node
         """
         if not name in self.nodes:
-            raise(ValueError("attempted to retrive path to non-existing node " + name))
+            raise (ValueError("attempted to retrive path to non-existing node " + name))
 
         return [entry[3] for entry in self.nodes_to_output[name]]
 
@@ -328,6 +329,146 @@ class Network(object):
 
         s.render(path, view=False, format=format)
 
+    def get_html_result(self, name, time_symbol='t', evaluate=False, feed_dict=None, use_shared_default=False,
+                        linebreak_limit=1, precision=0, path='out.html'):
+        """
+        Creates a html file with a rendered math equation describing all waves arriving at the given node.
+
+        .. warning:: To correctly render the equations in the browser, MathJax is required. The script is loaded automatically when you open the html file in a browser, if an internet connection is available.
+
+        :param name: Name of the node to get result from. If it is a list, results will be retrieved for all nodes in the list and compiled in a single html file.
+        :type name: str or list
+        :param time_symbol: character used to describe time/delays in the equation
+        :type time_symbol: str
+        :param evaluate: If evaluate is True, SymNum's will be evaluated using the feed_dict and use_shared_default values specified. Otherwise SymNums are represented by their name as variables.
+        :type evaluate: bool
+        :param feed_dict: a dictionary specifying values of variables by name. If only some variables are specified, for all other variables the default value will be used.
+        :type feed_dict: dict
+        :param use_shared_default: set to true if shared defaults should be used with SymNums (higher speed) when no \
+        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
+        The value is ignored if feed_dict is not None. Default: False
+        :type use_shared_default: bool
+        :param linebreak_limit: A line break will be added roughly every linebreak_limit chars in the latex string. Set to 1 for a linebreak after each term. Set to 0 to get a latex string on a single line. Default: 1
+        :type linebreak_limit: int
+        :param path: Output path where html file containing the MathJax code is stored
+        :type path: str
+        :param precision: Number of significant digits to be output. Set to 0 to use the default value of str() method.
+        :type precision: int
+
+        :raises ValueError: If the node with the provided name does not exist in the network.
+
+        :return: writes a html file at
+        """
+
+        template = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width">
+          <title>{}</title>
+          <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+          <script id="MathJax-script" async
+                  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+          </script>
+        </head>
+        <body>
+        {}
+        </body>
+        </html>
+        """
+
+        if isinstance(name, list) == False:
+            name = [name]
+
+        raw_string = ''
+        for node in name:
+            if not node in self.nodes:
+                raise (ValueError("attempted to retrive wave at non-existing node " + name))
+
+            raw_string += '<p> Waves at node ' + node + '<br><br> \(' \
+                          + self.get_latex_result(name=node,
+                                                  time_symbol=time_symbol,
+                                                  evaluate=evaluate,
+                                                  feed_dict=feed_dict,
+                                                  use_shared_default=use_shared_default,
+                                                  linebreak_limit=linebreak_limit,
+                                                  precision=precision) + '\)</p>'
+
+        output_html = template.format('waves at nodes' + str(name), raw_string)
+
+        with open(path, 'w') as file:
+            file.write(output_html)
+
+    def get_latex_result(self, name, time_symbol='t', evaluate=False, feed_dict=None, use_shared_default=False,
+                         linebreak_limit=0, precision=0):
+        """
+        Returns a latex string that describes all waves arriving at the given node.
+
+        SymNums are shown as variables, unless evaluate is set to True.
+
+        :param name: Name of the node to get result from
+        :type name: str
+        :param time_symbol: character used to describe time/delays in the equation
+        :type time_symbol: str
+        :param evaluate: If evaluate is True, SymNum's will be evaluated using the feed_dict and use_shared_default values specified. Otherwise SymNums are represented by their name as variables.
+        :type evaluate: bool
+        :param feed_dict: a dictionary specifying values of variables by name. If only some variables are specified, for all other variables the default value will be used.
+        :type feed_dict: dict
+        :param use_shared_default: set to true if shared defaults should be used with SymNums (higher speed) when no \
+        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
+        The value is ignored if feed_dict is not None. Default: False
+        :type use_shared_default: bool
+        :param linebreak_limit: A line break will be added roughly every linebreak_limit chars in the latex string. Set to 1 for a linebreak after each term. Set to 0 to get a latex string on a single line. Default: 1
+        :type linebreak_limit: int
+        :param precision: Number of significant digits to be output. Set to 0 to use the default value of str() method.
+        :type precision: int
+
+        :raises ValueError: If the node with the provided name does not exist in the network.
+
+        :return: a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)
+        """
+        if not name in self.nodes:
+            raise (ValueError("attempted to retrive wave at non-existing node " + name))
+
+        latex_string = r''
+        last_linebreak = 0
+        align_next_line = False
+        for value in self.nodes_to_output[name]:
+            for i, elem in enumerate(value[0:3]):
+                elem_type = i % 4
+                # get the string representation of the value
+                if type(elem) == SymNum:
+                    if evaluate == True:
+                        temp_eval_val = elem.eval(feed_dict=feed_dict, use_shared_default=use_shared_default)
+                        str_elem_value = '%.*g' % (precision, temp_eval_val) if precision != 0 else str(temp_eval_val)
+                    else:
+                        str_elem_value = elem.to_latex(precision=precision)
+                else:
+                    temp_val = elem
+                    str_elem_value = '%.*g' % (precision, temp_val) if precision != 0 else str(temp_val)
+
+                # stich together the latex string depending on the type of the element (amplitude, phase, delay)
+                if elem_type == 0:  # amplitude
+                    latex_string += '+' + str_elem_value + '\cdot' if align_next_line == False else '+&' + str_elem_value + '\cdot'
+                    align_next_line = False
+                elif elem_type == 1:  # phase
+                    latex_string += '\exp(j (' + str_elem_value + '))\cdot '
+                elif elem_type == 2:  # delay
+                    in_node_name = value[3].split('-')[1]
+                    latex_string += in_node_name + '_{in}(' + time_symbol + '-' + str_elem_value + ')'
+                    # Linebreak
+                    if len(latex_string) - last_linebreak > linebreak_limit and linebreak_limit > 0:
+                        last_linebreak = len(latex_string)
+                        latex_string += r'\\'
+                        align_next_line = True
+
+        latex_string = latex_string[1:]  # removes the leading +
+        if linebreak_limit > 0:
+            latex_string = r'\begin{equation}\begin{split}&' + latex_string + r'\end{split}\end{equation}'
+
+        return latex_string
+
 
 class SymNum:
     """
@@ -369,8 +510,6 @@ class SymNum:
     def __eq__(self, other):
         return self.symbolic == other.symbolic and self.numerical == other.numerical and self.defaults == other.defaults and self.product == other.product and self.shared_default == other.shared_default
 
-
-
     def __copy__(self):
         """ Creates a copy of a Symbolic Number."""
         copy = SymNum('', product=self.product, numerical=self.numerical)
@@ -387,12 +526,12 @@ class SymNum:
         :rtype: class:`SymNum`
         """
         if self.product == True:
-            raise(ValueError("do not add product variables"))
+            raise (ValueError("do not add product variables"))
 
         copy = self.__copy__()
         if isinstance(other, SymNum):
             if not self.product == other.product:
-                raise(ValueError("ensure that product type of symbolic numbers are the same"))
+                raise (ValueError("ensure that product type of symbolic numbers are the same"))
             copy.numerical += other.numerical
             copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
@@ -417,12 +556,12 @@ class SymNum:
         :rtype: class:`SymNum`
         """
         if self.product == False:
-            raise(ValueError("do not multiply non-product variables"))
+            raise (ValueError("do not multiply non-product variables"))
 
         copy = self.__copy__()
         if isinstance(other, SymNum):
             if not self.product == other.product:
-                raise(ValueError("ensure that product type of symbolic numbers are the same"))
+                raise (ValueError("ensure that product type of symbolic numbers are the same"))
             copy.numerical *= other.numerical
             copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
@@ -447,11 +586,11 @@ class SymNum:
         :rtype: class:`SymNum`
         """
         if self.product == False:
-            raise(ValueError("do not divide non-product variables"))
+            raise (ValueError("do not divide non-product variables"))
         copy = self.__copy__()
         if isinstance(other, SymNum):
             if not self.product == other.product:
-                raise(ValueError("ensure that product type of symbolic numbers are the same"))
+                raise (ValueError("ensure that product type of symbolic numbers are the same"))
             copy.numerical /= other.numerical
             copy.shared_default = max(self.shared_default, other.shared_default)
             for symbol in other.symbolic.keys():
@@ -508,11 +647,25 @@ class SymNum:
 
         return str(self.numerical) + out
 
+    def to_latex(self, precision=0):
+        op1 = " " if self.product else " + "
+        op2 = "^" if self.product else " \cdot "
+        out = ""
+        for key in self.symbolic.keys():
+            out += op1
+            out += key + op2 + str(self.symbolic[key])
+
+        if precision == 0:
+            numerical_str = str(self.numerical)
+        else:
+            numerical_str = '%.*g' % (precision, self.numerical)
+        return numerical_str + out
+
     def __repr__(self):
         """
         convenience overload to print lists of these numbers easily.
         """
-        return '<SymNum{' + str(self)+'}>'
+        return '<SymNum{' + str(self) + '}>'
 
 
 class Device(Network):
@@ -552,7 +705,7 @@ class Device(Network):
         """
         name = self.devicetype + ":" + self.name + ":" + nodename
         if not name in self.nodes:
-            raise(ValueError("attempted to add output to inexistent node " + str(nodename)))
+            raise (ValueError("attempted to add output to inexistent node " + str(nodename)))
 
         self.outputs.append(name)
 
@@ -590,7 +743,7 @@ class Device(Network):
 
         """
         if ":" in nodename:
-            raise(ValueError("Use of : in nodenames is forbidden for Devices."))
+            raise (ValueError("Use of : in nodenames is forbidden for Devices."))
         name = self.devicetype + ":" + self.name + ":" + nodename
         super().add_node(name)
 
@@ -676,7 +829,7 @@ class DeviceLink(Edge):
         """
         for string in [startdevice, enddevice, startnode, endnode, startdevicetype, enddevicetype]:
             if not isinstance(string, str):
-                raise(TypeError("device links require string inputs on some arguments"))
+                raise (TypeError("device links require string inputs on some arguments"))
 
         super().__init__(startnode, endnode, phase, attenuation, delay)
         self.start = startdevicetype + ":" + startdevice + ":" + startnode
@@ -723,9 +876,9 @@ class PhysicalNetwork(Network):
         """
 
         if not devicelink.start in self.nodes:
-            raise(ValueError("attempted to add device link from inexistent node " + devicelink.start))
+            raise (ValueError("attempted to add device link from inexistent node " + devicelink.start))
         if not devicelink.end in self.nodes:
-            raise(ValueError("attempted to add device link to inexistent node " + devicelink.end))
+            raise (ValueError("attempted to add device link to inexistent node " + devicelink.end))
         self.add_edge(devicelink)
 
     def get_outputs(self):
@@ -874,8 +1027,8 @@ class Testbench():
             raise OverflowError("At most one input sequence can be added per node. You added two at " + node_name)
 
         if node_name in self.output_nodes:
-            raise ValueError("A node must be an input or output sequence node, it can not be both. You added both for node " + node_name)
-
+            raise ValueError(
+                "A node must be an input or output sequence node, it can not be both. You added both for node " + node_name)
 
         self.model.add_input(node_name)
         self.input_nodes.append(node_name)
@@ -987,7 +1140,7 @@ class Testbench():
         if n_threads == 0:
             for ind, node_out in enumerate(self.output_nodes):
                 if not node_out in self.model.nodes:
-                    raise(ValueError("node {} does not exist".format(node_out)))
+                    raise (ValueError("node {} does not exist".format(node_out)))
 
                 t, x = self.calculate_output_sequence(node_name=node_out, use_shared_default=use_shared_default)
                 self.x_out.append(x)
@@ -997,7 +1150,7 @@ class Testbench():
             args = []
             for ind, node_out in enumerate(self.output_nodes):
                 if not node_out in self.model.nodes:
-                    raise(ValueError("node {} does not exist".format(node_out)))
+                    raise (ValueError("node {} does not exist".format(node_out)))
 
                 args.append((node_out, use_shared_default))
             # Creates a thread per output node

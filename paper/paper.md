@@ -6,6 +6,9 @@ tags:
   - Integrated Photonics
   - Complex networks
   - Simulation
+  - Circuit Simulation
+  - Photonic Circuits
+  
 authors:
   - name: Pascal Stark
     affiliation: 1
@@ -15,7 +18,8 @@ authors:
 affiliations:
  - name: IBM Research – Zürich, Säumerstrasse 4, 8803 Rüschlikon, Switzerland
    index: 1
-date: 15 January 2020
+date: 30 January 2020
+bibliography: paper.bib
 ---
 
 ## Summary
@@ -26,12 +30,12 @@ well documented interface, which allows to quickly build network models and unde
 is to compute coherent wave propagation through linear photonic circuits, but COLNA might be useful in any research area, 
 where signal propagation through linear complex networks is of practical relevance.
 
-![Example of a recurrent network with 3 nodes that can be modelled using COLNA. The edge parameters ($a$, $\varphi$ and 
- $\Delta t$)](./figures/basic_net.png)
+![Example of a recurrent network with three nodes that can be modelled using COLNA. The edge parameters ($a$, $\varphi$ and 
+ $\Delta t$) can be numeric or symbolic numbers (variables).](./figures/basic_net.eps)
  
  
 ## Functionality and Features
-Fig. 2 illustrates COLNAs core functionality. Networks are assembled by adding nodes and edges. To verify the 
+Fig. 2 illustrates the core functionality of COLNA. Networks are assembled by adding nodes and edges. To verify the 
 assembly, networks can be visualized as a graph. In a next step, COLNA computes all paths leading from input to output 
 nodes, including recurrent paths, down to a certain amplitude accuracy threshold. 
 It supports the mixed use of numeric and symbolic numbers (variables) for all edge properties, returning either a numeric 
@@ -40,7 +44,7 @@ complex valued signals to the network and compute the resulting signals at the o
 
 ![Illustration of COLNA's core functions. Assembly and visualization of complex valued networks,
 evaluation of the wave propagation from input to output nodes. A testbench injects signals to the network
-and records the signals at the output nodes.](./figures/colna_features.png)
+and records the signals at the output nodes.](./figures/colna_features_plain.eps)
 
 # Statement of Need and Commercial Alternatives
 Today, integrated Si photonic circuits (PIC) cover a large range of functionality, from optical interconnects [@Pavesi2016] to 
@@ -57,7 +61,8 @@ do not provide an analytic description of the network.
 # Acknowledgements
 
 This project has received funding from the EU-H2020 research and innovation program under grant no.
-688579 (PHRESCO).
+688579 (PHRESCO) and from the Swiss National Science Foundation under grant no. 175801 (Novel Architectures for Photonic
+Reservoir Computing).
 
 # References
 

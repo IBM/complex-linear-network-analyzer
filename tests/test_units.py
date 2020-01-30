@@ -402,6 +402,12 @@ class TestSymNum(unittest.TestCase):
         self.assertEqual(str(self.add_5 + self.add_6), '0.0 + add_5*1 + add_6*1')
         self.assertEqual(str(2 + self.add_5 + self.add_6), '2.0 + add_5*1 + add_6*1')
 
+    def test_latex(self):
+        """ Tests the conversion of SymNum to latex strings."""
+
+        self.assertEqual(self.mult_0.to_latex(), '1.0 mult_0^1')
+        self.assertEqual(self.add_0.to_latex(), '0.0 + add_0 \cdot 1')
+
 
 class TestTestbench(unittest.TestCase):
 
