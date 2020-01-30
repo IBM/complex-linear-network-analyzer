@@ -34,11 +34,11 @@ COLNA can inject complex valued signals to the network and the compute the resul
 
 The core functionality of COLNA is visualized in the figure below.
 
-.. figure:: /figures/colna_features.png
+.. figure:: /figures/colna_features_extended_plain.svg
     :align: center
 
     Visualization of the basic functions of COLNA. With COLNA one can quickly assemble a network and visulize it,
-    evaluate how waves propagate from input to output nodes and with a testbench signals can be injected to the network
+    evaluate how waves propagate from input to output nodes. Using a testbench signals can be injected to nodes
     and the corresponding output signals are computed.
 
 

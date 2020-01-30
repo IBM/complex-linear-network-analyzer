@@ -15,7 +15,7 @@ COLNA can inject complex valued signals to the network and the compute the resul
 
 The core functionality of COLNA is visualized in the figure below.
 
-![](docs/_images/colna_features.png)
+![](docs/_images/colna_features_extended_plain.svg)
 
 Documentation
 -------------
