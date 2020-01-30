@@ -31,11 +31,11 @@ is to compute coherent wave propagation through linear photonic circuits, but CO
 where signal propagation through linear complex networks is of practical relevance.
 
 ![Example of a recurrent network with three nodes that can be modelled using COLNA. The edge parameters ($a$, $\varphi$ and 
- $\Delta t$) can be numeric or symbolic.](./figures/basic_net.eps)
+ $\Delta t$) can be numeric or symbolic numbers (variables).](./figures/basic_net.eps)
  
  
 ## Functionality and Features
-Fig. 2 illustrates COLNAs core functionality. Networks are assembled by adding nodes and edges. To verify the 
+Fig. 2 illustrates the core functionality of COLNA. Networks are assembled by adding nodes and edges. To verify the 
 assembly, networks can be visualized as a graph. In a next step, COLNA computes all paths leading from input to output 
 nodes, including recurrent paths, down to a certain amplitude accuracy threshold. 
 It supports the mixed use of numeric and symbolic numbers (variables) for all edge properties, returning either a numeric 
@@ -61,7 +61,7 @@ do not provide an analytic description of the network.
 # Acknowledgements
 
 This project has received funding from the EU-H2020 research and innovation program under grant no.
-688579 (PHRESCO) and from Swiss National Science Foundation under grant no. 175801 (Novel Architectures for Photonic
+688579 (PHRESCO) and from the Swiss National Science Foundation under grant no. 175801 (Novel Architectures for Photonic
 Reservoir Computing).
 
 # References
