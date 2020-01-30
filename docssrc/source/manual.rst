@@ -510,8 +510,7 @@ or using the :meth:`~.Network.get_html_result` we get the following rendered out
    :file: ./figures/symbolicfeedforward.html
 
 
-:meth:`.Network.evaluate` returns a symbolic representation of the waves arriving at node c and d. :meth:`~.Network.evaluate` takes two arguments: use_shared_default and a feed dictionary.
-These arguments are used for the evaluation of the network, the are applied in the same way as in the :meth:`.SymNum.eval` method. This settings are especially important when we work with recurrent
+:meth:`.Network.evaluate` returns a symbolic representation of the waves arriving at node c and d. The use_shared_default and a feed dictionary arguments are used for the evaluation of the network. They are defined in the same way as in the :meth:`.SymNum.eval` method. This settings are especially important when we work with recurrent
 loops in the network, as the cutoff criterion will be evaluated based on the evaluated numeric value of the symbolic numbers.
 
 Once again you can use the three different versions:
