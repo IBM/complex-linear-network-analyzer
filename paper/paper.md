@@ -18,7 +18,7 @@ authors:
 affiliations:
  - name: IBM Research – Zürich, Säumerstrasse 4, 8803 Rüschlikon, Switzerland
    index: 1
-date: 15 January 2020
+date: 30 January 2020
 bibliography: paper.bib
 ---
 
@@ -30,8 +30,8 @@ well documented interface, which allows to quickly build network models and unde
 is to compute coherent wave propagation through linear photonic circuits, but COLNA might be useful in any research area, 
 where signal propagation through linear complex networks is of practical relevance.
 
-![Example of a recurrent network with 3 nodes that can be modelled using COLNA. The edge parameters ($a$, $\varphi$ and 
- $\Delta t$)](./figures/basic_net.eps)
+![Example of a recurrent network with three nodes that can be modelled using COLNA. The edge parameters ($a$, $\varphi$ and 
+ $\Delta t$) can be numeric or symbolic.](./figures/basic_net.eps)
  
  
 ## Functionality and Features
