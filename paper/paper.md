@@ -31,7 +31,7 @@ is to compute coherent wave propagation through linear photonic circuits, but CO
 where signal propagation through linear complex networks is of practical relevance.
 
 ![Example of a recurrent network with 3 nodes that can be modelled using COLNA. The edge parameters ($a$, $\varphi$ and 
- $\Delta t$)](./figures/basic_net.png)
+ $\Delta t$)](./figures/basic_net.eps)
  
  
 ## Functionality and Features
