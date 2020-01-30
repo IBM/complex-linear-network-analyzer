@@ -44,7 +44,7 @@ complex valued signals to the network and compute the resulting signals at the o
 
 ![Illustration of COLNA's core functions. Assembly and visualization of complex valued networks,
 evaluation of the wave propagation from input to output nodes. A testbench injects signals to the network
-and records the signals at the output nodes.](./figures/colna_features.png)
+and records the signals at the output nodes.](./figures/colna_features.svg)
 
 # Statement of Need and Commercial Alternatives
 Today, integrated Si photonic circuits (PIC) cover a large range of functionality, from optical interconnects [@Pavesi2016] to 
