@@ -1,5 +1,5 @@
 ---
-title: 'COLNA: A Python package to analyze complex, linear networks'
+title: 'COLNA: A Python Package to Analyze Complex, Linear Networks'
 tags:
   - Python
   - Photonic networks
