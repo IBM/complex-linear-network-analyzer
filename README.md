@@ -37,4 +37,4 @@ For visualization: Graphviz + Graphviz Python Package (see installation instruct
 Contributing
 ------------
 
-Contributions are very welcome! Please follow the the [contribution guidelines](CONTRIBUTING.md).
+Contributions are very welcome! Please follow the [contribution guidelines](CONTRIBUTING.md).
