@@ -1,7 +1,7 @@
 Complex Linear Network Analyzer (COLNA)
 =======================================
 
-The complex linear network analyzer (COLNA) python package analytically computes the propagation of complex valued signals in networks with linear nodes and directed, complex valued and delayed edges (Fig. 1).
+The complex linear network analyzer (COLNA) python package analytically computes the propagation of complex valued signals in networks with linear nodes and directed, complex valued and delayed edges.
 
 COLNA was developed to compute coherent wave propagation in linear photonic circuits but it can be used in other areas, where signal propagation through linear complex networks is of relevance.
 
