@@ -34,5 +34,11 @@ setuptools.setup(
     install_requires=['tqdm','scipy','numpy','matplotlib'],
     extras_require={
         'Visualization':["graphviz"]
-    }
+    },
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: Apache License, Version 2.0",
+        "Operating System :: OS Independent",
+    ],
+
 )
