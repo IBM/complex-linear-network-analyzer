@@ -52,4 +52,4 @@ Contributions are very welcome! Please follow the the [contribution guidelines](
 Authors and Maintainers
 -----------------------
 * Pascal Stark
-* Lorenz Mueller
+* Lorenz Müller

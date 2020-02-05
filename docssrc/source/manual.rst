@@ -23,26 +23,34 @@ User Manual
 Installation
 ------------
 
-This package runs on Python 3.5+. Use pip to install it. Download/Clone the repository on your computer and run the
-install command in the base directory of the package (ComplexLinearNetworkAnalyzer).
+This package runs on Python 3.5+. The current release is available from pypi, you can use pip to install it:
+
+.. code-block:: console
+
+    pip install complex-linear-network-analyzer
+
+All dependencies required for the core features will be installed automatically.
+
+Visualization Feature
+#####################
+
+Networks can be visualized using Graphviz. If you intend to use this feature you need to install Graphviz manually
+and add it to your system path (get Graphviz `here <https://www.graphviz.org/>`_). Afterwards use
+
+.. code-block:: console
+
+    pip install complex-linear-network-analyzer[Visualization]
+
+to install the COLNA package and all its dependencies, including the Graphviz Python wrapper.
+
+Local installation
+##################
+To get access to the newest and possibly unstable features you can download/clone the `repository <https://github.com/IBM/complex-linear-network-analyzer>`_  on your computer and run the following
+install command in the base directory of the package (ComplexLinearNetworkAnalyzer) to perform a local installation:
 
 .. code-block:: console
 
     pip install .
-
-All dependencies required for the core features will be installed automatically.
-
-Optional Features
-#################
-
-Networks can be visualized using Graphviz. If you intend to use this feature you need to install Graphviz manually
-and add it to your system path (get Graphviz here `<https://www.graphviz.org/>`_). Afterwards use
-
-.. code-block:: console
-
-    pip install .[Visualization]
-
-to install the COLNA package and all its dependencies, including the Graphviz Python wrapper.
 
 Quickstart
 ----------
