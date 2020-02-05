@@ -16,19 +16,19 @@
 # |  Authors: Lorenz K. Mueller, Pascal Stark                                   |
 # +-----------------------------------------------------------------------------+
 
-import setuptools
+from setuptools import setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setuptools.setup(
+setup(
     name="complex-linear-network-analyzer",
     version="1.0.1",
     author="Lorenz K. Müller, Pascal Stark",
     author_email="crk@zurich.ibm.com",
-    description=" Computes analytically the output of complex valued, linear networks.",
+    description="Computes analytically the output of complex valued, linear networks.",
     long_description=long_description,
-    long_description_content_type="text/x-rst",
+    long_description_content_type="text/markdown",
     url="https://github.com/IBM/complex-linear-network-analyzer",
     packages=['colna'],
     install_requires=['tqdm','scipy','numpy','matplotlib'],
@@ -37,7 +37,7 @@ setuptools.setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: Apache License, Version 2.0",
+        "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
 
