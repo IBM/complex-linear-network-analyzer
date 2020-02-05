@@ -38,3 +38,8 @@ Contributing
 ------------
 
 Contributions are very welcome! Please follow the the [contribution guidelines](CONTRIBUTING.md).
+
+Authors and Maintainers
+-----------------------
+* Pascal Stark
+* Lorenz Müller

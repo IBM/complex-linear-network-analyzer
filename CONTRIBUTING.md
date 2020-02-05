@@ -29,8 +29,6 @@ pull request so it can be tracked.
 The project maintainers use LGTM (Looks Good To Me) in comments on the code
 review to indicate acceptance. 
 
-For a list of the maintainers, see the [MAINTAINERS.md](MAINTAINERS.md) page.
-
 ## Legal
 
 Each source file must include a license header for the Apache
@@ -68,12 +66,12 @@ git commit -s
 ```
 ## Setup
 
-For new features create a feature branch. All code in 
+For new features create a feature branch. Code in the master branch should always be stable and ready for deployment.
 
 ## Testing
 
-Please run the unittests in the tests directory before pushing any code changes. 
+Please run all unittests in the tests directory before pushing any code changes. 
 
 ## Coding style guidelines
 
-We use docstrings in reStructured Text formatting.
+We use reStructured Text formatting for docstrings.
