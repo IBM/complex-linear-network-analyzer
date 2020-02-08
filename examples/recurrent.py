@@ -40,7 +40,7 @@ for node in nodes:
 for edge in edges:
     net.add_edge(edge)
 net.add_input('a', amplitude=1.0)
-net.visualize(path='./visualizations/recurrent')
+net.visualize(path='./visualizations/recurrent', format='svg')
 
 ####
 #Evaluate Network
