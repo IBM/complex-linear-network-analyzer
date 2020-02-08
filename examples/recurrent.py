@@ -29,7 +29,7 @@ from colna.analyticnetwork import Network, Edge
 ###Define Network
 
 nodes = ['a', 'b', 'c', 'd']
-edges = [Edge('a', 'b', phase=0.5, attenuation=1.95, delay=1.0),
+edges = [Edge('a', 'b', phase=0.5, attenuation=1.1, delay=1.0), # some edges can have gain, but the overall gain of loops must be <1
          Edge('b', 'c', phase=1, attenuation=0.9, delay=2.0),
          Edge('c', 'd', phase=0.2, attenuation=0.98, delay=0.5),
          Edge('d', 'a', phase=-0.5, attenuation=0.8, delay=1.5)]

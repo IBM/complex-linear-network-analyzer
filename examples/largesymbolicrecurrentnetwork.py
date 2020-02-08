@@ -65,7 +65,7 @@ for i, edge in enumerate(net.edges):
 ####
 # Evaluate Network
 ####
-net.evaluate(amplitude_cutoff=1e-3, max_endpoints=1e6,use_shared_default=True)
+net.evaluate(amplitude_cutoff=5e-3, max_endpoints=1e6,use_shared_default=True)
 waves = [tuple([w.eval() if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('a')]
 
 ####
