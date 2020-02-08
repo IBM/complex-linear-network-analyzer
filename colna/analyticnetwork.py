@@ -1070,7 +1070,7 @@ class Testbench():
         :param timestep: Defines the sampling rate.
         :return: t_sampled, x_sampled: resampled time and signal vector
         """
-        t_sampled = np.linspace(start=self.t0, stop=self.t1, num=1 + round((self.t1 - self.t0) / timestep))
+        t_sampled = np.linspace(start=self.t0, stop=self.t1, num=int(1 + round((self.t1 - self.t0) / timestep)))
         x_sampled = self._interpolate_constant(x=t_sampled, xp=t, yp=x)
         return t_sampled, x_sampled
 

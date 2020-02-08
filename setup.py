@@ -23,7 +23,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="complex-linear-network-analyzer",
-    version="1.0.1",
+    version="1.0.2",
     author="Lorenz K. Müller, Pascal Stark",
     author_email="crk@zurich.ibm.com",
     description="Computes analytically the output of complex valued, linear networks.",
