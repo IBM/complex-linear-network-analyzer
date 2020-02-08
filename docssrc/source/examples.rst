@@ -20,7 +20,7 @@
 Examples
 ========
 
-The following code examples are included in the examples/ directory of the COLNA project.
+The examples can be downloaded from COLNA's github `repository <https://github.com/IBM/complex-linear-network-analyzer>`_.
 
 Feedforward Network
 -------------------

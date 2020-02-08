@@ -4,7 +4,9 @@ digraph structs {
 	a [label=a]
 	b [label=b]
 	c [label=c]
-	a -> b [label="a0.95, p0.0 + ph_ab*1, d0.5"]
-	a -> b [label="a1.0 * amp_bc**1, p0.0 + ph_bc*1, d1.5"]
-	a -> b [label="a0.2, p0.5, d1.5"]
+	d [label=d]
+	a -> b [label="a0.95, p0.0 + ph1*1, d1.0"]
+	b -> c [label="a1.0 * amp1**1, p0.5, d1.0"]
+	c -> d [label="a0.95, p0.5, d0.0 + del1*1"]
+	d -> a [label="a0.95, p0.5, d1.0"]
 }
