@@ -169,8 +169,10 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">multiprocessing.dummy</span> <span class="kn">import</span> <span class="n">Pool</span> <span class="k">as</span> <span class="n">ThreadPool</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 
 <div class="viewcode-block" id="Edge"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Edge">[docs]</a><span class="k">class</span> <span class="nc">Edge</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -448,7 +450,7 @@
 
 <span class="sd">        :param show_edge_labels: if True, edge labels showing the amplitude, phase and delay of the edge are drawn.</span>
 <span class="sd">        :type show_edge_labels: bool</span>
-<span class="sd">        :param path: output path for file</span>
+<span class="sd">        :param path: output path for file. If the path does not exist it will be created automatically.</span>
 <span class="sd">        :type path: str</span>
 <span class="sd">        :param skip_colon: Skip nodes which contain &#39;:&#39; in their name. This is used for PhysicalNetwork visualization.</span>
 <span class="sd">        :type skip_colon: bool</span>
@@ -476,6 +478,9 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">s</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">edge</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">edge</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
+        <span class="n">head</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">head</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">head</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Network.get_html_result"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_html_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_html_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time_symbol</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -499,7 +504,7 @@
 <span class="sd">        :type use_shared_default: bool</span>
 <span class="sd">        :param linebreak_limit: A line break will be added roughly every linebreak_limit chars in the latex string. Set to 1 for a linebreak after each term. Set to 0 to get a latex string on a single line. Default: 1</span>
 <span class="sd">        :type linebreak_limit: int</span>
-<span class="sd">        :param path: Output path where html file containing the MathJax code is stored</span>
+<span class="sd">        :param path: Output path where html file containing the MathJax code is stored.  If the path does not exist it will be created automatically.</span>
 <span class="sd">        :type path: str</span>
 <span class="sd">        :param precision: Number of significant digits to be output. Set to 0 to use the default value of str() method.</span>
 <span class="sd">        :type precision: int</span>
@@ -545,6 +550,10 @@
                                                   <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;\)&lt;/p&gt;&#39;</span>
 
         <span class="n">output_html</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;waves at nodes&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">raw_string</span><span class="p">)</span>
+
+        <span class="n">head</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">head</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">head</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_html</span><span class="p">)</span></div>
@@ -1219,7 +1228,7 @@
 <span class="sd">        :param timestep: Defines the sampling rate.</span>
 <span class="sd">        :return: t_sampled, x_sampled: resampled time and signal vector</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">t_sampled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">round</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">t1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">timestep</span><span class="p">))</span>
+        <span class="n">t_sampled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="nb">round</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">t1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">timestep</span><span class="p">)))</span>
         <span class="n">x_sampled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interpolate_constant</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">t_sampled</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">yp</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">t_sampled</span><span class="p">,</span> <span class="n">x_sampled</span>
 

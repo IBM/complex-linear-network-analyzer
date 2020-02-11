@@ -20,8 +20,10 @@ import warnings
 import numpy as np
 from tqdm import tqdm
 from copy import deepcopy
+from pathlib import Path
 from multiprocessing.dummy import Pool as ThreadPool
 import multiprocessing
+import os
 
 
 class Edge(object):
@@ -299,7 +301,7 @@ class Network(object):
 
         :param show_edge_labels: if True, edge labels showing the amplitude, phase and delay of the edge are drawn.
         :type show_edge_labels: bool
-        :param path: output path for file
+        :param path: output path for file. If the path does not exist it will be created automatically.
         :type path: str
         :param skip_colon: Skip nodes which contain ':' in their name. This is used for PhysicalNetwork visualization.
         :type skip_colon: bool
@@ -327,6 +329,9 @@ class Network(object):
             else:
                 s.edge(edge.start.replace(":", ""), edge.end.replace(":", ""))
 
+        head, tail = os.path.split(path)
+        if head != '':
+            Path(head).mkdir(parents=True, exist_ok=True)
         s.render(path, view=False, format=format)
 
     def get_html_result(self, name, time_symbol='t', evaluate=False, feed_dict=None, use_shared_default=False,
@@ -350,7 +355,7 @@ class Network(object):
         :type use_shared_default: bool
         :param linebreak_limit: A line break will be added roughly every linebreak_limit chars in the latex string. Set to 1 for a linebreak after each term. Set to 0 to get a latex string on a single line. Default: 1
         :type linebreak_limit: int
-        :param path: Output path where html file containing the MathJax code is stored
+        :param path: Output path where html file containing the MathJax code is stored.  If the path does not exist it will be created automatically.
         :type path: str
         :param precision: Number of significant digits to be output. Set to 0 to use the default value of str() method.
         :type precision: int
@@ -396,6 +401,10 @@ class Network(object):
                                                   precision=precision) + '\)</p>'
 
         output_html = template.format('waves at nodes' + str(name), raw_string)
+
+        head, tail = os.path.split(path)
+        if head != '':
+            Path(head).mkdir(parents=True, exist_ok=True)
 
         with open(path, 'w') as file:
             file.write(output_html)
