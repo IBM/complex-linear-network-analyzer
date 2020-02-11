@@ -73,7 +73,7 @@ plt.plot(t, np.abs(x), 'x') # Output signal
 plt.xlabel('Time')
 plt.ylabel('|x|')
 plt.legend(['Input', 'Output C'], loc='lower left')
-plt.savefig('./visualizations/quickstart.svg')
+# plt.savefig('./visualizations/quickstart.svg')
 plt.show()
 
 # Show paths leading to node c and output waves arriving at node c

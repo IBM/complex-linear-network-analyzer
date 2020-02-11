@@ -89,7 +89,9 @@ plt.ylabel('|x|')
 plt.legend(['Input', 'Output'], loc='lower left')
 plt.grid()
 plt.tight_layout()
-plt.savefig('./visualizations/docdemo_tb_output.png', dpi=600)
-plt.savefig('./visualizations/docdemo_tb_output.svg')
+
+# save the figures - make sure the path exists
+# plt.savefig('./visualizations/docdemo_tb_output.png', dpi=600)
+# plt.savefig('./visualizations/docdemo_tb_output.svg')
 
 plt.show()

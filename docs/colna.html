@@ -470,7 +470,7 @@ a dictionary whose keys are node names. For each node name a list of quadruplets
 <li><p><strong>feed_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – a dictionary specifying values of variables by name. If only some variables are specified, for all other variables the default value will be used.</p></li>
 <li><p><strong>use_shared_default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – set to true if shared defaults should be used with SymNums (higher speed) when no         feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy).         The value is ignored if feed_dict is not None. Default: False</p></li>
 <li><p><strong>linebreak_limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – A line break will be added roughly every linebreak_limit chars in the latex string. Set to 1 for a linebreak after each term. Set to 0 to get a latex string on a single line. Default: 1</p></li>
-<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Output path where html file containing the MathJax code is stored</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Output path where html file containing the MathJax code is stored.  If the path does not exist it will be created automatically.</p></li>
 <li><p><strong>precision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of significant digits to be output. Set to 0 to use the default value of str() method.</p></li>
 </ul>
 </dd>
@@ -595,7 +595,7 @@ is stopped.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>show_edge_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – if True, edge labels showing the amplitude, phase and delay of the edge are drawn.</p></li>
-<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – output path for file</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – output path for file. If the path does not exist it will be created automatically.</p></li>
 <li><p><strong>skip_colon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Skip nodes which contain ‘:’ in their name. This is used for PhysicalNetwork visualization.</p></li>
 <li><p><strong>format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – output format (supports all format options of Graphviz), e.g. ‘pdf’, ‘svg’</p></li>
 </ul>
