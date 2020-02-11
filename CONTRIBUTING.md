@@ -26,8 +26,9 @@ pull request so it can be tracked.
 
 ### Merge approval
 
-The project maintainers use LGTM (Looks Good To Me) in comments on the code
-review to indicate acceptance. 
+Project maintainers use LGTM (Looks Good To Me) in comments on the code
+review to indicate acceptance. For small fixes only one project maintainer needs to approve, 
+for larger changes two maintainers should approve. 
 
 ## Legal
 
@@ -64,13 +65,16 @@ local git repository using the following command:
 ```
 git commit -s
 ```
+
 ## Setup
 
 For new features create a feature branch. Code in the master branch should always be stable and ready for deployment.
 
 ## Testing
 
-Please run all unittests in the tests directory before pushing any code changes. 
+Please run all unittests in the tests directory before pushing any code changes. So far the tests do not cover any
+of the visualization features. In case you update them, please verify them manually. Expansion of tests to cover 
+visualization features is planned and should be added soon.
 
 ## Coding style guidelines
 
