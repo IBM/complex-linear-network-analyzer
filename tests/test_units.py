@@ -4,8 +4,8 @@ import numpy as np
 from colna.lossconversion import dBcm_to_loss_per_m, loss_per_m_to_dBcm, attenuation_to_dBcm, \
     attenuation_to_loss_per_meter, loss_per_meter_to_attenuation, dBcm_to_attenuation, imag_index_to_dBcm
 from colna.analyticnetwork import Network, Edge, SymNum, Testbench, Device, DeviceLink, PhysicalNetwork
-
-
+from shutil import rmtree
+import os
 class TestUnitconverter(unittest.TestCase):
 
     def test_loss_conversion(self):
@@ -204,6 +204,81 @@ class TestNetwork(unittest.TestCase):
         split_net.evaluate()
 
         self.assertEqual(split_net.nodes_to_output, expected_nodes_to_output)
+
+    def test_visualize(self):
+        """ This test only checks that a graph is generated.
+
+        It does not check if the graph does match the network description. This test will fail if graphviz is not setup.
+        """
+        edge_1 = Edge('b', 'a', phase=0.5, attenuation=0.5, delay=2)
+        edge_2 = Edge('c', 'a', phase=-0.5, attenuation=1.5, delay=-1)
+
+        split_net = Network()
+        split_net.add_node('a')
+        split_net.add_node('b')
+        split_net.add_node('c')
+
+        split_net.add_edge(edge_1)
+        split_net.add_edge(edge_2)
+        split_net.add_input('b', amplitude=1)
+        split_net.add_input('c', amplitude=1)
+        split_net.evaluate()
+        self.assertEqual(split_net.visualize(show_edge_labels=True,path='./visualizations/test1'), './visualizations\\test1.pdf')
+        self.assertEqual(split_net.visualize(show_edge_labels=False, path='./visualizations/test2'), './visualizations\\test2.pdf')
+        self.assertEqual(split_net.visualize(show_edge_labels=True,format='svg',path='./visualizations/test1'), './visualizations\\test1.svg')
+        rmtree('./visualizations') # remove the directory
+
+    def test_get_latex_result(self):
+        edge_1 = Edge('b', 'a', phase=0.5, attenuation=0.5, delay=2)
+        edge_2 = Edge('c', 'a', phase=-0.5, attenuation=1.5, delay=-1)
+
+        split_net = self.net
+        split_net.add_node('c')
+
+        split_net.add_edge(edge_1)
+        split_net.add_edge(edge_2)
+        split_net.add_input('b', amplitude=1)
+        split_net.add_input('c', amplitude=1)
+        split_net.evaluate()
+        self.assertEqual(split_net.get_latex_result('b'),'1\cdot\exp(j (0.0))\cdot b_{in}(t-0.0)')
+
+        edge_1 = Edge('a', 'b', phase=1, attenuation=0.4, delay=2)
+        edge_2 = Edge('b', 'c', phase=2, attenuation=0.3, delay=1.2)
+        edge_3 = Edge('c', 'a', phase=3, attenuation=0.2, delay=0)
+
+        loop_net = Network()
+        loop_net.add_node('a')
+        loop_net.add_node('b')
+        loop_net.add_node('c')
+        loop_net.add_edge(edge_1)
+        loop_net.add_edge(edge_2)
+        loop_net.add_edge(edge_3)
+        loop_net.add_input('a', amplitude=1)
+
+        loop_net.evaluate(amplitude_cutoff=1e-4)
+        self.assertEqual(loop_net.get_latex_result('b',precision=2),'0.4\cdot\exp(j (1))\cdot a_{in}(t-2)+0.0096\cdot\exp(j (7))\cdot a_{in}(t-5.2)+0.00023\cdot\exp(j (13))\cdot a_{in}(t-8.4)')
+
+    def test_get_html_result(self):
+        """ This checks that the html file is generated. It does not verify the correctness of the output."""
+        edge_1 = Edge('b', 'a', phase=0.5, attenuation=0.5, delay=2)
+        edge_2 = Edge('c', 'a', phase=-0.5, attenuation=1.5, delay=-1)
+
+        split_net = self.net
+        split_net.add_node('c')
+
+        split_net.add_edge(edge_1)
+        split_net.add_edge(edge_2)
+        split_net.add_input('b', amplitude=1)
+        split_net.add_input('c', amplitude=1)
+        split_net.evaluate()
+
+        path='./html_test/out.html'
+        split_net.get_html_result(['a','b'], path=path)
+        self.assertEqual(os.path.exists(path),True)
+        split_net.get_html_result('a', path=path)
+        self.assertEqual(os.path.exists(path),True)
+
+        rmtree('./html_test')
 
 
 class TestSymNum(unittest.TestCase):
@@ -407,6 +482,8 @@ class TestSymNum(unittest.TestCase):
 
         self.assertEqual(self.mult_0.to_latex(), '1.0 mult_0^1')
         self.assertEqual(self.add_0.to_latex(), '0.0 + add_0 \cdot 1')
+
+
 
 
 class TestTestbench(unittest.TestCase):
@@ -683,3 +760,18 @@ class TestPhysicalNetwork(unittest.TestCase):
     def test_add_devicelink_error(self):
         with self.assertRaises(ValueError):
             self.net.add_devicelink(DeviceLink('a','b','1','2'))
+
+    def test_visualize(self):
+        """ This test only checks that a graph is generated.
+
+        It does not check if the graph does match the network description. This test will fail if graphviz is not setup.
+        """
+        self.net.add_device(self.splitter)
+        self.net.add_device(self.combiner)
+        self.net.add_devicelink(DeviceLink('split_0','combine_0','o0','i0','pd','pd'))
+        self.net.evaluate()
+
+        self.assertEqual(self.net.visualize(show_edge_labels=True,path='./visualizations/test1'), './visualizations\\test1.pdf')
+        self.assertEqual(self.net.visualize(show_edge_labels=True, path='./visualizations/test2', full_graph=True), './visualizations\\test2.pdf')
+
+        rmtree('./visualizations') # remove the directory

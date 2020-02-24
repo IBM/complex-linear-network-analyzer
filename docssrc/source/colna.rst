@@ -20,12 +20,6 @@
 Reference
 ===============================================
 
-.. automodule:: colna
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 Analyticnetwork module
 ----------------------------
 Overview of the available classes.

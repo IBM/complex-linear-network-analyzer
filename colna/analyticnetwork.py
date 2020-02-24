@@ -308,6 +308,7 @@ class Network(object):
         :param format: output format (supports all format options of Graphviz), e.g. 'pdf', 'svg'
         :type format: str
         :return: Writes a dot file at the given path and renders it to the desired output format using graphviz.
+        :return: Returns the path to the file (can be relative).
         """
         try:
             from graphviz import Digraph
@@ -332,7 +333,7 @@ class Network(object):
         head, tail = os.path.split(path)
         if head != '':
             Path(head).mkdir(parents=True, exist_ok=True)
-        s.render(path, view=False, format=format)
+        return s.render(path, view=False, format=format)
 
     def get_html_result(self, name, time_symbol='t', evaluate=False, feed_dict=None, use_shared_default=False,
                         linebreak_limit=1, precision=0, path='out.html'):
@@ -361,8 +362,10 @@ class Network(object):
         :type precision: int
 
         :raises ValueError: If the node with the provided name does not exist in the network.
+        :raises IOError: If the output file can not be created or accessed.
 
-        :return: writes a html file at
+        :return: writes a html file at the given path
+
         """
 
         template = """
@@ -406,8 +409,13 @@ class Network(object):
         if head != '':
             Path(head).mkdir(parents=True, exist_ok=True)
 
-        with open(path, 'w') as file:
-            file.write(output_html)
+        try:
+            with open(path, 'w') as file:
+                file.write(output_html)
+        except IOError as e:
+            return e
+
+
 
     def get_latex_result(self, name, time_symbol='t', evaluate=False, feed_dict=None, use_shared_default=False,
                          linebreak_limit=0, precision=0):
@@ -909,9 +917,10 @@ class PhysicalNetwork(Network):
         :param format: output format (supports all format options of Graphviz), e.g. 'pdf', 'svg'
         :type format: str
         :return: Writes a dot file at the given path and renders it to the desired output format using graphviz.
+        :return: Returns the path to the file (can be relative).
         """
         if full_graph:
-            super().visualize(show_edge_labels, path, True, format=format)
+            return super().visualize(show_edge_labels, path, True, format=format)
         else:
             try:
                 from graphviz import Digraph
@@ -946,7 +955,7 @@ class PhysicalNetwork(Network):
                     else:
                         s.edge(edgestart, edgeend)
 
-            s.render(path, format=format, view=False)
+            return s.render(path, format=format, view=False)
 
 
 class Testbench():

@@ -9,3 +9,13 @@ Initial release
 Version 1.0.1  (1/29/2020)
 --------------------------
 * Pretty print using latex/MathJax of waves reaching a given node
+
+Version 1.0.2  (2/11/2020)
+--------------------------
+* Type Conversion Bugfix
+* New project description on Pypi 
+
+Version 1.0.3  (2/21/2020)
+--------------------------
+* Improved test coverage for visualization features
+* Small improvements to documentation (included statement of need)
