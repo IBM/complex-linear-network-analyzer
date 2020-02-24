@@ -83,7 +83,8 @@ physnet.get_html_result('device:combiner:o0',path='./visualizations/equation.htm
 
 # Get default output
 output_name = physnet.outputs[0]
-amp, phase, delay = physnet.get_reduced_output(output_name)
+print(physnet.get_reduced_output(output_name))
+# >>> (array([1.]), array([1.62146718]), array([0.]))
 
 # Sweep Heater
 dn_dT = 1e-4 # Thermooptic coefficient (index change per temperature change)

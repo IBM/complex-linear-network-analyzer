@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Reference" href="colna.html" />
+    <link rel="next" title="Photonic Design Examples" href="photonicdesignexamples.html" />
     <link rel="prev" title="User Manual" href="manual.html" /> 
 </head>
 
@@ -95,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#large-symbolic-recurrent-network">Large Symbolic Recurrent Network</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="photonicdesignexamples.html">Photonic Design Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="colna.html">Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
@@ -940,7 +941,11 @@
 70
 71
 72
-73</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># +-----------------------------------------------------------------------------+</span>
+73
+74
+75
+76
+77</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># +-----------------------------------------------------------------------------+</span>
 <span class="c1"># |  Copyright 2019-2020 IBM Corp. All Rights Reserved.                         |</span>
 <span class="c1"># |                                                                             |</span>
 <span class="c1"># |  Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);            |</span>
@@ -999,20 +1004,24 @@
 <span class="c1"># Evaluation without feed dictionary, using the default value of each SymNum</span>
 <span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">get_eval_result</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 
 <span class="c1"># Evaluation without feed dictionary, with global defaults</span>
 <span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">get_eval_result</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
 <span class="c1"># Evaluation with a feed dictionary</span>
 <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;a2&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;phi1&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;phi2&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
 <span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">get_eval_result</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">,</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
 <span class="c1"># Evaluation with a partial feed dictionary</span>
 <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a1&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;phi2&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
 <span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Waves arriving at c:&#39;</span><span class="p">,</span> <span class="n">waves</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">get_eval_result</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed</span><span class="p">,</span><span class="n">use_shared_default</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </td></tr></table></div>
 <div class="figure align-center">
@@ -1546,7 +1555,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="colna.html" class="btn btn-neutral float-right" title="Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="photonicdesignexamples.html" class="btn btn-neutral float-right" title="Photonic Design Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="manual.html" class="btn btn-neutral float-left" title="User Manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -20,8 +20,9 @@
 Photonic Design Examples
 ===========================
 
-Here we show how COLNA can be used to model simple photonic circuits. Did you use COLNA to model a photonic circuit? Let
-us know and we will be very happy to add your example on this page.
+Here we show how COLNA can be used to model simple photonic circuits.
+
+.. note:: Did you use COLNA to model a photonic circuit? Let us know and we will be very happy to add your example on this page.
 
 The examples can be downloaded from COLNA's github `repository <https://github.com/IBM/complex-linear-network-analyzer>`_.
 
@@ -60,9 +61,27 @@ Next we are ready to assemble the network.
     :language: python
     :lines: 68-78
 
-You can visualize the network and as usual you can get the html description:
+You can visualize the network and as usual you can also extract the network equation:
 
 .. figure:: /figures/mziweight.svg
     :align: center
 
-As we just use a constant input wave we can use the :meth:`.Network.get_reduced_output` method
+As we use a constant input wave we can use the :meth:`.Network.get_reduced_output` method to get the output.
+
+.. literalinclude:: ../../designexamples/mziweight.py
+    :language: python
+    :lines: 80-86
+
+
+The :meth:`.Network.get_reduced_output` takes a feed dictionary as an argument. With this we can test different MZI
+configurations and plot the corresponding data.
+
+.. literalinclude:: ../../designexamples/mziweight.py
+    :language: python
+    :lines: 88-125
+
+The resulting figure is shown below:
+
+.. figure:: /figures/output_power.svg
+    :align: center
+

@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Photonic Design Examples &mdash; Complex Linear Network Analyzer 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference" href="colna.html" />
+    <link rel="prev" title="Examples" href="examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Complex Linear Network Analyzer
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="manual.html">User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Photonic Design Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mach-zehnder-interferometer-weight">Mach-Zehnder Interferometer Weight</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="colna.html">Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Complex Linear Network Analyzer</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Photonic Design Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/photonicdesignexamples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="photonic-design-examples">
+<h1>Photonic Design Examples<a class="headerlink" href="#photonic-design-examples" title="Permalink to this headline">¶</a></h1>
+<p>Here we show how COLNA can be used to model simple photonic circuits.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Did you use COLNA to model a photonic circuit? Let us know and we will be very happy to add your example on this page.</p>
+</div>
+<p>The examples can be downloaded from COLNA’s github <a class="reference external" href="https://github.com/IBM/complex-linear-network-analyzer">repository</a>.</p>
+<div class="section" id="mach-zehnder-interferometer-weight">
+<h2>Mach-Zehnder Interferometer Weight<a class="headerlink" href="#mach-zehnder-interferometer-weight" title="Permalink to this headline">¶</a></h2>
+<p>In this example we model a Mach-Zehnder interferometer (MZI) used as an optical transmission weight:
+By tuning the mode index in one of the MZI arms we set the transmission for a constant input signal.
+In this example a heater is used to tune the index through the thermo-optic effect.
+The figure below shows a sketch of the structure of our MZI interferometer.</p>
+<div class="figure align-center">
+<img alt="_images/mzi_example.svg" src="_images/mzi_example.svg" /></div>
+<p>We use a <a class="reference internal" href="colna.html#colna.analyticnetwork.PhysicalNetwork" title="colna.analyticnetwork.PhysicalNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">PhysicalNetwork</span></code></a> to model our circuit. As we use our MZI as a constant transmission weight
+we are not interested in the time delay caused by the MZI, therefore all time delays are set to zero.</p>
+<p>After setting the global parameters (wavelength, effective mode index in waveguide) we
+start by modeling the y-splitter. Due to fabrication imperfections the input power will not be split exactly equally
+between the two output ports of the splitter; the same is true for the phase relations. We create symbolic numbers for the
+splitting efficiency and phases and create the corresponding <a class="reference internal" href="colna.html#colna.analyticnetwork.Device" title="colna.analyticnetwork.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">Device</span></code></a>. The combiner is modeled in a similar way.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Global defaults</span>
+<span class="n">wavelength</span> <span class="o">=</span> <span class="mf">1.55e-6</span>
+<span class="n">neff</span> <span class="o">=</span> <span class="mf">2.6</span>
+
+<span class="c1"># Splitter configuration</span>
+<span class="n">splitter_length</span> <span class="o">=</span> <span class="mf">10e-6</span>
+<span class="n">splitter_phase_default</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">wavelength</span> <span class="o">*</span> <span class="n">neff</span> <span class="o">*</span> <span class="n">splitter_length</span>
+<span class="n">splitter_efficiency00</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;split_</span><span class="si">{00}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">splitter_efficiency01</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;split_</span><span class="si">{01}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">splitter_phase00</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;split_{\phi00}&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">splitter_phase_default</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">splitter_phase01</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;split_{\phi01}&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">splitter_phase_default</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">Device</span><span class="p">(</span><span class="s1">&#39;splitter&#39;</span><span class="p">)</span>
+<span class="n">splitter</span><span class="o">.</span><span class="n">init_from_phase_and_attenuation_matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">splitter_efficiency00</span><span class="p">,</span> <span class="n">splitter_efficiency01</span><span class="p">]]),</span>
+                                                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">splitter_phase00</span><span class="p">,</span> <span class="n">splitter_phase01</span><span class="p">]]),</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">splitter</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s1">&#39;i0&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The parameters of the two waveguide arms are defined:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Waveguide Configuration</span>
+<span class="n">arm_length</span> <span class="o">=</span> <span class="mf">500e-6</span>
+<span class="n">default_phase</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">wavelength</span> <span class="o">*</span> <span class="n">neff</span> <span class="o">*</span> <span class="n">arm_length</span>
+<span class="n">arm_0_amplitude</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;arm0amp&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">arm_0_phase</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;arm0phase&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_phase</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">arm_1_amplitude</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;arm1amp&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">arm_1_phase</span> <span class="o">=</span> <span class="n">SymNum</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;arm1phase&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_phase</span><span class="p">,</span> <span class="n">product</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next we are ready to assemble the network.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create Network</span>
+<span class="n">physnet</span> <span class="o">=</span> <span class="n">PhysicalNetwork</span><span class="p">()</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">splitter</span><span class="p">)</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">combiner</span><span class="p">)</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">add_devicelink</span><span class="p">(</span>
+    <span class="n">DeviceLink</span><span class="p">(</span><span class="s1">&#39;splitter&#39;</span><span class="p">,</span> <span class="s1">&#39;combiner&#39;</span><span class="p">,</span> <span class="s1">&#39;o0&#39;</span><span class="p">,</span> <span class="s1">&#39;i0&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">arm_0_phase</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="n">arm_0_amplitude</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">add_devicelink</span><span class="p">(</span>
+    <span class="n">DeviceLink</span><span class="p">(</span><span class="s1">&#39;splitter&#39;</span><span class="p">,</span> <span class="s1">&#39;combiner&#39;</span><span class="p">,</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="o">=</span><span class="n">arm_1_phase</span><span class="p">,</span> <span class="n">attenuation</span><span class="o">=</span><span class="n">arm_1_amplitude</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c1"># Visualize the network</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/mziweight&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="n">full_graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can visualize the network and as usual you can also extract the network equation:</p>
+<div class="figure align-center">
+<img alt="_images/mziweight.svg" src="_images/mziweight.svg" /></div>
+<p>As we use a constant input wave we can use the <a class="reference internal" href="colna.html#colna.analyticnetwork.Network.get_reduced_output" title="colna.analyticnetwork.Network.get_reduced_output"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Network.get_reduced_output()</span></code></a> method to get the output.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Evaluate and get HTML output</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+<span class="n">physnet</span><span class="o">.</span><span class="n">get_html_result</span><span class="p">(</span><span class="s1">&#39;device:combiner:o0&#39;</span><span class="p">,</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./visualizations/equation.html&#39;</span><span class="p">)</span>
+
+<span class="c1"># Get default output</span>
+<span class="n">output_name</span> <span class="o">=</span> <span class="n">physnet</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">physnet</span><span class="o">.</span><span class="n">get_reduced_output</span><span class="p">(</span><span class="n">output_name</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="colna.html#colna.analyticnetwork.Network.get_reduced_output" title="colna.analyticnetwork.Network.get_reduced_output"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Network.get_reduced_output()</span></code></a> takes a feed dictionary as an argument. With this we can test different MZI
+configurations and plot the corresponding data.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1"># Sweep Heater</span>
+<span class="n">dn_dT</span> <span class="o">=</span> <span class="mf">1e-4</span> <span class="c1"># Thermooptic coefficient (index change per temperature change)</span>
+<span class="n">temperature_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="c1"># Ideal splitter and combiner</span>
+<span class="n">amplitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">temperature_range</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">temperature</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temperature_range</span><span class="p">):</span>
+    <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;arm0phase&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">wavelength</span> <span class="o">*</span> <span class="p">(</span><span class="n">neff</span><span class="o">+</span><span class="n">dn_dT</span><span class="o">*</span><span class="n">temperature</span><span class="p">)</span> <span class="o">*</span> <span class="n">arm_length</span><span class="p">}</span>
+    <span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">physnet</span><span class="o">.</span><span class="n">get_reduced_output</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+    <span class="n">amplitudes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">amp</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperature_range</span><span class="p">,</span> <span class="n">amplitudes</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Ideal Splitter and Combiner&#39;</span><span class="p">)</span>
+
+<span class="c1"># Splitter non-ideal splitting ratio</span>
+<span class="n">amplitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">temperature_range</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">temperature</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temperature_range</span><span class="p">):</span>
+    <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;arm0phase&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">wavelength</span> <span class="o">*</span> <span class="p">(</span><span class="n">neff</span><span class="o">+</span><span class="n">dn_dT</span><span class="o">*</span><span class="n">temperature</span><span class="p">)</span> <span class="o">*</span> <span class="n">arm_length</span><span class="p">,</span> <span class="s1">&#39;split_</span><span class="si">{01}</span><span class="s1">&#39;</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="s1">&#39;split_</span><span class="si">{00}</span><span class="s1">&#39;</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
+    <span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">physnet</span><span class="o">.</span><span class="n">get_reduced_output</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+    <span class="n">amplitudes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">amp</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperature_range</span><span class="p">,</span> <span class="n">amplitudes</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Non-ideal splitter&#39;</span><span class="p">)</span>
+
+<span class="c1"># Splitter and Combiner non-ideal</span>
+<span class="n">amplitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">temperature_range</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">temperature</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">temperature_range</span><span class="p">):</span>
+    <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;arm0phase&#39;</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">wavelength</span> <span class="o">*</span> <span class="p">(</span><span class="n">neff</span><span class="o">+</span><span class="n">dn_dT</span><span class="o">*</span><span class="n">temperature</span><span class="p">)</span> <span class="o">*</span> <span class="n">arm_length</span><span class="p">,</span> <span class="s1">&#39;split_</span><span class="si">{01}</span><span class="s1">&#39;</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mf">0.9</span><span class="p">,</span> <span class="s1">&#39;split_</span><span class="si">{00}</span><span class="s1">&#39;</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+                 <span class="s1">&#39;comb_</span><span class="si">{00}</span><span class="s1">&#39;</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;comb_</span><span class="si">{10}</span><span class="s1">&#39;</span><span class="p">:</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mf">0.8</span><span class="p">}</span>
+    <span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">physnet</span><span class="o">.</span><span class="n">get_reduced_output</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+    <span class="n">amplitudes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">amp</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">temperature_range</span><span class="p">,</span> <span class="n">amplitudes</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Non-ideal splitter and combiner&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Temperature&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;|E|^2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;./visualizations/output_power.svg&#39;</span><span class="p">)</span>
+
+</pre></div>
+</div>
+<p>The resulting figure is shown below:</p>
+<div class="figure align-center">
+<img alt="_images/output_power.svg" src="_images/output_power.svg" /></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="colna.html" class="btn btn-neutral float-right" title="Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Lorenz K. Müller, Pascal Stark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

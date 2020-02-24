@@ -56,6 +56,7 @@ To start working with COLNA we suggest to take a look at the user manual and som
 
    manual.rst
    examples.rst
+   photonicdesignexamples.rst
    colna.rst
    license.rst
 

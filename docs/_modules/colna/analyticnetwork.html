@@ -82,6 +82,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../manual.html">User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../photonicdesignexamples.html">Photonic Design Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../colna.html">Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
 </ul>
@@ -288,6 +289,54 @@
             <span class="k">raise</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;attempted to give input to inexistent node &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Network.get_reduced_output"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_reduced_output">[docs]</a>    <span class="k">def</span> <span class="nf">get_reduced_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the output waves at this node. Paths with identical delay are added together.</span>
+
+<span class="sd">        Waves with same delay are combined into a single entry using linear superposition of phase and amplitude.</span>
+<span class="sd">        Phase is reduced to cover only 2*pi range.</span>
+
+<span class="sd">        :param name: name of the node to get result from</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param use_shared_default: set to true if shared defaults should be used with SymNum&#39;s (higher speed),</span>
+<span class="sd">         set to false if the default value of each SymNum should be used instead (higher accuracy). Default: True</span>
+<span class="sd">        :type use_shared_default: bool</span>
+<span class="sd">        :param feed_dict: Feed dictionary for SymNum variables. Default: None</span>
+<span class="sd">        :type feed_dict: dict</span>
+
+<span class="sd">        :return: amplitude, phase, delay (all numpy arrays)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">waves</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="n">use_shared_default</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">]))</span> <span class="k">for</span>
+                 <span class="n">inner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_result_np</span><span class="p">(</span><span class="n">name</span><span class="p">)]</span>
+        <span class="n">delays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">waves</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">delay</span> <span class="ow">in</span> <span class="n">delays</span><span class="p">:</span>
+            <span class="n">amp_temp</span> <span class="o">=</span> <span class="n">waves</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">waves</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="n">delay</span><span class="p">)]</span>
+            <span class="n">phase_temp</span> <span class="o">=</span> <span class="n">waves</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">waves</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="n">delay</span><span class="p">)]</span>
+            <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">amp_temp</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">phase_temp</span><span class="p">)))</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="n">delays</span></div>
+
+<div class="viewcode-block" id="Network.get_eval_result"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_eval_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_eval_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of waves mixing at this node and evaluates symbolic numbers.</span>
+
+<span class="sd">        :param name: name of the node to get result from</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param use_shared_default: set to true if shared defaults should be used with SymNum&#39;s (higher speed),</span>
+<span class="sd">         set to false if the default value of each SymNum should be used instead (higher accuracy). Default: False</span>
+<span class="sd">        :type use_shared_default: bool</span>
+<span class="sd">        :param feed_dict: Feed dictionary for SymNum variables. Default: None</span>
+<span class="sd">        :type feed_dict: dict</span>
+
+<span class="sd">        :return: a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">([</span><span class="n">w</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="n">use_shared_default</span><span class="p">)</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s1">&#39;eval&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">inner</span><span class="p">])</span> <span class="k">for</span>
+                 <span class="n">inner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_result</span><span class="p">(</span><span class="n">name</span><span class="p">)]</span></div>
 
 <div class="viewcode-block" id="Network.get_result"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -622,6 +671,7 @@
                     <span class="n">latex_string</span> <span class="o">+=</span> <span class="s1">&#39;\exp(j (&#39;</span> <span class="o">+</span> <span class="n">str_elem_value</span> <span class="o">+</span> <span class="s1">&#39;))\cdot &#39;</span>
                 <span class="k">elif</span> <span class="n">elem_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># delay</span>
                     <span class="n">in_node_name</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">in_node_name</span> <span class="o">=</span> <span class="n">in_node_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;\_&#39;</span><span class="p">)</span>
                     <span class="n">latex_string</span> <span class="o">+=</span> <span class="n">in_node_name</span> <span class="o">+</span> <span class="s1">&#39;_</span><span class="si">{in}</span><span class="s1">(&#39;</span> <span class="o">+</span> <span class="n">time_symbol</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">str_elem_value</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
                     <span class="c1"># Linebreak</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">latex_string</span><span class="p">)</span> <span class="o">-</span> <span class="n">last_linebreak</span> <span class="o">&gt;</span> <span class="n">linebreak_limit</span> <span class="ow">and</span> <span class="n">linebreak_limit</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
