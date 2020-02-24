@@ -57,17 +57,21 @@ net.get_html_result(['c','d'],path='./visualizations/symbolicfeedforward.html')
 # Evaluation without feed dictionary, using the default value of each SymNum
 waves = [tuple([w.eval(feed_dict=None, use_shared_default=False) if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('c')]
 print('Waves arriving at c:', waves, '\n')
+print(net.get_eval_result(name='c',feed_dict=None,use_shared_default=False))
 
 # Evaluation without feed dictionary, with global defaults
 waves = [tuple([w.eval(feed_dict=None, use_shared_default=True) if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('c')]
 print('Waves arriving at c:', waves, '\n')
+print(net.get_eval_result(name='c',feed_dict=None,use_shared_default=True))
 
 # Evaluation with a feed dictionary
 feed = {'a1': 1, 'a2': 2, 'phi1': 2, 'phi2': 4}
 waves = [tuple([w.eval(feed_dict=feed, use_shared_default=True) if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('c')]
 print('Waves arriving at c:', waves, '\n')
+print(net.get_eval_result(name='c',feed_dict=feed,use_shared_default=True))
 
 # Evaluation with a partial feed dictionary
 feed = {'a1': 0.5, 'phi2': 4}
 waves = [tuple([w.eval(feed_dict=feed, use_shared_default=True) if hasattr(w,'eval') else w for w in inner]) for inner in net.get_result('c')]
 print('Waves arriving at c:', waves, '\n')
+print(net.get_eval_result(name='c',feed_dict=feed,use_shared_default=True))

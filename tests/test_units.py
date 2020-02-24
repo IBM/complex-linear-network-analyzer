@@ -205,6 +205,58 @@ class TestNetwork(unittest.TestCase):
 
         self.assertEqual(split_net.nodes_to_output, expected_nodes_to_output)
 
+    def test_get_reduced_output(self):
+        """ creates and evaluates a feed forward combiner """
+        edge_1 = Edge('b', 'a', phase=0, attenuation=0.5, delay=2)
+        edge_2 = Edge('c', 'a', phase=0, attenuation=1.5, delay=2)
+
+        split_net = Network()
+        split_net.add_node('a')
+        split_net.add_node('b')
+        split_net.add_node('c')
+
+        split_net.add_edge(edge_1)
+        split_net.add_edge(edge_2)
+        split_net.add_input('b', amplitude=1)
+        split_net.add_input('c', amplitude=1)
+        split_net.evaluate()
+
+        amp, phase, delay = split_net.get_reduced_output('a')
+
+        self.assertEqual(amp[0], 2)
+        self.assertEqual(phase[0], 0)
+        self.assertEqual(delay[0], 2)
+
+        split_net.edges[1].phase=-np.pi/2
+        split_net.edges[1].attenuation=0.5
+
+        split_net.evaluate()
+        amp, phase, delay = split_net.get_reduced_output('a')
+        self.assertAlmostEqual(amp[0], 1/np.sqrt(2),places=5)
+        self.assertAlmostEqual(phase[0], -np.pi/4, places=5)
+        self.assertEquals(delay[0], 2)
+
+    def test_get_eval_result(self):
+        """ creates and evaluates a feed forward combiner """
+        edge_1 = Edge('b', 'a', phase=SymNum('phi1',default=0.5,product=False), attenuation=0.5, delay=2)
+        edge_2 = Edge('c', 'a', phase=SymNum('phi2',default=0.0,product=False), attenuation=SymNum('amp2',default=1.5,product=True), delay=-1)
+
+        split_net = Network()
+        split_net.add_node('a')
+        split_net.add_node('b')
+        split_net.add_node('c')
+
+        split_net.add_edge(edge_1)
+        split_net.add_edge(edge_2)
+        split_net.add_input('b', amplitude=1)
+        split_net.add_input('c', amplitude=1)
+        split_net.evaluate()
+
+        self.assertEqual(split_net.get_eval_result('a'), [(0.5, 0.5, 2.0), (1.5, 0.0, -1.0)])
+        self.assertEqual(split_net.get_eval_result('a',feed_dict=None, use_shared_default=True), [(0.5, 0.5, 2.0), (1.5, 0.0, -1.0)])
+        self.assertEqual(split_net.get_eval_result('a',feed_dict={'phi1':0.6,'phi2':3,'amp2':6}, use_shared_default=True), [(0.5, 0.6, 2.0), (6.0, 3.0, -1.0)])
+
+
     def test_visualize(self):
         """ This test only checks that a graph is generated.
 
@@ -706,6 +758,45 @@ class TestDevice(unittest.TestCase):
         expected_net.add_node('device:test:i1')
         expected_net.add_edge(Edge(start='device:test:i0', end='device:test:o0', phase=0, attenuation=0.5, delay=1.0))
         expected_net.add_edge(Edge(start='device:test:i0', end='device:test:o1', phase=0, attenuation=0.4, delay=1.0))
+        expected_net.add_edge(
+            Edge(start='device:test:i1', end='device:test:o0', phase=np.pi, attenuation=1.0, delay=1.0))
+        expected_net.add_edge(
+            Edge(start='device:test:i1', end='device:test:o1', phase=np.pi, attenuation=0.4, delay=1.0))
+        self.assertEqual(test_dev.nodes, expected_net.nodes)
+        self.assertEqual(test_dev.edges, expected_net.edges)
+
+    def test_init_from_phase_and_attenuation_matrix(self):
+        test_dev = Device(name='test')
+
+        # splitter 1x2
+        test_dev.init_from_phase_and_attenuation_matrix(np.array([[1 / np.sqrt(2), 1 / np.sqrt(2)]]), np.array([[np.pi, 0]]),
+                                             delay=2.0)
+
+        expected_net = Network()
+        expected_net.add_node('device:test:i0')
+        expected_net.add_node('device:test:o0')
+        expected_net.add_node('device:test:o1')
+        expected_net.add_edge(
+            Edge(start='device:test:i0', end='device:test:o0', phase=np.pi, attenuation=1 / np.sqrt(2), delay=2.0))
+        expected_net.add_edge(
+            Edge(start='device:test:i0', end='device:test:o1', phase=0, attenuation=1 / np.sqrt(2), delay=2.0))
+
+        self.assertEqual(test_dev.nodes, expected_net.nodes)
+        self.assertEqual(test_dev.edges, expected_net.edges)
+
+        # mixing 2x2
+        test_dev = Device(name='test')
+
+        # splitter 1x2
+        test_dev.init_from_phase_and_attenuation_matrix(np.array([[0.5, 0.4], [1.0, 0.4]]), np.array([[0.0,0.0],[np.pi,np.pi]]), delay=1.0)
+
+        expected_net = Network()
+        expected_net.add_node('device:test:i0')
+        expected_net.add_node('device:test:o0')
+        expected_net.add_node('device:test:o1')
+        expected_net.add_node('device:test:i1')
+        expected_net.add_edge(Edge(start='device:test:i0', end='device:test:o0', phase=0.0, attenuation=0.5, delay=1.0))
+        expected_net.add_edge(Edge(start='device:test:i0', end='device:test:o1', phase=0.0, attenuation=0.4, delay=1.0))
         expected_net.add_edge(
             Edge(start='device:test:i1', end='device:test:o0', phase=np.pi, attenuation=1.0, delay=1.0))
         expected_net.add_edge(

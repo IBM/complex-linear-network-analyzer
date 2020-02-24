@@ -938,6 +938,10 @@
 <span class="sd">        input node number k will be named &#39;i+str(k)&#39;</span>
 <span class="sd">        output node number k will be named &#39;o+str(k)&#39;</span>
 
+<span class="sd">        .. warning::</span>
+<span class="sd">           This method can not be used with SymNums. Use :meth:`~.Device.initialize_from_phase_and_attenuation_matrix` or define the</span>
+<span class="sd">           nodes and edges manually instead.</span>
+
 <span class="sd">        :param smatrix: complex scattering matrix defining the input to output mapping</span>
 <span class="sd">        :type smatrix: numpy.array</span>
 <span class="sd">        :param delay: time delay from input to output</span>
@@ -959,8 +963,46 @@
                             <span class="n">phase</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">smatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]),</span>
                             <span class="n">attenuation</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">smatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]),</span>
                             <span class="n">delay</span><span class="o">=</span><span class="n">delay</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Device.init_from_phase_and_attenuation_matrix"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Device.init_from_phase_and_attenuation_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">init_from_phase_and_attenuation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attenuationmatrix</span><span class="p">,</span> <span class="n">phasematrix</span><span class="p">,</span> <span class="n">delay</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defines a device by its attenuation and phase matrix and a delay.</span>
+
+<span class="sd">        For a device with n inputs and m outputs pass a nxm matrix specifying attenuation and an nxm matrix specifiying</span>
+<span class="sd">        phase-shift from input node i to output node j at matrix entry (i, j). Creates n+m nodes linked by n*m edges with</span>
+<span class="sd">        the given parameters, all with time delay &#39;delay&#39;.</span>
+
+<span class="sd">        input node number k will be named &#39;i+str(k)&#39;</span>
+<span class="sd">        output node number k will be named &#39;o+str(k)&#39;</span>
+
+<span class="sd">        Use this method if you want to use symbolic numbers to define the phase and or amplitudes.</span>
+
+<span class="sd">        :param attenuationmatrix: matrix defining attenuation between input to output node</span>
+<span class="sd">        :type attenuationmatrix: numpy.array</span>
+<span class="sd">        :param phasematrix: matrix defining phase between input to output node</span>
+<span class="sd">        :type phasematrix: numpy.array</span>
+<span class="sd">        :param delay: time delay from input to output</span>
+<span class="sd">        :type delay: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">attenuationmatrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">attenuationmatrix</span><span class="p">)</span>
+        <span class="n">n_in</span> <span class="o">=</span> <span class="n">attenuationmatrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n_out</span> <span class="o">=</span> <span class="n">attenuationmatrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_in</span><span class="p">):</span>
+            <span class="n">in_name</span> <span class="o">=</span> <span class="s2">&quot;i&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">in_name</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_out</span><span class="p">):</span>
+                <span class="n">out_name</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">devicetype</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">out_name</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">out_name</span><span class="p">)</span>
+                <span class="n">edge</span> <span class="o">=</span> <span class="n">Edge</span><span class="p">(</span><span class="n">in_name</span><span class="p">,</span> <span class="n">out_name</span><span class="p">,</span>
+                            <span class="n">phase</span><span class="o">=</span><span class="n">phasematrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
+                            <span class="n">attenuation</span><span class="o">=</span><span class="n">attenuationmatrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span>
+                            <span class="n">delay</span><span class="o">=</span><span class="n">delay</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="DeviceLink"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.DeviceLink">[docs]</a><span class="k">class</span> <span class="nc">DeviceLink</span><span class="p">(</span><span class="n">Edge</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

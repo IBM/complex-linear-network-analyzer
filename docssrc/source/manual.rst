@@ -541,6 +541,16 @@ We can evaluate the symbolic expression using the :meth:`SymNum.eval` method as 
 
     >>> Waves arriving at c: [(2.0, 6.0, 3.0)]
 
+As a simpler alternative we could also use the :meth:`.Network.get_evaluated_result` method which will return the same result:
+
+.. code-block:: python
+
+    # Evaluation with a feed dictionary
+    feed = {'a1': 1, 'a2': 2, 'phi1': 2, 'phi2': 4}
+    print('Waves arriving at c:', net.get_eval_result(name='c',feed_dict=None,use_shared_default=False), '\n')
+
+    >>> Waves arriving at c: [(2.0, 6.0, 3.0)]
+
 Symbolic Network with Testbench
 ###############################
 SymNum based networks can be used together with a :class:`.Testbench`.
