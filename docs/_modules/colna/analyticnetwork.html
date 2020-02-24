@@ -457,6 +457,7 @@
 <span class="sd">        :param format: output format (supports all format options of Graphviz), e.g. &#39;pdf&#39;, &#39;svg&#39;</span>
 <span class="sd">        :type format: str</span>
 <span class="sd">        :return: Writes a dot file at the given path and renders it to the desired output format using graphviz.</span>
+<span class="sd">        :return: Returns the path to the file (can be relative).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
@@ -481,7 +482,7 @@
         <span class="n">head</span><span class="p">,</span> <span class="n">tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">head</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="n">Path</span><span class="p">(</span><span class="n">head</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Network.get_html_result"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_html_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_html_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time_symbol</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">linebreak_limit</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;out.html&#39;</span><span class="p">):</span>
@@ -510,8 +511,10 @@
 <span class="sd">        :type precision: int</span>
 
 <span class="sd">        :raises ValueError: If the node with the provided name does not exist in the network.</span>
+<span class="sd">        :raises IOError: If the output file can not be created or accessed.</span>
 
-<span class="sd">        :return: writes a html file at</span>
+<span class="sd">        :return: writes a html file at the given path</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -555,8 +558,13 @@
         <span class="k">if</span> <span class="n">head</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="n">Path</span><span class="p">(</span><span class="n">head</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-            <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_html</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_html</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">e</span></div>
+
+
 
 <div class="viewcode-block" id="Network.get_latex_result"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Network.get_latex_result">[docs]</a>    <span class="k">def</span> <span class="nf">get_latex_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time_symbol</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">evaluate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_shared_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                          <span class="n">linebreak_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -1058,9 +1066,10 @@
 <span class="sd">        :param format: output format (supports all format options of Graphviz), e.g. &#39;pdf&#39;, &#39;svg&#39;</span>
 <span class="sd">        :type format: str</span>
 <span class="sd">        :return: Writes a dot file at the given path and renders it to the desired output format using graphviz.</span>
+<span class="sd">        :return: Returns the path to the file (can be relative).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">full_graph</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">show_edge_labels</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">show_edge_labels</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="kn">from</span> <span class="nn">graphviz</span> <span class="kn">import</span> <span class="n">Digraph</span>
@@ -1095,7 +1104,7 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">s</span><span class="o">.</span><span class="n">edge</span><span class="p">(</span><span class="n">edgestart</span><span class="p">,</span> <span class="n">edgeend</span><span class="p">)</span>
 
-            <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
+            <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Testbench"><a class="viewcode-back" href="../../colna.html#colna.analyticnetwork.Testbench">[docs]</a><span class="k">class</span> <span class="nc">Testbench</span><span class="p">():</span>

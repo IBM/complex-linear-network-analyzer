@@ -20,17 +20,21 @@
 Complex Linear Network Analyzer (COLNA)
 =======================================
 
-The complex linear network analyzer (COLNA) python package analytically computes the propagation of complex valued signals in networks with linear nodes and directed, complex valued and delayed edges (Fig. 1).
+The complex linear network analyzer (COLNA) python package analytically computes the propagation of complex valued signals in networks with linear nodes and directed, complex valued and delayed edges.
 
-COLNA was developed to compute coherent wave propagation in linear photonic circuits but it can be used in other areas, where signal propagation through linear complex networks is of relevance.
+* COLNA can be used to model linear, photonic circuits (e.g. Si photonic integrated circuits). It provides an analytic expression of the systems transfer matrix, which is often useful to better understand the effect of system parameters on the output signal.
 
-COLNA offers an easy and well documented interface, which allows to quickly build network models and understand their behaviour.
+* COLNA offers an easy and well documented interface, which allows to quickly build network models and understand their behaviour.
 
-COLNA computes all paths leading from input to output nodes (including recurrent paths) down to a certain amplitude accuracy threshold.
+* COLNA computes all paths leading from input to output nodes down to a certain amplitude accuracy threshold. It also supports the evaluation of recurrent paths (loops).
 
-COLNA supports the mixed use of numeric and symbolic numbers (variable) for all edge properties.
+* COLNA supports the mixed use of numeric and symbolic numbers (variable) for all edge properties.
 
-COLNA can inject complex valued signals to the network and the compute the resulting signals at the output nodes using a testbench.
+* COLNA can inject complex valued signals to the network and the compute the resulting signals at the output nodes using a testbench.
+
+* COLNA was developed to compute coherent wave propagation in linear photonic circuits but it can be used in other areas, where signal propagation through linear complex valued networks is of relevance.
+
+* COLNA is well suited for educational purposes, where analytic expression help to better understand the functionality of simple photonic networks, like for example a Mach-Zehnder interferometer.
 
 The core functionality of COLNA is visualized in the figure below.
 

@@ -59,22 +59,15 @@ submitter accepts the DCO:
 Signed-off-by: John Doe <john.doe@example.com>
 ```
 
-You can include this automatically when you commit a change to your
-local git repository using the following command:
-
-```
-git commit -s
-```
-
 ## Setup
 
 For new features create a feature branch. Code in the master branch should always be stable and ready for deployment.
 
 ## Testing
 
-Please run all unittests in the tests directory before pushing any code changes. So far the tests do not cover any
-of the visualization features. In case you update them, please verify them manually. Expansion of tests to cover 
-visualization features is planned and should be added soon.
+Please run all unittests in the tests directory before pushing any code changes. 
+The tests do not check the correctness of the visualization features. In case you update them, please verify 
+the correctness manually. 
 
 ## Coding style guidelines
 
