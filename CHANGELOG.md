@@ -17,5 +17,5 @@ Version 1.0.2  (2/11/2020)
 
 Version 1.0.3  (2/21/2020)
 --------------------------
-* Small improvements to documentation (adds Statement of Need)
-* 
+* Improved test coverage for visualization features
+* Small improvements to documentation (included statement of need)
