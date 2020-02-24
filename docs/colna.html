@@ -37,7 +37,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="License" href="license.html" />
-    <link rel="prev" title="Examples" href="examples.html" /> 
+    <link rel="prev" title="Photonic Design Examples" href="photonicdesignexamples.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -84,6 +84,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="manual.html">User Manual</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="photonicdesignexamples.html">Photonic Design Examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#analyticnetwork-module">Analyticnetwork module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#device">Device</a></li>
@@ -278,6 +279,27 @@ propagating through the network from the given node when computing the analytica
 </dd></dl>
 
 <dl class="method">
+<dt id="colna.analyticnetwork.Device.init_from_phase_and_attenuation_matrix">
+<code class="sig-name descname">init_from_phase_and_attenuation_matrix</code><span class="sig-paren">(</span><em class="sig-param">attenuationmatrix</em>, <em class="sig-param">phasematrix</em>, <em class="sig-param">delay</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Device.init_from_phase_and_attenuation_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Device.init_from_phase_and_attenuation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a device by its attenuation and phase matrix and a delay.</p>
+<p>For a device with n inputs and m outputs pass a nxm matrix specifying attenuation and an nxm matrix specifiying
+phase-shift from input node i to output node j at matrix entry (i, j). Creates n+m nodes linked by n*m edges with
+the given parameters, all with time delay ‘delay’.</p>
+<p>input node number k will be named ‘i+str(k)’
+output node number k will be named ‘o+str(k)’</p>
+<p>Use this method if you want to use symbolic numbers to define the phase and or amplitudes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>attenuationmatrix</strong> (<em>numpy.array</em>) – matrix defining attenuation between input to output node</p></li>
+<li><p><strong>phasematrix</strong> (<em>numpy.array</em>) – matrix defining phase between input to output node</p></li>
+<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – time delay from input to output</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="colna.analyticnetwork.Device.init_from_scattering_matrix">
 <code class="sig-name descname">init_from_scattering_matrix</code><span class="sig-paren">(</span><em class="sig-param">smatrix</em>, <em class="sig-param">delay=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Device.init_from_scattering_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Device.init_from_scattering_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a device by its complex scattering matrix and a delay</p>
@@ -286,6 +308,11 @@ input node i to output node j at matrix entry (i, j). Creates n+m nodes linked b
 all with time delay ‘delay’.
 input node number k will be named ‘i+str(k)’
 output node number k will be named ‘o+str(k)’</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method can not be used with SymNums. Use <code class="xref py py-meth docutils literal notranslate"><span class="pre">initialize_from_phase_and_attenuation_matrix()</span></code> or define the
+nodes and edges manually instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -446,6 +473,25 @@ a dictionary whose keys are node names. For each node name a list of quadruplets
 </dd></dl>
 
 <dl class="method">
+<dt id="colna.analyticnetwork.Network.get_eval_result">
+<code class="sig-name descname">get_eval_result</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">feed_dict=None</em>, <em class="sig-param">use_shared_default=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.get_eval_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.get_eval_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of waves mixing at this node and evaluates symbolic numbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – name of the node to get result from</p></li>
+<li><p><strong>use_shared_default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – set to true if shared defaults should be used with SymNum’s (higher speed),
+set to false if the default value of each SymNum should be used instead (higher accuracy). Default: False</p></li>
+<li><p><strong>feed_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Feed dictionary for SymNum variables. Default: None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="colna.analyticnetwork.Network.get_html_result">
 <code class="sig-name descname">get_html_result</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">time_symbol='t'</em>, <em class="sig-param">evaluate=False</em>, <em class="sig-param">feed_dict=None</em>, <em class="sig-param">use_shared_default=False</em>, <em class="sig-param">linebreak_limit=1</em>, <em class="sig-param">precision=0</em>, <em class="sig-param">path='out.html'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.get_html_result"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.get_html_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a html file with a rendered math equation describing all waves arriving at the given node.</p>
@@ -517,6 +563,27 @@ a dictionary whose keys are node names. For each node name a list of quadruplets
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>all paths leading to a node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="colna.analyticnetwork.Network.get_reduced_output">
+<code class="sig-name descname">get_reduced_output</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">feed_dict=None</em>, <em class="sig-param">use_shared_default=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/colna/analyticnetwork.html#Network.get_reduced_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#colna.analyticnetwork.Network.get_reduced_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the output waves at this node. Paths with identical delay are added together.</p>
+<p>Waves with same delay are combined into a single entry using linear superposition of phase and amplitude.
+Phase is reduced to cover only 2*pi range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – name of the node to get result from</p></li>
+<li><p><strong>use_shared_default</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – set to true if shared defaults should be used with SymNum’s (higher speed),
+set to false if the default value of each SymNum should be used instead (higher accuracy). Default: True</p></li>
+<li><p><strong>feed_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Feed dictionary for SymNum variables. Default: None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>amplitude, phase, delay (all numpy arrays)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1043,7 +1110,7 @@ set to false if the default value of each SymNum should be used instead (higher 
         <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="photonicdesignexamples.html" class="btn btn-neutral float-left" title="Photonic Design Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

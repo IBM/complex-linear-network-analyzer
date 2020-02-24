@@ -17,5 +17,8 @@ Version 1.0.2  (2/11/2020)
 
 Version 1.0.3  (2/21/2020)
 --------------------------
+* New method to get network results (get_reduced_result, get_eval_result) which both evaluate symbolic numbers before 
+returning the result 
 * Improved test coverage for visualization features
 * Small improvements to documentation (included statement of need)
+* New Photonic Design Example: Mach Zehnder Interferometer Weight

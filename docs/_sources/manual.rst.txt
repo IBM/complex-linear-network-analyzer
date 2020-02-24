@@ -530,7 +530,18 @@ Once again you can use the three different versions:
 Independent of the parameters, :meth:`~.Network.evaluate` will always compute the symbolic representation of the network,
 the feed values are only used for the evaluation of the cutoff criterion.
 
-We can evaluate the symbolic expression using the :meth:`SymNum.eval` method as discussed in the :ref:`Symbolic Numbers` section.
+We can evaluate the symbolic expression using the :meth:`.Network.get_evaluated_result` method.
+
+.. code-block:: python
+
+    # Evaluation with a feed dictionary
+    feed = {'a1': 1, 'a2': 2, 'phi1': 2, 'phi2': 4}
+    print('Waves arriving at c:', net.get_eval_result(name='c',feed_dict=None,use_shared_default=False), '\n')
+
+    >>> Waves arriving at c: [(2.0, 6.0, 3.0)]
+
+
+As an alternative we could also use the :meth:`SymNum.eval` as discussed in the :ref:`Symbolic Numbers` section.
 
 .. code-block:: python
 

@@ -140,6 +140,54 @@ class Network(object):
 
         self.inputs.append((amplitude, phase, delay, name))
 
+    def get_reduced_output(self, name, feed_dict=None, use_shared_default=False):
+        """
+        Returns the output waves at this node. Paths with identical delay are added together.
+
+        Waves with same delay are combined into a single entry using linear superposition of phase and amplitude.
+        Phase is reduced to cover only 2*pi range.
+
+        :param name: name of the node to get result from
+        :type name: str
+        :param use_shared_default: set to true if shared defaults should be used with SymNum's (higher speed),
+         set to false if the default value of each SymNum should be used instead (higher accuracy). Default: True
+        :type use_shared_default: bool
+        :param feed_dict: Feed dictionary for SymNum variables. Default: None
+        :type feed_dict: dict
+
+        :return: amplitude, phase, delay (all numpy arrays)
+
+        """
+
+        waves = [np.array(list([w.eval(feed_dict=feed_dict, use_shared_default=use_shared_default) if hasattr(w, 'eval') else w for w in inner])) for
+                 inner in self.get_result_np(name)]
+        delays = np.unique(waves[2])
+        values = []
+
+        for delay in delays:
+            amp_temp = waves[0][np.where(waves[2]==delay)]
+            phase_temp = waves[1][np.where(waves[2]==delay)]
+            values.append(np.sum(amp_temp*np.exp(1j*phase_temp)))
+        values = np.array(values)
+        return np.abs(values), np.angle(values), delays
+
+    def get_eval_result(self, name, feed_dict=None, use_shared_default=False):
+        """
+        Returns a list of waves mixing at this node and evaluates symbolic numbers.
+
+        :param name: name of the node to get result from
+        :type name: str
+        :param use_shared_default: set to true if shared defaults should be used with SymNum's (higher speed),
+         set to false if the default value of each SymNum should be used instead (higher accuracy). Default: False
+        :type use_shared_default: bool
+        :param feed_dict: Feed dictionary for SymNum variables. Default: None
+        :type feed_dict: dict
+
+        :return: a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)
+        """
+        return [tuple([w.eval(feed_dict=feed_dict, use_shared_default=use_shared_default) if hasattr(w, 'eval') else w for w in inner]) for
+                 inner in self.get_result(name)]
+
     def get_result(self, name):
         """
         Returns a list of waves mixing at this node
@@ -473,6 +521,7 @@ class Network(object):
                     latex_string += '\exp(j (' + str_elem_value + '))\cdot '
                 elif elem_type == 2:  # delay
                     in_node_name = value[3].split('-')[1]
+                    in_node_name = in_node_name.replace(':','\_')
                     latex_string += in_node_name + '_{in}(' + time_symbol + '-' + str_elem_value + ')'
                     # Linebreak
                     if len(latex_string) - last_linebreak > linebreak_limit and linebreak_limit > 0:
@@ -789,6 +838,10 @@ class Device(Network):
         input node number k will be named 'i+str(k)'
         output node number k will be named 'o+str(k)'
 
+        .. warning::
+           This method can not be used with SymNums. Use :meth:`~.Device.initialize_from_phase_and_attenuation_matrix` or define the
+           nodes and edges manually instead.
+
         :param smatrix: complex scattering matrix defining the input to output mapping
         :type smatrix: numpy.array
         :param delay: time delay from input to output
@@ -812,6 +865,44 @@ class Device(Network):
                             delay=delay)
                 self.add_edge(edge)
 
+    def init_from_phase_and_attenuation_matrix(self, attenuationmatrix, phasematrix, delay):
+        """
+        Defines a device by its attenuation and phase matrix and a delay.
+
+        For a device with n inputs and m outputs pass a nxm matrix specifying attenuation and an nxm matrix specifiying
+        phase-shift from input node i to output node j at matrix entry (i, j). Creates n+m nodes linked by n*m edges with
+        the given parameters, all with time delay 'delay'.
+
+        input node number k will be named 'i+str(k)'
+        output node number k will be named 'o+str(k)'
+
+        Use this method if you want to use symbolic numbers to define the phase and or amplitudes.
+
+        :param attenuationmatrix: matrix defining attenuation between input to output node
+        :type attenuationmatrix: numpy.array
+        :param phasematrix: matrix defining phase between input to output node
+        :type phasematrix: numpy.array
+        :param delay: time delay from input to output
+        :type delay: float
+        """
+
+        attenuationmatrix = np.atleast_2d(attenuationmatrix)
+        n_in = attenuationmatrix.shape[0]
+        n_out = attenuationmatrix.shape[1]
+
+        for i in range(n_in):
+            in_name = "i" + str(i)
+            self.add_node(in_name)
+            for j in range(n_out):
+                out_name = "o" + str(j)
+                name = self.devicetype + ":" + self.name + ":" + out_name
+                if name not in self.nodes:
+                    self.add_node(out_name)
+                edge = Edge(in_name, out_name,
+                            phase=phasematrix[i, j],
+                            attenuation=attenuationmatrix[i, j],
+                            delay=delay)
+                self.add_edge(edge)
 
 class DeviceLink(Edge):
     """
