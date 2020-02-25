@@ -52,6 +52,31 @@ Contributing
 ------------
 Contributions are very welcome! Please follow the the [contribution guidelines](CONTRIBUTING.md).
 
+Paper and Citation
+------------------
+A short paper on COLNA has been published in the Journal of Open Source Software (JOSS): 
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02073/status.svg)](https://doi.org/10.21105/joss.02073)
+
+If COLNA was useful for your work please consider citing the JOSS article. 
+
+**Citation String**
+Stark et al., (2020). COLNA: A Python Package to Analyze Complex, Linear Networks. Journal of Open Source Software, 5(46), 2073, https://doi.org/10.21105/joss.02073
+
+**Bibtex Citation**
+``` 
+@article{Stark2020,
+  doi = {10.21105/joss.02073},
+  url = {https://doi.org/10.21105/joss.02073},
+  year = {2020},
+  publisher = {The Open Journal},
+  volume = {5},
+  number = {46},
+  pages = {2073},
+  author = {Pascal Stark and Lorenz Müller},
+  title = {COLNA: A Python Package to Analyze Complex, Linear Networks},
+  journal = {Journal of Open Source Software}
+}
+```
 Authors and Maintainers
 -----------------------
 * Pascal Stark

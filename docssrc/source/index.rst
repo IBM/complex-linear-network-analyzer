@@ -49,7 +49,8 @@ The core functionality of COLNA is visualized in the figure below.
 Contents
 ========
 
-To start working with COLNA we suggest to take a look at the user manual and some of the examples.
+To start working with COLNA we suggest to take a look at the user manual, read through the short `JOSS paper <https://joss.theoj.org/papers/10.21105/joss.02073>`_  and play around with
+some of the examples.
 
 .. toctree::
    :maxdepth: 2
@@ -58,6 +59,7 @@ To start working with COLNA we suggest to take a look at the user manual and som
    examples.rst
    photonicdesignexamples.rst
    colna.rst
+   paperandcitation.rst
    license.rst
 
 Indices and tables
