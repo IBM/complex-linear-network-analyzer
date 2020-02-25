@@ -19,6 +19,11 @@ Version 1.0.3  (2/21/2020)
 --------------------------
 * New method to get network results (get_reduced_result, get_eval_result) which both evaluate symbolic numbers before 
 returning the result 
+* New method to construct device from phase and amplitude matrix
 * Improved test coverage for visualization features
 * Small improvements to documentation (included statement of need)
 * New Photonic Design Example: Mach Zehnder Interferometer Weight
+
+Version 1.0.4  (2/25/2020)
+--------------------------
+* JOSS Release

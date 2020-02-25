@@ -80,8 +80,10 @@ configurations and plot the corresponding data.
     :language: python
     :lines: 88-125
 
-The resulting figure is shown below:
+The results are shown below.
 
 .. figure:: /figures/output_power.svg
     :align: center
 
+There are more parameters to optimize, here we just played around with a few of them.
+It would also be possible to perform a sensitivity analysis to estimate which parameters are most critical.
