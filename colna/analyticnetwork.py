@@ -463,6 +463,81 @@ class Network(object):
         except IOError as e:
             return e
 
+    def get_mathematica_result(self, name, time_symbol='t', evaluate=False, feed_dict=None, use_shared_default=False,
+                         linebreak_limit=0, precision=0):
+        """
+        Returns a latex string that describes all waves arriving at the given node.
+
+        SymNums are shown as variables, unless evaluate is set to True.
+
+        :param name: Name of the node to get result from
+        :type name: str
+        :param time_symbol: character used to describe time/delays in the equation
+        :type time_symbol: str
+        :param evaluate: If evaluate is True, SymNum's will be evaluated using the feed_dict and use_shared_default values specified. Otherwise SymNums are represented by their name as variables.
+        :type evaluate: bool
+        :param feed_dict: a dictionary specifying values of variables by name. If only some variables are specified, for all other variables the default value will be used.
+        :type feed_dict: dict
+        :param use_shared_default: set to true if shared defaults should be used with SymNums (higher speed) when no \
+        feed_dict is provided, set to false if the default value of each SymNum should be used instead (higher accuracy). \
+        The value is ignored if feed_dict is not None. Default: False
+        :type use_shared_default: bool
+        :param linebreak_limit: A line break will be added roughly every linebreak_limit chars in the latex string. Set to 1 for a linebreak after each term. Set to 0 to get a latex string on a single line. Default: 1
+        :type linebreak_limit: int
+        :param precision: Number of significant digits to be output. Set to 0 to use the default value of str() method.
+        :type precision: int
+
+        :raises ValueError: If the node with the provided name does not exist in the network.
+
+        :return: a list of waves mixing at this node, given as a tuple with entries (amplitude, phase, delay)
+        """
+        if not name in self.nodes:
+            raise (ValueError("attempted to retrive wave at non-existing node " + name))
+
+        mathematica_string = r''
+        last_linebreak = 0
+        align_next_line = False
+        variables = []
+        input_vars = []
+        for value in self.nodes_to_output[name]:
+            for i, elem in enumerate(value[0:3]):
+                elem_type = i % 4
+                # get the string representation of the value
+                if type(elem) == SymNum:
+                    if evaluate == True:
+                        temp_eval_val = elem.eval(feed_dict=feed_dict, use_shared_default=use_shared_default)
+                        str_elem_value = '%f' % (precision, temp_eval_val) if precision != 0 else str(temp_eval_val)
+                    else:
+                        str_elem_value, vars2 = elem.to_mathematica(precision=precision)
+                        variables.extend(vars2)
+                else:
+                    temp_val = elem
+                    str_elem_value = '%f' % (precision, temp_val) if precision != 0 else str(temp_val)
+                    str_elem_value=str_elem_value.replace('e','*^')
+
+                # stich together the latex string depending on the type of the element (amplitude, phase, delay)
+                if elem_type == 0:  # amplitude
+                    mathematica_string += '+' + str_elem_value + '*'
+                elif elem_type == 1:  # phase
+                    mathematica_string += 'Exp[I*(' + str_elem_value + ')]* '
+                elif elem_type == 2:  # delay
+                    in_node_name = value[3].split('-')[1]
+                    in_node_name = in_node_name.replace(':','')
+                    input_vars.append((in_node_name, str_elem_value))
+                    str_elem_value=str_elem_value.replace('*^','e')
+                    str_elem_value=str_elem_value.replace('.','p')
+                    str_elem_value=str_elem_value.replace('-','m')
+
+                    mathematica_string += in_node_name + 'indt%s'%str_elem_value
+                    variables.append(in_node_name + 'indt%s'%str_elem_value)
+
+        mathematica_string = mathematica_string[1:]  # removes the leading +
+        mathematica_string = mathematica_string.replace("_","")
+        vars = np.unique(variables)
+        vars = [x.replace("_","")+'_' for x in vars]
+        vars_str = ','.join(vars)
+        mathematica_string = 'y[' + vars_str+ '] := ' + mathematica_string
+        return mathematica_string, vars,input_vars
 
 
     def get_latex_result(self, name, time_symbol='t', evaluate=False, feed_dict=None, use_shared_default=False,
@@ -726,6 +801,22 @@ class SymNum:
         else:
             numerical_str = '%.*g' % (precision, self.numerical)
         return numerical_str + out
+
+    def to_mathematica(self, precision=0):
+        op1 = " " if self.product else " + "
+        op2 = "^" if self.product else " * "
+        out = ""
+        variables = []
+        for key in self.symbolic.keys():
+            out += op1
+            out += key + op2 + str(self.symbolic[key])
+            variables.append(key)
+        if precision == 0:
+            numerical_str = str(self.numerical)
+        else:
+            numerical_str = '%f' % (precision, self.numerical)
+        return numerical_str + out, variables
+
 
     def __repr__(self):
         """
